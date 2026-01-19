@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -49,8 +50,8 @@ const prompt = ai.definePrompt({
 
   Consider the programming language when making suggestions.
 
-  Codebase:
-  \`\`\`{{programmingLanguage}}
+  Codebase in {{programmingLanguage}}:
+  \`\`\`
   {{codebase}}
   \`\`\`
 
