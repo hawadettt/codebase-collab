@@ -1,3 +1,5 @@
+import CodeCollabDashboard from "@/components/code-collab-dashboard";
+
 export default function Home() {
-  return <></>;
+  return <CodeCollabDashboard />;
 }
