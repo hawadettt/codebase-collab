@@ -35,7 +35,8 @@ import {
   FileCode,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { saveCodeToFirestore } from "@/lib/firestore-actions";
+import { useUser, useFirestore, addDocumentNonBlocking } from "@/firebase";
+import { collection, serverTimestamp } from "firebase/firestore";
 
 type AnalysisResult = AnalyzeCodebaseForErrorsOutput & SuggestCodeImprovementsOutput;
 
@@ -85,6 +86,8 @@ export default function CodeCollabDashboard() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
 
   const handleAnalyze = async () => {
     setIsLoading(true);
@@ -107,21 +110,25 @@ export default function CodeCollabDashboard() {
     }
   };
   
-  const handleSave = async () => {
-    try {
-      const docId = await saveCodeToFirestore(code);
-      toast({
-        title: "Code Saved",
-        description: `Your code has been saved successfully with ID: ${docId}`,
-      });
-    } catch (error) {
-      console.error("Save failed:", error);
+  const handleSave = () => {
+    if (!user) {
       toast({
         variant: "destructive",
-        title: "Save Failed",
-        description: "Could not save the code. Please check your connection and Firestore setup.",
+        title: "Not Authenticated",
+        description: "You must be logged in to save your code.",
       });
+      return;
     }
+    const collectionRef = collection(firestore, 'users', user.uid, 'documents');
+    addDocumentNonBlocking(collectionRef, {
+      code,
+      createdAt: serverTimestamp(),
+      version: 1,
+    });
+    toast({
+      title: "Code Saved",
+      description: `Your code has been saved successfully.`,
+    });
   };
 
   return (

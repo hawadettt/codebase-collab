@@ -21,6 +21,9 @@ import {
   Code,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useAuth, useUser } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { useToast } from "@/hooks/use-toast";
 
 const files = [
   { name: "index.js", path: "/src/index.js" },
@@ -32,6 +35,28 @@ const files = [
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
 export function AppSidebar() {
+  const { user } = useUser();
+  const auth = useAuth();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out.",
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast({
+        variant: "destructive",
+        title: "Logout Failed",
+        description: "Could not log you out. Please try again.",
+      });
+    }
+  };
+
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -81,14 +106,15 @@ export function AppSidebar() {
         <SidebarSeparator />
         <div className="flex items-center gap-3 px-2 py-2">
           <Avatar className="h-9 w-9">
-            {userAvatar && <AvatarImage src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} />}
-            <AvatarFallback>U</AvatarFallback>
+            {user?.photoURL && <AvatarImage src={user.photoURL} />}
+            {!user?.photoURL && userAvatar && <AvatarImage src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} />}
+            <AvatarFallback>{user?.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-sm font-medium">User</span>
-            <span className="text-xs text-muted-foreground">user@example.com</span>
+            <span className="text-sm font-medium">{user?.displayName ?? "User"}</span>
+            <span className="text-xs text-muted-foreground">{user?.email ?? "user@example.com"}</span>
           </div>
-          <LogOut className="ml-auto h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" />
+          <LogOut onClick={handleLogout} className="ml-auto h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" />
         </div>
       </SidebarFooter>
     </Sidebar>

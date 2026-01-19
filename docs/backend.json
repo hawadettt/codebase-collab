@@ -25,12 +25,36 @@
         "email",
         "userName"
       ]
+    },
+    "CodeDocument": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Code Document",
+      "type": "object",
+      "description": "A single document containing a user's code snippet.",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "The code content."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of when the document was created."
+        },
+        "version": {
+          "type": "number",
+          "description": "Version number of the document."
+        }
+      },
+      "required": [
+        "code",
+        "createdAt"
+      ]
     }
   },
   "auth": {
     "providers": [
-      "password",
-      "anonymous"
+      "password"
     ]
   },
   "firestore": {
@@ -103,6 +127,26 @@
             {
               "name": "revisionId",
               "description": "Unique ID for the revision."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/documents/{documentId}",
+        "definition": {
+          "entityName": "CodeDocument",
+          "schema": {
+            "$ref": "#/backend/entities/CodeDocument"
+          },
+          "description": "Stores user-saved code documents.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the owner user."
+            },
+            {
+              "name": "documentId",
+              "description": "Unique ID for the code document."
             }
           ]
         }
