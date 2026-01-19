@@ -1,0 +1,113 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user in the Codebase Collab application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "userName": {
+          "type": "string",
+          "description": "The user's chosen user name."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "userName"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles.  `userId` is the Firebase Auth UID.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/codebases/{codebaseId}",
+        "definition": {
+          "entityName": "codebase",
+          "schema": {
+            "$ref": "#/backend/entities/codebase"
+          },
+          "description": "Stores codebases owned by a specific user. `userId` is the Firebase Auth UID. Includes version history within each document.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the owner user."
+            },
+            {
+              "name": "codebaseId",
+              "description": "Unique ID for the codebase."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/codebases/{codebaseId}",
+        "definition": {
+          "entityName": "codebase",
+          "schema": {
+            "$ref": "#/backend/entities/codebase"
+          },
+          "description": "Stores codebases shared among multiple users. Includes denormalized 'members' map for authorization independence and allows secure listing. 'members' map: {uid: role}.",
+          "params": [
+            {
+              "name": "codebaseId",
+              "description": "Unique ID for the collaborative codebase."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/codebases/{codebaseId}/revisions/{revisionId}",
+        "definition": {
+          "entityName": "revision",
+          "schema": {
+            "$ref": "#/backend/entities/revision"
+          },
+          "description": "Stores revision history of shared codebases. `codebaseId` references the collaborative codebase. Includes denormalized 'members' map copied from parent /codebases/{codebaseId} for authorization independence.",
+          "params": [
+            {
+              "name": "codebaseId",
+              "description": "Unique ID for the collaborative codebase."
+            },
+            {
+              "name": "revisionId",
+              "description": "Unique ID for the revision."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support the Codebase Collab application, emphasizing secure code storage, collaborative editing, and version control. The structure prioritizes Authorization Independence by denormalizing authorization data (specifically, members and roles) into subcollections, eliminating the need for `get()` calls in security rules and ensuring atomic operations. Structural Segregation is used to isolate code files based on ownership and collaboration needs. Access Modeling employs path-based ownership for private user data and Membership Maps for collaborative projects. QAPs are achieved through collection segregation and denormalized membership maps. The structure also aims for Data Clarity and Predictability through explicit state modeling and standardized naming conventions.\n\nThe `/users/{userId}` collection stores user profiles. The `/users/{userId}/codebases/{codebaseId}` collection stores codebases owned by individual users. The `/codebases/{codebaseId}` collection stores codebases shared among multiple collaborators, with the 'members' map denormalized to control access. Version control is implemented within each codebase document, creating immutable revisions."
+  }
+}
