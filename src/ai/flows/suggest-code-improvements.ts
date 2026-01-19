@@ -51,8 +51,8 @@ const prompt = ai.definePrompt({
   Consider the programming language when making suggestions.
 
   Codebase in {{programmingLanguage}}:
-  \`\`\`
-  {{codebase}}
+  \`\`\`{{programmingLanguage}}
+  {{{codebase}}}
   \`\`\`
 
   Suggestions:
@@ -70,3 +70,4 @@ const suggestCodeImprovementsFlow = ai.defineFlow(
     return output!;
   }
 );
+
