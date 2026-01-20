@@ -4,8 +4,8 @@ import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
-  title: 'Codebase Collab',
-  description: 'Collaborate on code with AI-powered analysis and version control.',
+  title: 'مفتاح النيل',
+  description: 'نظام إدارة الشحنات والمالية لشركة مفتاح النيل',
 };
 
 export default function RootLayout({

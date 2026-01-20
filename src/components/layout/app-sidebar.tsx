@@ -14,12 +14,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  FileText,
-  Users,
+  Truck,
+  LayoutDashboard,
   Settings,
-  GitBranch,
   LogOut,
-  Code,
+  Leaf,
   LogIn,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -28,13 +27,6 @@ import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const files = [
-  { name: "index.js", path: "/src/index.js" },
-  { name: "app.tsx", path: "/src/components/app.tsx" },
-  { name: "utils.ts", path: "/src/lib/utils.ts" },
-  { name: "api.py", path: "/server/api.py" },
-];
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
@@ -66,40 +58,32 @@ export function AppSidebar() {
       <SidebarHeader>
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Code className="h-5 w-5 text-primary-foreground" />
+            <Leaf className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="font-headline text-lg font-semibold">
-            Codebase Collab
+            مفتاح النيل
           </span>
         </div>
       </SidebarHeader>
       <SidebarContent className="p-2">
         <SidebarMenu>
-          {files.map((file, index) => (
-            <SidebarMenuItem key={file.path}>
-              <SidebarMenuButton isActive={index === 1} size="sm">
-                <FileText />
-                <span>{file.name}</span>
+            <SidebarMenuItem>
+              <SidebarMenuButton isActive={true} size="sm">
+                <LayoutDashboard />
+                <span>Dashboard</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          ))}
+             <SidebarMenuItem>
+              <SidebarMenuButton size="sm">
+                <Truck />
+                <span>Shipments</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
       <SidebarSeparator />
       <SidebarFooter className="p-2">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="sm">
-              <Users />
-              <span>Collaborators</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="sm">
-              <GitBranch />
-              <span>Version History</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton size="sm">
               <Settings />

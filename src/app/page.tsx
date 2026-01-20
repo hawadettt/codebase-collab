@@ -1,7 +1,7 @@
 'use client';
 
-import CodeCollabDashboard from "@/components/code-collab-dashboard";
+import NileKeyDashboard from "@/components/nile-key-dashboard";
 
 export default function Home() {
-  return <CodeCollabDashboard />;
+  return <NileKeyDashboard />;
 }

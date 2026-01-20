@@ -4,7 +4,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "User",
       "type": "object",
-      "description": "Represents a user in the Codebase Collab application.",
+      "description": "Represents a user in the Nile Key application.",
       "properties": {
         "id": {
           "type": "string",
@@ -26,28 +26,55 @@
         "userName"
       ]
     },
-    "CodeDocument": {
+    "Shipment": {
       "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Code Document",
+      "title": "Shipment",
       "type": "object",
-      "description": "A single document containing a user's code snippet.",
+      "description": "A single shipment record.",
       "properties": {
-        "code": {
+        "shipmentType": {
           "type": "string",
-          "description": "The code content."
+          "description": "The type or name of the product being shipped."
+        },
+        "weight": {
+          "type": "number",
+          "description": "The weight of the shipment in kilograms."
+        },
+        "containerNumber": {
+          "type": "string",
+          "description": "The shipping container number."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The quantity of items in the shipment."
+        },
+        "price": {
+          "type": "number",
+          "description": "The total price or value of the shipment."
+        },
+        "customer": {
+          "type": "string",
+          "description": "The name of the customer receiving the shipment."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the shipment.",
+          "enum": ["قيد التجهيز", "في الميناء", "تم الشحن"]
         },
         "createdAt": {
           "type": "string",
           "format": "date-time",
-          "description": "Timestamp of when the document was created."
-        },
-        "version": {
-          "type": "number",
-          "description": "Version number of the document."
+          "description": "Timestamp of when the shipment was created."
         }
       },
       "required": [
-        "code",
+        "shipmentType",
+        "weight",
+        "containerNumber",
+        "quantity",
+        "price",
+        "customer",
+        "status",
         "createdAt"
       ]
     }
@@ -76,82 +103,25 @@
         }
       },
       {
-        "path": "/users/{userId}/codebases/{codebaseId}",
+        "path": "/users/{userId}/shipments/{shipmentId}",
         "definition": {
-          "entityName": "codebase",
+          "entityName": "Shipment",
           "schema": {
-            "$ref": "#/backend/entities/codebase"
+            "$ref": "#/backend/entities/Shipment"
           },
-          "description": "Stores codebases owned by a specific user. `userId` is the Firebase Auth UID. Includes version history within each document.",
+          "description": "Stores user-saved shipment records.",
           "params": [
             {
               "name": "userId",
               "description": "The Firebase Auth UID of the owner user."
             },
             {
-              "name": "codebaseId",
-              "description": "Unique ID for the codebase."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/codebases/{codebaseId}",
-        "definition": {
-          "entityName": "codebase",
-          "schema": {
-            "$ref": "#/backend/entities/codebase"
-          },
-          "description": "Stores codebases shared among multiple users. Includes denormalized 'members' map for authorization independence and allows secure listing. 'members' map: {uid: role}.",
-          "params": [
-            {
-              "name": "codebaseId",
-              "description": "Unique ID for the collaborative codebase."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/codebases/{codebaseId}/revisions/{revisionId}",
-        "definition": {
-          "entityName": "revision",
-          "schema": {
-            "$ref": "#/backend/entities/revision"
-          },
-          "description": "Stores revision history of shared codebases. `codebaseId` references the collaborative codebase. Includes denormalized 'members' map copied from parent /codebases/{codebaseId} for authorization independence.",
-          "params": [
-            {
-              "name": "codebaseId",
-              "description": "Unique ID for the collaborative codebase."
-            },
-            {
-              "name": "revisionId",
-              "description": "Unique ID for the revision."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/users/{userId}/documents/{documentId}",
-        "definition": {
-          "entityName": "CodeDocument",
-          "schema": {
-            "$ref": "#/backend/entities/CodeDocument"
-          },
-          "description": "Stores user-saved code documents.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The Firebase Auth UID of the owner user."
-            },
-            {
-              "name": "documentId",
-              "description": "Unique ID for the code document."
+              "name": "shipmentId",
+              "description": "Unique ID for the shipment."
             }
           ]
         }
       }
-    ],
-    "reasoning": "The Firestore structure is designed to support the Codebase Collab application, emphasizing secure code storage, collaborative editing, and version control. The structure prioritizes Authorization Independence by denormalizing authorization data (specifically, members and roles) into subcollections, eliminating the need for `get()` calls in security rules and ensuring atomic operations. Structural Segregation is used to isolate code files based on ownership and collaboration needs. Access Modeling employs path-based ownership for private user data and Membership Maps for collaborative projects. QAPs are achieved through collection segregation and denormalized membership maps. The structure also aims for Data Clarity and Predictability through explicit state modeling and standardized naming conventions.\n\nThe `/users/{userId}` collection stores user profiles. The `/users/{userId}/codebases/{codebaseId}` collection stores codebases owned by individual users. The `/codebases/{codebaseId}` collection stores codebases shared among multiple collaborators, with the 'members' map denormalized to control access. Version control is implemented within each codebase document, creating immutable revisions."
+    ]
   }
 }

@@ -2,171 +2,36 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /**
-     * Core Philosophy: This ruleset enforces a dual security model. First, a strict
-     * user-ownership model for all private data nested under the /users/{userId}
-     * path, ensuring users can only access their own information. Second, a flexible,
-     * collaborative model for shared codebases in the top-level /codebases collection,
-     * where access is governed by a denormalized 'members' map within each document.
-     * The default posture is to deny all access unless explicitly granted.
-     *
-     * Data Structure: Data is structurally segregated into two primary hierarchies:
-     * 1. /users/{userId}/... for user-specific profiles and private codebases.
-     * 2. /codebases/{codebaseId}/... for shared, collaborative codebases and their
-     *    revision history.
-     *
-     * Key Security Decisions:
-     * - No User Listing: Listing the top-level /users collection is disallowed to
-     *   prevent user enumeration.
-     * - No Public Listing of Shared Codebases: Listing the top-level /codebases
-     *   collection is disallowed to prevent exposing the existence of private projects.
-     * - Authorization Independence: The /codebases collection uses a denormalized 'members'
-     *   map (e.g., {uid: 'owner'}) on each document. This avoids slow and costly `get()`
-     *   calls for most authorization checks, making the rules more performant and secure.
-     * - Structural Segregation: Private user codebases (/users/{userId}/codebases) and
-     *   shared codebases (/codebases) are stored in separate collections. This is more
-     *   secure and efficient for queries than using a single collection with a flag.
-     * - Privileged Operations: Modifying the list of collaborators (the 'members' map) on a
-     *   shared codebase is restricted to users with the 'owner' role.
-     */
-
     // -------------------------------------------------------------------------
     // Helper Functions
     // -------------------------------------------------------------------------
 
-    /**
-     * Returns true if the user is authenticated.
-     */
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /**
-     * Returns true if the authenticated user's UID matches the provided userId.
-     * This is the foundation of the user-ownership model.
-     * @param userId The UID to check against the authenticated user.
-     */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
-    }
-
-    /**
-     * Returns true if the document being operated on already exists.
-     * This is crucial for securing all update and delete operations.
-     */
-    function isExistingDoc() {
-      return resource != null;
-    }
-
-    /**
-     * Returns true if the user is the owner of an existing document.
-     * A standard check for update and delete operations on user-owned data.
-     * @param userId The UID of the document owner.
-     */
-    function isExistingOwner(userId) {
-      return isOwner(userId) && isExistingDoc();
-    }
-
-    /**
-     * Returns true if the user is listed in the 'members' map of the parent codebase document.
-     * Used to secure list access on subcollections of shared resources.
-     * @param codebaseId The ID of the parent codebase document to check.
-     */
-    function isMemberOfParent(codebaseId) {
-      return isSignedIn() && request.auth.uid in get(/databases/$(database)/documents/codebases/$(codebaseId)).data.members;
-    }
-
-    /**
-     * Returns true if the user has a role of 'owner' or 'editor' in the document's members map.
-     * @param docData The resource data map which must contain a 'members' map.
-     */
-    function isEditor(docData) {
-      return isSignedIn() && docData.members[request.auth.uid] in ['owner', 'editor'];
-    }
-
-    /**
-     * Returns true if the user has the 'owner' role in the document's members map.
-     * @param docData The resource data map which must contain a 'members' map.
-     */
-    function isOwnerOfShared(docData) {
-      return isSignedIn() && docData.members[request.auth.uid] == 'owner';
     }
 
     // -------------------------------------------------------------------------
     // User Data (/users)
     // -------------------------------------------------------------------------
 
-    /**
-     * @description Controls access to user profile documents.
-     * @path /users/{userId}
-     * @allow (create) An authenticated user creating their own profile document, where the document ID matches their UID.
-     * @deny (get) A user trying to read another user's profile.
-     * @principle Restricts access to a user's own data tree and enforces self-creation of the root user document.
-     */
     match /users/{userId} {
       allow get: if isOwner(userId);
       allow list: if false; // Explicitly deny listing the entire users collection.
       allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
-      allow delete: if isExistingOwner(userId);
+      allow update: if isOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isOwner(userId);
 
       /**
-       * @description Controls access to a user's private codebases.
-       * @path /users/{userId}/codebases/{codebaseId}
-       * @allow (create) An authenticated user creating a new codebase under their own user profile.
-       * @deny (update) A user trying to update a codebase belonging to another user.
+       * @description Controls access to a user's private shipments.
+       * @path /users/{userId}/shipments/{shipmentId}
        * @principle Enforces strict ownership for all documents within a user's private data tree.
        */
-      match /codebases/{codebaseId} {
-        allow get: if isOwner(userId);
-        allow list: if isOwner(userId);
-        allow create: if isOwner(userId);
-        allow update: if isExistingOwner(userId);
-        allow delete: if isExistingOwner(userId);
-      }
-      
-      match /documents/{documentId} {
+      match /shipments/{shipmentId} {
         allow read, write: if isOwner(userId);
-      }
-    }
-
-    // -------------------------------------------------------------------------
-    // Shared Data (/codebases)
-    // -------------------------------------------------------------------------
-
-    /**
-     * @description Controls access to shared, collaborative codebases. Access is determined
-     * by a 'members' map {uid: role} stored directly on the document.
-     * @path /codebases/{codebaseId}
-     * @allow (get) A user whose UID is in the document's 'members' map reading the codebase.
-     * @deny (list) Any user trying to list all shared codebases to prevent project enumeration.
-     * @deny (update) An 'editor' trying to change the 'members' map. Only an 'owner' can do that.
-     * @principle Implements role-based access control using a denormalized map of collaborators.
-     */
-    match /codebases/{codebaseId} {
-      allow get: if isSignedIn() && isExistingDoc() && request.auth.uid in resource.data.members;
-      allow list: if false; // Deny listing to prevent discovery of private projects.
-      allow create: if isSignedIn() && request.resource.data.members[request.auth.uid] == 'owner';
-      allow update: if isExistingDoc() && (
-        (isEditor(resource.data) && request.resource.data.members == resource.data.members) || isOwnerOfShared(resource.data)
-      );
-      allow delete: if isExistingDoc() && isOwnerOfShared(resource.data);
-
-      /**
-       * @description Controls access to the revisions of a shared codebase. Access is
-       * inherited from the parent codebase document.
-       * @path /codebases/{codebaseId}/revisions/{revisionId}
-       * @allow (list) A member of the parent codebase listing all of its revisions.
-       * @deny (get) A non-member trying to read a specific revision document.
-       * @principle Secures a subcollection by checking for membership on the parent document.
-       */
-      match /revisions/{revisionId} {
-        allow get: if isMemberOfParent(codebaseId);
-        allow list: if isMemberOfParent(codebaseId);
-        allow create: if isMemberOfParent(codebaseId);
-        // Revisions are typically immutable; only allow creation. Update and delete are denied.
-        allow update: if false;
-        allow delete: if false;
       }
     }
   }

@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Code, Loader2 } from 'lucide-react';
+import { Leaf, Loader2 } from 'lucide-react';
 import {
   useAuth,
   useUser,
@@ -101,10 +101,10 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
        <div className="flex items-center gap-2 mb-6">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <Code className="h-6 w-6 text-primary-foreground" />
+            <Leaf className="h-6 w-6 text-primary-foreground" />
           </div>
           <span className="font-headline text-2xl font-semibold">
-            Codebase Collab
+            مفتاح النيل
           </span>
         </div>
       <Card className="w-full max-w-sm">
