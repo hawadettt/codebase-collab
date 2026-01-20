@@ -18,6 +18,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   analyzeCodebaseForErrors,
   AnalyzeCodebaseForErrorsOutput,
 } from "@/ai/flows/analyze-codebase-for-errors";
@@ -86,7 +92,7 @@ export default function CodeCollabDashboard() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
-  const { user } = useUser();
+  const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
 
   const handleAnalyze = async () => {
@@ -147,7 +153,26 @@ export default function CodeCollabDashboard() {
                       <CardDescription>Paste or write your code below.</CardDescription>
                     </div>
                     <div className="flex gap-2">
-                      <Button onClick={handleSave} variant="outline"><Save className="mr-2 h-4 w-4" /> Save</Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="inline-block">
+                              <Button
+                                onClick={handleSave}
+                                variant="outline"
+                                disabled={!user || isUserLoading}
+                              >
+                                <Save className="mr-2 h-4 w-4" /> Save
+                              </Button>
+                            </div>
+                          </TooltipTrigger>
+                          {!user && (
+                            <TooltipContent>
+                              <p>Please log in to save your code.</p>
+                            </TooltipContent>
+                          )}
+                        </Tooltip>
+                      </TooltipProvider>
                       <Button onClick={handleAnalyze} disabled={isLoading}>
                         {isLoading ? (
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
@@ -19,11 +20,14 @@ import {
   GitBranch,
   LogOut,
   Code,
+  LogIn,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useUser } from "@/firebase";
 import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const files = [
   { name: "index.js", path: "/src/index.js" },
@@ -35,7 +39,7 @@ const files = [
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
 export function AppSidebar() {
-  const { user } = useUser();
+  const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const { toast } = useToast();
 
@@ -104,18 +108,37 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarSeparator />
-        <div className="flex items-center gap-3 px-2 py-2">
-          <Avatar className="h-9 w-9">
-            {user?.photoURL && <AvatarImage src={user.photoURL} />}
-            {!user?.photoURL && userAvatar && <AvatarImage src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} />}
-            <AvatarFallback>{user?.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">{user?.displayName ?? "User"}</span>
-            <span className="text-xs text-muted-foreground">{user?.email ?? "user@example.com"}</span>
+        {isUserLoading ? (
+          <div className="flex items-center gap-3 px-2 py-2">
+            <Skeleton className="h-9 w-9 rounded-full" />
+            <div className="flex flex-col gap-1">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-3 w-28" />
+            </div>
           </div>
-          <LogOut onClick={handleLogout} className="ml-auto h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" />
-        </div>
+        ) : user ? (
+          <div className="flex items-center gap-3 px-2 py-2">
+            <Avatar className="h-9 w-9">
+              {user?.photoURL && <AvatarImage src={user.photoURL} />}
+              {!user?.photoURL && userAvatar && <AvatarImage src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} />}
+              <AvatarFallback>{user?.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium">{user?.displayName ?? "User"}</span>
+              <span className="text-xs text-muted-foreground">{user?.email ?? "user@example.com"}</span>
+            </div>
+            <LogOut onClick={handleLogout} className="ml-auto h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" />
+          </div>
+        ) : (
+          <div className="px-2 py-2">
+            <Link href="/login" passHref>
+              <Button className="w-full">
+                <LogIn className="mr-2 h-4 w-4" />
+                Login / Sign Up
+              </Button>
+            </Link>
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
