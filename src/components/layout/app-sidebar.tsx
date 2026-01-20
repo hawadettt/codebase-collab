@@ -39,15 +39,15 @@ export function AppSidebar() {
     try {
       await signOut(auth);
       toast({
-        title: "Logged Out",
-        description: "You have been successfully logged out.",
+        title: "تم تسجيل الخروج",
+        description: "لقد تم تسجيل خروجك بنجاح.",
       });
     } catch (error) {
       console.error("Logout failed:", error);
       toast({
         variant: "destructive",
-        title: "Logout Failed",
-        description: "Could not log you out. Please try again.",
+        title: "فشل تسجيل الخروج",
+        description: "تعذر تسجيل خروجك. يرجى المحاولة مرة أخرى.",
       });
     }
   };
@@ -70,13 +70,13 @@ export function AppSidebar() {
             <SidebarMenuItem>
               <SidebarMenuButton isActive={true} size="sm">
                 <LayoutDashboard />
-                <span>Dashboard</span>
+                <span>لوحة التحكم</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
               <SidebarMenuButton size="sm">
                 <Truck />
-                <span>Shipments</span>
+                <span>الشحنات</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>
@@ -87,7 +87,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="sm">
               <Settings />
-              <span>Settings</span>
+              <span>الإعدادات</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -108,17 +108,17 @@ export function AppSidebar() {
               <AvatarFallback>{user?.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="text-sm font-medium">{user?.displayName ?? "User"}</span>
+              <span className="text-sm font-medium">{user?.displayName ?? "مستخدم"}</span>
               <span className="text-xs text-muted-foreground">{user?.email ?? "user@example.com"}</span>
             </div>
-            <LogOut onClick={handleLogout} className="ml-auto h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" />
+            <LogOut onClick={handleLogout} className="mr-auto h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" />
           </div>
         ) : (
           <div className="px-2 py-2">
             <Link href="/login" passHref>
               <Button className="w-full">
-                <LogIn className="mr-2 h-4 w-4" />
-                Login / Sign Up
+                <LogIn className="ml-2 h-4 w-4" />
+                تسجيل الدخول / إنشاء حساب
               </Button>
             </Link>
           </div>

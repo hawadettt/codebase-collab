@@ -14,17 +14,17 @@ export function Header() {
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden" />
         <h1 className="font-headline text-lg font-semibold md:text-xl">
-          Shipment Dashboard
+          لوحة تحكم الشحنات
         </h1>
       </div>
       <div className="flex items-center gap-3">
         <Button variant="outline" size="sm">
-          <Share2 className="mr-2 h-4 w-4" />
-          Share
+          <Share2 className="ml-2 h-4 w-4" />
+          مشاركة
         </Button>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Bell className="h-5 w-5" />
-          <span className="sr-only">Notifications</span>
+          <span className="sr-only">الإشعارات</span>
         </Button>
       </div>
     </header>

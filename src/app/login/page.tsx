@@ -34,10 +34,10 @@ import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   email: z.string().email({
-    message: 'Please enter a valid email address.',
+    message: 'الرجاء إدخال عنوان بريد إلكتروني صالح.',
   }),
   password: z.string().min(6, {
-    message: 'Password must be at least 6 characters.',
+    message: 'يجب أن لا تقل كلمة المرور عن 6 أحرف.',
   }),
 });
 
@@ -73,14 +73,14 @@ export default function LoginPage() {
       }
       // Non-blocking, so we don't await. We rely on the auth state listener.
       toast({
-        title: 'Processing...',
-        description: 'Please wait while we process your request.',
+        title: 'جاري المعالجة...',
+        description: 'يرجى الانتظار بينما نقوم بمعالجة طلبك.',
       });
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'Authentication Failed',
-        description: error.message || 'An unexpected error occurred.',
+        title: 'فشل المصادقة',
+        description: error.message || 'حدث خطأ غير متوقع.',
       });
       setIsLoading(false);
     }
@@ -110,12 +110,12 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl font-headline">
-            {isSigningIn ? 'Sign In' : 'Sign Up'}
+            {isSigningIn ? 'تسجيل الدخول' : 'إنشاء حساب'}
           </CardTitle>
           <CardDescription>
             {isSigningIn
-              ? "Enter your credentials to access your account."
-              : "Create an account to start collaborating."}
+              ? "أدخل بيانات الاعتماد الخاصة بك للوصول إلى حسابك."
+              : "أنشئ حسابًا لبدء التعاون."}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -126,7 +126,7 @@ export default function LoginPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>البريد الإلكتروني</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="you@example.com"
@@ -143,7 +143,7 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>كلمة المرور</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -158,20 +158,20 @@ export default function LoginPage() {
               />
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="ml-2 h-4 w-4 animate-spin" />
                 )}
-                {isSigningIn ? 'Sign In' : 'Sign Up'}
+                {isSigningIn ? 'تسجيل الدخول' : 'إنشاء حساب'}
               </Button>
             </form>
           </Form>
           <div className="mt-4 text-center text-sm">
-            {isSigningIn ? "Don't have an account?" : "Already have an account?"}{' '}
+            {isSigningIn ? 'ليس لديك حساب؟' : 'هل لديك حساب بالفعل؟'}{' '}
             <Button
               variant="link"
               className="p-0 h-auto"
               onClick={() => setIsSigningIn(!isSigningIn)}
             >
-              {isSigningIn ? 'Sign Up' : 'Sign In'}
+              {isSigningIn ? 'إنشاء حساب' : 'تسجيل الدخول'}
             </Button>
           </div>
         </CardContent>
