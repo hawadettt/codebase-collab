@@ -120,8 +120,8 @@ export function AppSidebar() {
               </Link>
             </SidebarMenuItem>
              <SidebarMenuItem>
-              <Link href="/">
-                <SidebarMenuButton isActive={pathname === '/'} size="sm">
+              <Link href="/shipments">
+                <SidebarMenuButton isActive={pathname === '/shipments'} size="sm">
                   <Truck />
                   <span>{t.sidebarShipments}</span>
                 </SidebarMenuButton>
