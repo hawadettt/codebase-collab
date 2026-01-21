@@ -9,7 +9,7 @@ export function Header() {
   const { t } = useLanguage();
   
   return (
-    <header className="sticky top-0 z-10 flex h-20 shrink-0 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
+    <header className="sticky top-0 z-10 flex h-40 shrink-0 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden" />
         <div className="hidden items-center gap-3 md:flex">
@@ -17,10 +17,10 @@ export function Header() {
               <Leaf className="h-7 w-7 text-primary" />
             </div>
             <div>
-                <h1 className="font-headline text-base font-bold text-foreground md:text-lg">
+                <h1 className="font-headline text-lg font-bold text-primary md:text-xl">
                     شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
                 </h1>
-                <p className="text-sm text-muted-foreground">Nile Key for Investment and International Trade LLC</p>
+                <p className="text-base text-primary/90">Nile Key for Investment and International Trade LLC</p>
             </div>
         </div>
       </div>
