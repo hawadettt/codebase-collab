@@ -55,15 +55,21 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar>
+    <Sidebar side={language === 'ar' ? 'right' : 'left'}>
       <SidebarHeader>
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Leaf className="h-5 w-5 text-primary-foreground" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+              <Leaf className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <span className="font-headline text-lg font-semibold">
+              {t.nileKeyCompany}
+            </span>
           </div>
-          <span className="font-headline text-lg font-semibold">
-            {t.nileKeyCompany}
-          </span>
+          <div className="flex items-center gap-1">
+            <Button variant={language === 'en' ? 'secondary' : 'ghost'} size="sm" onClick={() => setLanguage('en')}>EN</Button>
+            <Button variant={language === 'ar' ? 'secondary' : 'ghost'} size="sm" onClick={() => setLanguage('ar')}>AR</Button>
+          </div>
         </div>
       </SidebarHeader>
       <SidebarContent className="p-2">
@@ -85,12 +91,6 @@ export function AppSidebar() {
       <SidebarSeparator />
       <SidebarFooter className="p-2">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <div className="flex justify-center items-center gap-1 mb-2">
-              <Button variant={language === 'en' ? 'secondary' : 'ghost'} size="sm" onClick={() => setLanguage('en')}>EN</Button>
-              <Button variant={language === 'ar' ? 'secondary' : 'ghost'} size="sm" onClick={() => setLanguage('ar')}>AR</Button>
-            </div>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton size="sm">
               <Settings />
