@@ -26,6 +26,73 @@
         "userName"
       ]
     },
+    "Supplier": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Supplier",
+      "type": "object",
+      "description": "Represents a supplier or farm.",
+      "properties": {
+        "farmName": {
+          "type": "string",
+          "description": "The name of the farm or supplier."
+        },
+        "cropType": {
+          "type": "string",
+          "description": "The type of crop they supply."
+        },
+        "location": {
+          "type": "string",
+          "description": "Geographical location of the supplier."
+        },
+        "contactNumber": {
+          "type": "string",
+          "description": "Contact phone number for the supplier."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of when the supplier was added."
+        }
+      },
+      "required": [
+        "farmName",
+        "cropType",
+        "location",
+        "contactNumber",
+        "createdAt"
+      ]
+    },
+    "Customer": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Customer",
+      "type": "object",
+      "description": "Represents a customer, typically a trader.",
+      "properties": {
+        "traderName": {
+          "type": "string",
+          "description": "The name of the trader or customer company."
+        },
+        "targetMarket": {
+          "type": "string",
+          "description": "The target market, e.g., Amman Central Market."
+        },
+        "creditLimit": {
+          "type": "number",
+          "description": "The credit limit for the customer."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of when the customer was added."
+        }
+      },
+      "required": [
+        "traderName",
+        "targetMarket",
+        "creditLimit",
+        "createdAt"
+      ]
+    },
     "Shipment": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Shipment",
@@ -59,7 +126,23 @@
         "status": {
           "type": "string",
           "description": "The current status of the shipment.",
-          "enum": ["قيد التجهيز", "في الميناء", "تم الشحن"]
+          "enum": [
+            "قيد التجهيز",
+            "في الميناء",
+            "تم الشحن"
+          ]
+        },
+        "trackingNumber": {
+          "type": "string",
+          "description": "The tracking number for the shipment (e.g., bill of lading)."
+        },
+        "transportType": {
+          "type": "string",
+          "description": "The mode of transport.",
+          "enum": [
+            "Air",
+            "Land"
+          ]
         },
         "createdAt": {
           "type": "string",
@@ -118,6 +201,46 @@
             {
               "name": "shipmentId",
               "description": "Unique ID for the shipment."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/suppliers/{supplierId}",
+        "definition": {
+          "entityName": "Supplier",
+          "schema": {
+            "$ref": "#/backend/entities/Supplier"
+          },
+          "description": "Stores supplier records for a user.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the owner user."
+            },
+            {
+              "name": "supplierId",
+              "description": "Unique ID for the supplier."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/customers/{customerId}",
+        "definition": {
+          "entityName": "Customer",
+          "schema": {
+            "$ref": "#/backend/entities/Customer"
+          },
+          "description": "Stores customer records for a user.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the owner user."
+            },
+            {
+              "name": "customerId",
+              "description": "Unique ID for the customer."
             }
           ]
         }

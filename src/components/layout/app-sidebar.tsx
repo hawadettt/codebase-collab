@@ -4,6 +4,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +22,8 @@ import {
   Settings,
   LogOut,
   LogIn,
+  Users,
+  Building2
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useUser } from "@/firebase";
@@ -38,6 +41,7 @@ export function AppSidebar() {
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const { toast } = useToast();
+  const pathname = usePathname();
 
   const handleLogout = async () => {
     try {
@@ -108,16 +112,36 @@ export function AppSidebar() {
       <SidebarContent className="p-2">
         <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton isActive={true} size="sm">
-                <LayoutDashboard />
-                <span>{t.sidebarDashboard}</span>
-              </SidebarMenuButton>
+              <Link href="/">
+                <SidebarMenuButton isActive={pathname === '/'} size="sm">
+                  <LayoutDashboard />
+                  <span>{t.sidebarDashboard}</span>
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
              <SidebarMenuItem>
-              <SidebarMenuButton size="sm">
-                <Truck />
-                <span>{t.sidebarShipments}</span>
-              </SidebarMenuButton>
+              <Link href="/">
+                <SidebarMenuButton isActive={pathname === '/'} size="sm">
+                  <Truck />
+                  <span>{t.sidebarShipments}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href="/suppliers">
+                <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm">
+                  <Building2 />
+                  <span>{t.sidebarSuppliers}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href="/customers">
+                <SidebarMenuButton isActive={pathname === '/customers'} size="sm">
+                  <Users />
+                  <span>{t.sidebarCustomers}</span>
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>

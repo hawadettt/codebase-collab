@@ -33,6 +33,22 @@ service cloud.firestore {
       match /shipments/{shipmentId} {
         allow read, write: if isOwner(userId);
       }
+      
+      /**
+       * @description Controls access to a user's private suppliers.
+       * @path /users/{userId}/suppliers/{supplierId}
+       */
+      match /suppliers/{supplierId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      /**
+       * @description Controls access to a user's private customers.
+       * @path /users/{userId}/customers/{customerId}
+       */
+      match /customers/{customerId} {
+        allow read, write: if isOwner(userId);
+      }
     }
   }
 }

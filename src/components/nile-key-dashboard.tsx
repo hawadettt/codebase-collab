@@ -30,11 +30,14 @@ import { useLanguage } from "@/context/language-provider";
 export default function NileKeyDashboard() {
   const { language, t } = useLanguage();
   const shipmentStatusEnum = z.enum([t.shipmentStatusOption1, t.shipmentStatusOption2, t.shipmentStatusOption3]);
+  const transportTypeEnum = z.enum(['Air', 'Land']);
 
   const shipmentSchema = z.object({
     shipmentType: z.string().min(1, t.formShipmentTypeRequired),
     weight: z.preprocess((a) => parseFloat(z.string().parse(a)), z.number().positive(t.formWeightPositive)),
     containerNumber: z.string().min(1, t.formContainerNumberRequired),
+    trackingNumber: z.string().min(1, t.formTrackingNumberRequired),
+    transportType: transportTypeEnum,
     quantity: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().int().positive(t.formQuantityPositive)),
     price: z.preprocess((a) => parseFloat(z.string().parse(a)), z.number().positive(t.formPricePositive)),
     customer: z.string().min(1, t.formCustomerRequired),
@@ -59,6 +62,8 @@ export default function NileKeyDashboard() {
       shipmentType: "",
       weight: 0,
       containerNumber: "",
+      trackingNumber: "",
+      transportType: "Land",
       quantity: 0,
       price: 0,
       customer: "",
@@ -91,7 +96,7 @@ export default function NileKeyDashboard() {
       const collectionRef = collection(firestore, 'users', user.uid, 'shipments');
       await addDocumentNonBlocking(collectionRef, { ...values, createdAt: serverTimestamp() });
       toast({ title: t.addShipmentSuccessTitle, description: t.addShipmentSuccessDescription });
-      form.reset({ ...form.getValues(), status: t.shipmentStatusOption1 });
+      form.reset();
     } catch (error) {
       console.error("Failed to add shipment:", error);
       toast({ variant: "destructive", title: t.addShipmentFailTitle, description: t.addShipmentFailDescription });
@@ -201,6 +206,8 @@ export default function NileKeyDashboard() {
                               <TableHead>{t.tableHeaderCustomer}</TableHead>
                               <TableHead>{t.tableHeaderDate}</TableHead>
                               <TableHead>{t.tableHeaderStatus}</TableHead>
+                              <TableHead>{t.tableHeaderTransport}</TableHead>
+                              <TableHead>{t.tableHeaderTracking}</TableHead>
                               <TableHead className="text-left">{t.tableHeaderPrice}</TableHead>
                             </TableRow>
                           </TableHeader>
@@ -211,6 +218,8 @@ export default function NileKeyDashboard() {
                                 <TableCell>{shipment.customer}</TableCell>
                                 <TableCell>{shipment.createdAt ? format(new Date(shipment.createdAt.seconds * 1000), "PPP", { locale: language === 'ar' ? ar : enUS }) : 'N/A'}</TableCell>
                                 <TableCell><Badge variant={shipment.status === t.shipmentStatusOption3 ? 'default' : 'secondary'}>{shipment.status}</Badge></TableCell>
+                                <TableCell>{shipment.transportType}</TableCell>
+                                <TableCell>{shipment.trackingNumber}</TableCell>
                                 <TableCell className="text-left">${shipment.price.toLocaleString()}</TableCell>
                               </TableRow>
                             ))}
@@ -236,12 +245,18 @@ export default function NileKeyDashboard() {
                     <CardContent>
                       <Form {...form}>
                         <form onSubmit={form.handleSubmit(handleAddShipment)} className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <FormField control={form.control} name="shipmentType" render={({ field }) => (
                               <FormItem><FormLabel>{t.formShipmentType}</FormLabel><FormControl><Input placeholder={t.formShipmentTypePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                             <FormField control={form.control} name="customer" render={({ field }) => (
                               <FormItem><FormLabel>{t.formCustomer}</FormLabel><FormControl><Input placeholder={t.formCustomerPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                             <FormField control={form.control} name="trackingNumber" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formTrackingNumber}</FormLabel><FormControl><Input placeholder={t.formTrackingNumberPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="containerNumber" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formContainerNumber}</FormLabel><FormControl><Input placeholder={t.formContainerNumberPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                             <FormField control={form.control} name="weight" render={({ field }) => (
                               <FormItem><FormLabel>{t.formWeight}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
@@ -252,22 +267,30 @@ export default function NileKeyDashboard() {
                             <FormField control={form.control} name="price" render={({ field }) => (
                               <FormItem><FormLabel>{t.formPrice}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
-                            <FormField control={form.control} name="containerNumber" render={({ field }) => (
-                              <FormItem><FormLabel>{t.formContainerNumber}</FormLabel><FormControl><Input placeholder={t.formContainerNumberPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
+                             <FormField control={form.control} name="transportType" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formTransportType}</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl><SelectTrigger><SelectValue placeholder={t.formTransportTypePlaceholder} /></SelectTrigger></FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="Land">{t.transportTypeLand}</SelectItem>
+                                    <SelectItem value="Air">{t.transportTypeAir}</SelectItem>
+                                  </SelectContent>
+                                </Select><FormMessage />
+                              </FormItem>
+                            )} />
+                             <FormField control={form.control} name="status" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formStatus}</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl><SelectTrigger><SelectValue placeholder={t.formStatusPlaceholder} /></SelectTrigger></FormControl>
+                                  <SelectContent>
+                                    <SelectItem value={t.shipmentStatusOption1}>{t.shipmentStatusOption1}</SelectItem>
+                                    <SelectItem value={t.shipmentStatusOption2}>{t.shipmentStatusOption2}</SelectItem>
+                                    <SelectItem value={t.shipmentStatusOption3}>{t.shipmentStatusOption3}</SelectItem>
+                                  </SelectContent>
+                                </Select><FormMessage />
+                              </FormItem>
                             )} />
                           </div>
-                           <FormField control={form.control} name="status" render={({ field }) => (
-                            <FormItem><FormLabel>{t.formStatus}</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl><SelectTrigger><SelectValue placeholder={t.formStatusPlaceholder} /></SelectTrigger></FormControl>
-                                <SelectContent>
-                                  <SelectItem value={t.shipmentStatusOption1}>{t.shipmentStatusOption1}</SelectItem>
-                                  <SelectItem value={t.shipmentStatusOption2}>{t.shipmentStatusOption2}</SelectItem>
-                                  <SelectItem value={t.shipmentStatusOption3}>{t.shipmentStatusOption3}</SelectItem>
-                                </SelectContent>
-                              </Select><FormMessage />
-                            </FormItem>
-                          )} />
                           <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
                             {isSubmitting && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
                             {t.addShipmentButton}
