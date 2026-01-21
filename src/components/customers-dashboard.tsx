@@ -32,12 +32,15 @@ export function CustomersDashboard() {
   });
 
   const rfqSchema = z.object({
-    name: z.string().min(1, t.formNameRequired),
+    companyName: z.string().min(1, t.formCompanyNameRequired),
     email: z.string().email(t.formEmailRequired),
-    phone: z.string().optional(),
+    whatsapp: z.string().optional(),
+    destinationCountry: z.string().min(1, t.formDestinationCountryRequired),
+    destinationPort: z.string().min(1, t.formDestinationPortRequired),
     product: z.string().min(1, t.formProductRequired),
     specifications: z.string().min(1, t.formSpecificationsRequired),
     quantity: z.string().min(1, t.formQuantityRfqRequired),
+    additionalNotes: z.string().optional(),
   });
 
   type Customer = z.infer<typeof customerSchema> & { id: string; createdAt: { seconds: number, nanoseconds: number } };
@@ -66,12 +69,15 @@ export function CustomersDashboard() {
   const rfqForm = useForm<z.infer<typeof rfqSchema>>({
     resolver: zodResolver(rfqSchema),
     defaultValues: {
-      name: '',
+      companyName: '',
       email: '',
-      phone: '',
+      whatsapp: '',
+      destinationCountry: '',
+      destinationPort: '',
       product: '',
       specifications: '',
       quantity: '',
+      additionalNotes: '',
     },
   });
 
@@ -314,10 +320,10 @@ export function CustomersDashboard() {
           <Form {...rfqForm}>
             <form onSubmit={rfqForm.handleSubmit(handleRfqSubmit)} className="space-y-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <FormField control={rfqForm.control} name="name" render={({ field }) => (
+                <FormField control={rfqForm.control} name="companyName" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t.formName}</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
+                    <FormLabel>{t.formCompanyName}</FormLabel>
+                    <FormControl><Input placeholder={t.formCompanyNamePlaceholder} {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -328,25 +334,39 @@ export function CustomersDashboard() {
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField control={rfqForm.control} name="phone" render={({ field }) => (
+                <FormField control={rfqForm.control} name="whatsapp" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t.formPhone}</FormLabel>
+                    <FormLabel>{t.formWhatsapp}</FormLabel>
                     <FormControl><Input {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField control={rfqForm.control} name="product" render={({ field }) => (
+                <FormField control={rfqForm.control} name="destinationCountry" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t.formProduct}</FormLabel>
-                    <FormControl><Input placeholder={t.formProductPlaceholder} {...field} /></FormControl>
+                    <FormLabel>{t.formDestinationCountry}</FormLabel>
+                    <FormControl><Input placeholder={t.formCountryPlaceholder} {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={rfqForm.control} name="destinationPort" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t.formDestinationPort}</FormLabel>
+                    <FormControl><Input placeholder={t.formDestinationPortPlaceholder} {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={rfqForm.control} name="quantity" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t.formQuantityRfq}</FormLabel>
+                    <FormControl><Input placeholder={t.formQuantityRfqPlaceholder} {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
               </div>
-              <FormField control={rfqForm.control} name="quantity" render={({ field }) => (
+              <FormField control={rfqForm.control} name="product" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t.formQuantityRfq}</FormLabel>
-                  <FormControl><Input placeholder={t.formQuantityRfqPlaceholder} {...field} /></FormControl>
+                  <FormLabel>{t.formProduct}</FormLabel>
+                  <FormControl><Textarea placeholder={t.formProductRfqPlaceholder} {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -354,6 +374,13 @@ export function CustomersDashboard() {
                 <FormItem>
                   <FormLabel>{t.formSpecifications}</FormLabel>
                   <FormControl><Textarea placeholder={t.formSpecificationsPlaceholder} {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={rfqForm.control} name="additionalNotes" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t.formAdditionalNotes}</FormLabel>
+                  <FormControl><Textarea placeholder={t.formAdditionalNotesPlaceholder} {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
