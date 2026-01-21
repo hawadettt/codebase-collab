@@ -54,13 +54,13 @@ export function Header() {
             </div>
             <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
 
-            <div>
+            <div className="text-center">
                 <h1 
                     className="font-body text-2xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color)] whitespace-nowrap"
                 >
                     شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
                 </h1>
-                <p className="font-headline text-[15px] font-bold tracking-wider text-primary/90">
+                <p className="font-headline text-lg font-bold tracking-wider text-primary/90">
                     Nile Key for Investment and International Trade LLC
                 </p>
             </div>
