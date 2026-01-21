@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
+  Home,
   Truck,
   LayoutDashboard,
   Settings,
@@ -111,6 +111,14 @@ export function AppSidebar() {
       <SidebarSeparator />
       <SidebarContent className="p-2">
         <SidebarMenu>
+            <SidebarMenuItem>
+              <Link href="/home">
+                <SidebarMenuButton isActive={pathname === '/home'} size="sm">
+                  <Home />
+                  <span>{t.sidebarHome}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
             <SidebarMenuItem>
               <Link href="/">
                 <SidebarMenuButton isActive={pathname === '/'} size="sm">
