@@ -13,7 +13,7 @@ export default {
         body: ['Cairo', 'sans-serif'],
         headline: ['Space Grotesk', 'sans-serif'],
         code: ['Source Code Pro', 'monospace'],
-        handwritten: ['Caveat', 'cursive'],
+        handwritten: ['Reem Kufi', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',

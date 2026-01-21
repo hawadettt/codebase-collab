@@ -56,7 +56,7 @@ export function Header() {
 
             <div>
                 <h1 
-                    className="font-handwritten text-4xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color)] md:text-5xl"
+                    className="font-handwritten text-3xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color)] whitespace-nowrap"
                 >
                     شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
                 </h1>
