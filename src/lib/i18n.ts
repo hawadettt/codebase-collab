@@ -246,7 +246,13 @@ export const translations = {
     rfqSuccessTitle: 'Request Sent',
     rfqSuccessDescription: 'Thank you! We will get back to you with a quote shortly.',
     rfqFailTitle: 'Submission Failed',
-    rfqFailDescription: 'Could not send your request. Please try again.'
+    rfqFailDescription: 'Could not send your request. Please try again.',
+    settingsTitle: "Settings",
+    settingsDescription: "Manage your application settings.",
+    settingsThemeTitle: "Theme",
+    settingsThemeLight: "Light",
+    settingsThemeDark: "Dark",
+    settingsThemeSystem: "System",
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -495,7 +501,13 @@ export const translations = {
     rfqSuccessTitle: 'تم إرسال الطلب',
     rfqSuccessDescription: 'شكراً لك! سنتواصل معك بعرض أسعار قريباً.',
     rfqFailTitle: 'فشل الإرسال',
-    rfqFailDescription: 'تعذر إرسال طلبك. يرجى المحاولة مرة أخرى.'
+    rfqFailDescription: 'تعذر إرسال طلبك. يرجى المحاولة مرة أخرى.',
+    settingsTitle: "الإعدادات",
+    settingsDescription: "إدارة إعدادات التطبيق الخاص بك.",
+    settingsThemeTitle: "المظهر",
+    settingsThemeLight: "فاتح",
+    settingsThemeDark: "داكن",
+    settingsThemeSystem: "النظام",
   },
 };
 

@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { LanguageProvider } from '@/context/language-provider';
 import BodyWrapper from './body-wrapper';
+import { ThemeProvider } from '@/context/theme-provider';
 
 
 export const metadata: Metadata = {
@@ -16,7 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <LanguageProvider>
-      <BodyWrapper>{children}</BodyWrapper>
+      <ThemeProvider defaultTheme="dark" storageKey="nile-key-theme">
+        <BodyWrapper>{children}</BodyWrapper>
+      </ThemeProvider>
     </LanguageProvider>
   );
 }

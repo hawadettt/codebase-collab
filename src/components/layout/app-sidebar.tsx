@@ -166,10 +166,12 @@ export function AppSidebar() {
       <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="sm">
-              <Settings />
-              <span>{t.sidebarSettings}</span>
-            </SidebarMenuButton>
+            <Link href="/settings">
+              <SidebarMenuButton isActive={pathname === '/settings'} size="sm">
+                <Settings />
+                <span>{t.sidebarSettings}</span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

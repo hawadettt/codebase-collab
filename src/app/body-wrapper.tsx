@@ -8,7 +8,7 @@ export default function BodyWrapper({ children }: { children: React.ReactNode })
     const dir = language === 'ar' ? 'rtl' : 'ltr';
 
     return (
-        <html lang={language} dir={dir} className="dark">
+        <html lang={language} dir={dir}>
             <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
