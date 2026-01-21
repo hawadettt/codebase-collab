@@ -56,11 +56,11 @@ export function Header() {
 
             <div>
                 <h1 
-                    className="font-body text-3xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color)] whitespace-nowrap"
+                    className="font-body text-2xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color)] whitespace-nowrap"
                 >
                     شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
                 </h1>
-                <p className="font-headline text-2xl font-bold text-primary/90 tracking-widest">
+                <p className="font-headline text-xl font-bold text-primary/90 tracking-widest">
                     Nile Key for Investment and International Trade LLC
                 </p>
             </div>
