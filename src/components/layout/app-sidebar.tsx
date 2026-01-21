@@ -28,6 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/context/language-provider";
+import { Separator } from "@/components/ui/separator";
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
@@ -57,18 +58,22 @@ export function AppSidebar() {
   return (
     <Sidebar side={language === 'ar' ? 'right' : 'left'}>
       <SidebarHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Leaf className="h-5 w-5 text-primary-foreground" />
             </div>
             <span className="font-headline text-lg font-semibold">
-              {t.nileKeyCompany}
+              {t.nileKey}
             </span>
           </div>
-          <div className="flex items-center gap-1">
-            <Button variant={language === 'en' ? 'secondary' : 'ghost'} size="sm" onClick={() => setLanguage('en')}>EN</Button>
-            <Button variant={language === 'ar' ? 'secondary' : 'ghost'} size="sm" onClick={() => setLanguage('ar')}>AR</Button>
+          <div className="flex flex-col items-end gap-1 text-right">
+              <div className="text-xs font-medium text-muted-foreground">{t.chooseLanguage}</div>
+              <div className="flex items-center rounded-md border bg-background/50 p-1">
+                  <Button variant={language === 'en' ? 'secondary' : 'ghost'} size="sm" className="h-7 px-2" onClick={() => setLanguage('en')}>English</Button>
+                  <Separator orientation="vertical" className="h-4" />
+                  <Button variant={language === 'ar' ? 'secondary' : 'ghost'} size="sm" className="h-7 px-2" onClick={() => setLanguage('ar')}>العربية</Button>
+              </div>
           </div>
         </div>
       </SidebarHeader>

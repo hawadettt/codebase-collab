@@ -1,28 +1,33 @@
-
-"use client";
+'use client';
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Share2, Bell } from "lucide-react";
-import { useSidebar } from "@/components/ui/sidebar";
+import { Bell, Leaf, PlusCircle } from "lucide-react";
 import { useLanguage } from "@/context/language-provider";
 
 export function Header() {
-  const { isMobile } = useSidebar();
   const { t } = useLanguage();
   
   return (
-    <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
+    <header className="sticky top-0 z-10 flex h-20 shrink-0 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden" />
-        <h1 className="font-headline text-lg font-semibold md:text-xl">
-          {t.headerTitle}
-        </h1>
+        <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 ">
+              <Leaf className="h-7 w-7 text-primary" />
+            </div>
+            <div>
+                <h1 className="font-headline text-base font-bold text-foreground md:text-lg">
+                    شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
+                </h1>
+                <p className="text-sm text-muted-foreground">Nile Key for Investment and International Trade LLC</p>
+            </div>
+        </div>
       </div>
       <div className="flex items-center gap-3">
-        <Button variant="outline" size="sm">
-          <Share2 className="mx-2 h-4 w-4" />
-          {t.headerShare}
+        <Button variant="default" className="hidden md:flex">
+          <PlusCircle className="mx-2 h-4 w-4" />
+          {t.addShipmentTitle}
         </Button>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Bell className="h-5 w-5" />
