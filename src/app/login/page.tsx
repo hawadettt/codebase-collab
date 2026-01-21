@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,19 +29,21 @@ import {
   initiateEmailSignIn,
 } from '@/firebase';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-
-const formSchema = z.object({
-  email: z.string().email({
-    message: 'الرجاء إدخال عنوان بريد إلكتروني صالح.',
-  }),
-  password: z.string().min(6, {
-    message: 'يجب أن لا تقل كلمة المرور عن 6 أحرف.',
-  }),
-});
+import { useLanguage } from '@/context/language-provider';
 
 export default function LoginPage() {
+  const { t } = useLanguage();
+
+  const formSchema = z.object({
+    email: z.string().email({
+      message: t.loginEmailValidation,
+    }),
+    password: z.string().min(6, {
+      message: t.loginPasswordValidation,
+    }),
+  });
+  
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const router = useRouter();
@@ -63,7 +65,7 @@ export default function LoginPage() {
     }
   }, [user, isUserLoading, router]);
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>>) => {
     setIsLoading(true);
     try {
       if (isSigningIn) {
@@ -71,21 +73,18 @@ export default function LoginPage() {
       } else {
         initiateEmailSignUp(auth, values.email, values.password);
       }
-      // Non-blocking, so we don't await. We rely on the auth state listener.
       toast({
-        title: 'جاري المعالجة...',
-        description: 'يرجى الانتظار بينما نقوم بمعالجة طلبك.',
+        title: t.loginProcessingTitle,
+        description: t.loginProcessingDescription,
       });
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'فشل المصادقة',
-        description: error.message || 'حدث خطأ غير متوقع.',
+        title: t.loginAuthFailedTitle,
+        description: error.message || t.loginUnexpectedError,
       });
       setIsLoading(false);
     }
-    // The useEffect will handle redirect on successful auth.
-    // We can set a timeout to reset loading state in case of an error not caught by the auth listener
     setTimeout(() => setIsLoading(false), 5000); 
   };
   
@@ -104,18 +103,18 @@ export default function LoginPage() {
             <Leaf className="h-6 w-6 text-primary-foreground" />
           </div>
           <span className="font-headline text-2xl font-semibold">
-            مفتاح النيل
+            {t.nileKey}
           </span>
         </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl font-headline">
-            {isSigningIn ? 'تسجيل الدخول' : 'إنشاء حساب'}
+            {isSigningIn ? t.loginSignInTitle : t.loginSignUpTitle}
           </CardTitle>
           <CardDescription>
             {isSigningIn
-              ? "أدخل بيانات الاعتماد الخاصة بك للوصول إلى حسابك."
-              : "أنشئ حسابًا لبدء التعاون."}
+              ? t.loginSignInDescription
+              : t.loginSignUpDescription}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -126,7 +125,7 @@ export default function LoginPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>البريد الإلكتروني</FormLabel>
+                    <FormLabel>{t.formEmailLabel}</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="you@example.com"
@@ -143,7 +142,7 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>كلمة المرور</FormLabel>
+                    <FormLabel>{t.formPasswordLabel}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -158,20 +157,20 @@ export default function LoginPage() {
               />
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading && (
-                  <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mx-2 h-4 w-4 animate-spin" />
                 )}
-                {isSigningIn ? 'تسجيل الدخول' : 'إنشاء حساب'}
+                {isSigningIn ? t.loginSignInButton : t.loginSignUpButton}
               </Button>
             </form>
           </Form>
           <div className="mt-4 text-center text-sm">
-            {isSigningIn ? 'ليس لديك حساب؟' : 'هل لديك حساب بالفعل؟'}{' '}
+            {isSigningIn ? t.loginNoAccountPrompt : t.loginHaveAccountPrompt}{' '}
             <Button
               variant="link"
               className="p-0 h-auto"
               onClick={() => setIsSigningIn(!isSigningIn)}
             >
-              {isSigningIn ? 'إنشاء حساب' : 'تسجيل الدخول'}
+              {isSigningIn ? t.loginSignUpLink : t.loginSignInLink}
             </Button>
           </div>
         </CardContent>
