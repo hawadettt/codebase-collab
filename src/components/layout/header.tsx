@@ -31,12 +31,12 @@ export function Header() {
     <header 
         className="sticky top-0 z-10 flex h-40 shrink-0 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6"
         style={{
-            '--neon-glow-color': 'hsl(var(--primary))'
+            '--neon-glow-color-primary': 'hsl(var(--primary))',
+            '--neon-glow-color-blue': 'hsl(199 100% 50%)'
         } as React.CSSProperties}
     >
-      <div className="flex items-center gap-4">
-        <SidebarTrigger className="md:hidden" />
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="flex items-center gap-4">
+            <SidebarTrigger className="md:hidden" />
             <div 
                 className="group relative h-24 w-24 cursor-pointer rounded-lg bg-primary/10 flex items-center justify-center" 
                 onClick={handleLogoClick}
@@ -53,25 +53,25 @@ export function Header() {
                 </div>
             </div>
             <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
-
-            <div className="text-center">
-                <h1 
-                    className="font-body text-2xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color)] whitespace-nowrap"
-                >
-                    شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
-                </h1>
-                <p className="font-headline text-lg font-bold tracking-wider text-primary/90">
-                    Nile Key for Investment and International Trade LLC
-                </p>
-            </div>
         </div>
-      </div>
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Bell className="h-5 w-5" />
-          <span className="sr-only">{t.headerNotifications}</span>
-        </Button>
-      </div>
+
+        <div className="flex-1 text-center">
+            <h1 
+                className="font-body text-3xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color-primary)] whitespace-nowrap"
+            >
+                شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
+            </h1>
+            <p className="font-headline text-lg font-bold tracking-wider text-[hsl(var(--neon-glow-color-blue))] drop-shadow-[0_0_8px_var(--neon-glow-color-blue)]">
+                Nile Key for Investment and International Trade LLC
+            </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" className="rounded-full">
+            <Bell className="h-5 w-5" />
+            <span className="sr-only">{t.headerNotifications}</span>
+            </Button>
+        </div>
     </header>
   );
 }
