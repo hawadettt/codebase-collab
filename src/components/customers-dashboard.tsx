@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { PlusCircle, Loader2, Users, Bot, Search, AlertTriangle } from 'lucide-react';
+import { PlusCircle, Loader2, Users, Bot, Search, AlertTriangle, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
 import { collection, serverTimestamp, query, orderBy } from 'firebase/firestore';
@@ -31,6 +31,15 @@ export function CustomersDashboard() {
     paymentTerms: z.string().min(1, t.formPaymentTermsRequired),
   });
 
+  const rfqSchema = z.object({
+    name: z.string().min(1, t.formNameRequired),
+    email: z.string().email(t.formEmailRequired),
+    phone: z.string().optional(),
+    product: z.string().min(1, t.formProductRequired),
+    specifications: z.string().min(1, t.formSpecificationsRequired),
+    quantity: z.string().min(1, t.formQuantityRfqRequired),
+  });
+
   type Customer = z.infer<typeof customerSchema> & { id: string; createdAt: { seconds: number, nanoseconds: number } };
 
   const { toast } = useToast();
@@ -40,6 +49,7 @@ export function CustomersDashboard() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchCustomersOutput | null>(null);
+  const [isRfqSubmitting, setIsRfqSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),
@@ -50,6 +60,18 @@ export function CustomersDashboard() {
       hsCodesPreferred: [],
       incoTerms: 'FOB',
       paymentTerms: '',
+    },
+  });
+  
+  const rfqForm = useForm<z.infer<typeof rfqSchema>>({
+    resolver: zodResolver(rfqSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      product: '',
+      specifications: '',
+      quantity: '',
     },
   });
 
@@ -76,6 +98,23 @@ export function CustomersDashboard() {
       toast({ variant: 'destructive', title: t.addCustomerFailTitle, description: t.addCustomerFailDescription });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+  
+  const handleRfqSubmit = async (values: z.infer<typeof rfqSchema>) => {
+    setIsRfqSubmitting(true);
+    try {
+      // Here you would typically send an email or save to a different collection
+      // For this example, we'll just simulate a successful submission with a toast.
+      console.log('RFQ Submitted:', values);
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+      toast({ title: t.rfqSuccessTitle, description: t.rfqSuccessDescription });
+      rfqForm.reset();
+    } catch (error) {
+      console.error('Failed to submit RFQ:', error);
+      toast({ variant: 'destructive', title: t.rfqFailTitle, description: t.rfqFailDescription });
+    } finally {
+      setIsRfqSubmitting(false);
     }
   };
 
@@ -258,6 +297,69 @@ export function CustomersDashboard() {
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
                 {t.addCustomerButton}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-headline flex items-center gap-2">
+            <FileText className="h-6 w-6" /> {t.rfqTitle}
+          </CardTitle>
+          <CardDescription>{t.rfqDescription}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...rfqForm}>
+            <form onSubmit={rfqForm.handleSubmit(handleRfqSubmit)} className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField control={rfqForm.control} name="name" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t.formName}</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={rfqForm.control} name="email" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t.formEmail}</FormLabel>
+                    <FormControl><Input type="email" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={rfqForm.control} name="phone" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t.formPhone}</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={rfqForm.control} name="product" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t.formProduct}</FormLabel>
+                    <FormControl><Input placeholder={t.formProductPlaceholder} {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+              <FormField control={rfqForm.control} name="quantity" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t.formQuantityRfq}</FormLabel>
+                  <FormControl><Input placeholder={t.formQuantityRfqPlaceholder} {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={rfqForm.control} name="specifications" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t.formSpecifications}</FormLabel>
+                  <FormControl><Textarea placeholder={t.formSpecificationsPlaceholder} {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <Button type="submit" disabled={isRfqSubmitting}>
+                {isRfqSubmitting && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
+                {t.rfqSubmitButton}
               </Button>
             </form>
           </Form>
