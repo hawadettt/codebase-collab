@@ -57,11 +57,14 @@ export function Header() {
 
         <div className="flex-1 text-center">
             <h1 
-                className="font-body text-3xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color-primary)] whitespace-nowrap"
+                className="font-body text-3xl md:text-4xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color-primary)] whitespace-nowrap"
             >
                 شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
             </h1>
-            <p className="font-headline text-lg font-bold tracking-wider text-[hsl(var(--neon-glow-color-blue))] drop-shadow-[0_0_8px_var(--neon-glow-color-blue)]">
+            <p 
+                className="font-headline font-bold tracking-wider text-[hsl(var(--neon-glow-color-blue))] drop-shadow-[0_0_8px_var(--neon-glow-color-blue)]"
+                style={{ fontSize: '18px' }}
+            >
                 Nile Key for Investment and International Trade LLC
             </p>
         </div>
