@@ -3,7 +3,7 @@ export const translations = {
   en: {
     nileKey: 'Nile Key',
     nileKeyCompany: 'Nile Key Company',
-    sidebarHome: 'Our Services',
+    sidebarHome: 'Home Page',
     sidebarDashboard: 'Dashboard',
     sidebarShipments: 'Shipments',
     sidebarSuppliers: 'Suppliers',
@@ -242,7 +242,7 @@ export const translations = {
   ar: {
     nileKey: 'مفتاح النيل',
     nileKeyCompany: 'شركة مفتاح النيل',
-    sidebarHome: 'خدمات الشركة',
+    sidebarHome: 'الصفحة الرئيسية',
     sidebarDashboard: 'لوحة التحكم',
     sidebarShipments: 'الشحنات',
     sidebarSuppliers: 'الموردين',

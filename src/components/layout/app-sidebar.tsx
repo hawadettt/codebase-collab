@@ -112,16 +112,16 @@ export function AppSidebar() {
       <SidebarContent className="p-2">
         <SidebarMenu>
             <SidebarMenuItem>
-              <Link href="/home">
-                <SidebarMenuButton isActive={pathname === '/home'} size="sm">
+              <Link href="/">
+                <SidebarMenuButton isActive={pathname === '/'} size="sm">
                   <Home />
                   <span>{t.sidebarHome}</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <Link href="/">
-                <SidebarMenuButton isActive={pathname === '/'} size="sm">
+              <Link href="/dashboard">
+                <SidebarMenuButton isActive={pathname === '/dashboard'} size="sm">
                   <LayoutDashboard />
                   <span>{t.sidebarDashboard}</span>
                 </SidebarMenuButton>
