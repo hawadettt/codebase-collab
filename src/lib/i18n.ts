@@ -3,7 +3,7 @@ export const translations = {
   en: {
     nileKey: 'Nile Key',
     nileKeyCompany: 'Nile Key Company',
-    sidebarHome: 'Home',
+    sidebarHome: 'Our Services',
     sidebarDashboard: 'Dashboard',
     sidebarShipments: 'Shipments',
     sidebarSuppliers: 'Suppliers',
@@ -242,7 +242,7 @@ export const translations = {
   ar: {
     nileKey: 'مفتاح النيل',
     nileKeyCompany: 'شركة مفتاح النيل',
-    sidebarHome: 'الصفحة الرئيسية',
+    sidebarHome: 'خدمات الشركة',
     sidebarDashboard: 'لوحة التحكم',
     sidebarShipments: 'الشحنات',
     sidebarSuppliers: 'الموردين',
@@ -482,3 +482,5 @@ export const translations = {
 };
 
 export type TranslationKeys = keyof typeof translations.en;
+
+    
