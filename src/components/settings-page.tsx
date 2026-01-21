@@ -35,8 +35,8 @@ export function SettingsPage() {
                   htmlFor="light"
                   className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
-                  <div className="flex h-16 w-full items-center justify-center rounded-md bg-white text-black">
-                     {t.settingsThemeLight}
+                  <div className="flex h-16 w-full items-center justify-center rounded-md bg-[#F9FAFB] text-[#1C2D46]">
+                     {t.settingsThemeNileBlue}
                   </div>
                 </Label>
               </div>
@@ -46,8 +46,8 @@ export function SettingsPage() {
                   htmlFor="dark"
                   className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
-                  <div className="flex h-16 w-full items-center justify-center rounded-md bg-black text-white">
-                    {t.settingsThemeDark}
+                  <div className="flex h-16 w-full items-center justify-center rounded-md bg-[#F5EEDD] text-[#4F423F]">
+                    {t.settingsThemeDesertGreen}
                   </div>
                 </Label>
               </div>

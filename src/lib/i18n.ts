@@ -249,9 +249,9 @@ export const translations = {
     rfqFailDescription: 'Could not send your request. Please try again.',
     settingsTitle: "Settings",
     settingsDescription: "Manage your application settings.",
-    settingsThemeTitle: "Theme",
-    settingsThemeLight: "Light",
-    settingsThemeDark: "Dark",
+    settingsThemeTitle: "Appearance",
+    settingsThemeNileBlue: "Nile Blue",
+    settingsThemeDesertGreen: "Desert Green",
     settingsThemeSystem: "System",
   },
   ar: {
@@ -505,8 +505,8 @@ export const translations = {
     settingsTitle: "الإعدادات",
     settingsDescription: "إدارة إعدادات التطبيق الخاص بك.",
     settingsThemeTitle: "المظهر",
-    settingsThemeLight: "فاتح",
-    settingsThemeDark: "داكن",
+    settingsThemeNileBlue: "أزرق النيل",
+    settingsThemeDesertGreen: "الأخضر الصحراوي",
     settingsThemeSystem: "النظام",
   },
 };
