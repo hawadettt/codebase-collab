@@ -13,6 +13,7 @@ export default {
         body: ['Cairo', 'sans-serif'],
         headline: ['Space Grotesk', 'sans-serif'],
         code: ['Source Code Pro', 'monospace'],
+        handwritten: ['Caveat', 'cursive'],
       },
       colors: {
         background: 'hsl(var(--background))',
