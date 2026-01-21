@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo } from "react";
@@ -136,7 +137,7 @@ export default function NileKeyDashboard() {
 
   return (
     <SidebarProvider>
-       <div className="flex min-h-screen w-full flex-col">
+      <div className="flex min-h-screen w-full flex-col">
         <Header />
         <div className="flex flex-1">
           <AppSidebar />
@@ -341,6 +342,7 @@ export default function NileKeyDashboard() {
                   <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground" />
                   <h2 className="mt-4 text-xl font-semibold">{t.loginRequiredTitle}</h2>
                   <p className="mt-2 text-muted-foreground">{t.loginRequiredDescription}</p>
+
                   <Button asChild className="mt-4">
                     <a href="/login">{t.sidebarLoginButton}</a>
                   </Button>

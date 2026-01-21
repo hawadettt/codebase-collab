@@ -1,3 +1,4 @@
+
 export const translations = {
   en: {
     nileKey: 'Nile Key',
@@ -8,6 +9,7 @@ export const translations = {
     sidebarUser: 'User',
     sidebarLoginButton: 'Login / Sign Up',
     chooseLanguage: 'Language',
+    uploadLogo: 'Change Logo',
     headerTitle: 'Dashboard',
     headerShare: 'Share',
     headerNotifications: 'Notifications',
@@ -103,6 +105,7 @@ export const translations = {
     sidebarUser: 'مستخدم',
     sidebarLoginButton: 'تسجيل الدخول / إنشاء حساب',
     chooseLanguage: 'اللغة',
+    uploadLogo: 'تغيير الشعار',
     headerTitle: 'لوحة التحكم',
     headerShare: 'مشاركة',
     headerNotifications: 'الإشعارات',
