@@ -1,10 +1,10 @@
 'use client';
-import { HomePage } from "@/components/home-page";
+import { ServicesPage } from "@/components/services-page";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Header } from "@/components/layout/header";
 
-export default function Home() {
+export default function Services() {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full flex-col">
@@ -12,7 +12,7 @@ export default function Home() {
         <div className="flex flex-1">
           <AppSidebar />
           <main className="flex-1 overflow-y-auto p-4 md:p-6">
-            <HomePage />
+            <ServicesPage />
           </main>
         </div>
       </div>

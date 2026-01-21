@@ -1,89 +1,81 @@
 'use client';
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/language-provider";
-import { Ship, Plane, Truck, FileBadge2, Warehouse, ShieldCheck } from "lucide-react";
-import { SidebarProvider } from "./ui/sidebar";
-import { Header } from "./layout/header";
-import { AppSidebar } from "./layout/app-sidebar";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, BarChart, Globe, Trophy } from "lucide-react";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export function HomePage() {
-  const { t } = useLanguage();
+    const { t } = useLanguage();
+    const heroImage = PlaceHolderImages.find(p => p.id === 'hero-background');
 
-  const services = [
-    {
-      title: t.serviceSeaFreightTitle,
-      description: t.serviceSeaFreightDesc,
-      icon: <Ship className="h-5 w-5 text-primary" />
-    },
-    {
-      title: t.serviceAirFreightTitle,
-      description: t.serviceAirFreightDesc,
-      icon: <Plane className="h-5 w-5 text-primary" />
-    },
-    {
-      title: t.serviceLandFreightTitle,
-      description: t.serviceLandFreightDesc,
-      icon: <Truck className="h-5 w-5 text-primary" />
-    },
-    {
-      title: t.serviceCustomsTitle,
-      description: t.serviceCustomsDesc,
-      icon: <FileBadge2 className="h-5 w-5 text-primary" />
-    },
-    {
-      title: t.serviceStorageTitle,
-      description: t.serviceStorageDesc,
-      icon: <Warehouse className="h-5 w-5 text-primary" />
-    },
-    {
-      title: t.serviceDocsTitle,
-      description: t.serviceDocsDesc,
-      icon: <ShieldCheck className="h-5 w-5 text-primary" />
-    },
-  ];
+    return (
+        <div className="flex flex-col gap-6">
+            <Card className="relative flex min-h-[400px] w-full flex-col items-center justify-center overflow-hidden rounded-lg p-6 text-center text-white">
+                {heroImage && 
+                    <Image
+                        src={heroImage.imageUrl}
+                        alt={heroImage.description}
+                        fill
+                        className="object-cover -z-10 brightness-50"
+                        data-ai-hint={heroImage.imageHint}
+                    />
+                }
+                <div className="max-w-3xl">
+                    <h1 className="font-headline text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl drop-shadow-md">
+                        {t.homeTitle}
+                    </h1>
+                    <p className="mt-4 text-lg md:text-xl text-neutral-200">
+                        {t.homeDescription}
+                    </p>
+                    <div className="mt-8 flex flex-wrap justify-center gap-4">
+                        <Button size="lg" asChild>
+                            <Link href="/dashboard">{t.sidebarDashboard} <ArrowRight className="ms-2 h-5 w-5" /></Link>
+                        </Button>
+                        <Button size="lg" variant="secondary" asChild>
+                            <Link href="/services">{t.sidebarServices}</Link>
+                        </Button>
+                    </div>
+                </div>
+            </Card>
 
-  return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full flex-col">
-        <Header />
-        <div className="flex flex-1">
-          <AppSidebar />
-          <main className="flex-1 overflow-y-auto p-4 md:p-6">
-            <div className="flex flex-col gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-headline text-3xl">{t.homeTitle}</CardTitle>
-                  <CardDescription className="text-base">{t.homeDescription}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Accordion type="single" collapsible className="w-full">
-                    {services.map((service, index) => (
-                      <AccordionItem value={`item-${index}`} key={index}>
-                        <AccordionTrigger className="text-lg">
-                          <div className="flex items-center gap-3">
-                            {service.icon}
-                            <span>{service.title}</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-4 text-base text-muted-foreground">
-                          {service.description}
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                </CardContent>
-              </Card>
+            <div className="grid gap-6 md:grid-cols-3">
+                <Card>
+                    <CardHeader>
+                        <div className="flex items-center gap-4">
+                            <Trophy className="h-10 w-10 text-primary" />
+                            <div>
+                                <CardTitle>{t.stat1Title}</CardTitle>
+                                <CardDescription>{t.stat1Value}</CardDescription>
+                            </div>
+                        </div>
+                    </CardHeader>
+                </Card>
+                <Card>
+                    <CardHeader>
+                         <div className="flex items-center gap-4">
+                            <Globe className="h-10 w-10 text-primary" />
+                            <div>
+                                <CardTitle>{t.stat2Title}</CardTitle>
+                                <CardDescription>{t.stat2Value}</CardDescription>
+                            </div>
+                        </div>
+                    </CardHeader>
+                </Card>
+                <Card>
+                    <CardHeader>
+                         <div className="flex items-center gap-4">
+                            <BarChart className="h-10 w-10 text-primary" />
+                            <div>
+                                <CardTitle>{t.stat3Title}</CardTitle>
+                                <CardDescription>{t.stat3Value}</CardDescription>
+                            </div>
+                        </div>
+                    </CardHeader>
+                </Card>
             </div>
-          </main>
         </div>
-      </div>
-    </SidebarProvider>
-  )
+    );
 }

@@ -23,7 +23,8 @@ import {
   LogOut,
   LogIn,
   Users,
-  Building2
+  Building2,
+  Briefcase
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useUser } from "@/firebase";
@@ -116,6 +117,14 @@ export function AppSidebar() {
                 <SidebarMenuButton isActive={pathname === '/'} size="sm">
                   <Home />
                   <span>{t.sidebarHome}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href="/services">
+                <SidebarMenuButton isActive={pathname === '/services'} size="sm">
+                  <Briefcase />
+                  <span>{t.sidebarServices}</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
