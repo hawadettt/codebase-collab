@@ -60,7 +60,7 @@ export function Header() {
                 >
                     شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
                 </h1>
-                <p className="font-headline text-xl font-bold text-primary/90 tracking-wider">
+                <p className="font-headline text-2xl font-bold text-primary/90 tracking-widest">
                     Nile Key for Investment and International Trade LLC
                 </p>
             </div>
