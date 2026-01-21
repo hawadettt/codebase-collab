@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo } from "react";
@@ -137,220 +136,220 @@ export default function NileKeyDashboard() {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <div className="flex w-full flex-1 flex-col">
-            <Header />
-            <main className="flex-1 overflow-y-auto p-4 md:p-6">
-              {isUserLoading ? (
-                <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>
-              ) : user ? (
-                <div className="flex flex-col gap-6">
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <Card>
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t.statsTotalShipments}</CardTitle>
-                        <Package className="h-4 w-4 text-muted-foreground" />
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-16" /> : stats.totalShipments}</div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t.statsTotalValue}</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-32" /> : `$${stats.totalValue.toLocaleString()}`}</div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t.statsInTransit}</CardTitle>
-                        <Truck className="h-4 w-4 text-muted-foreground" />
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-16" /> : stats.inTransit}</div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t.statsShipped}</CardTitle>
-                        <CheckCircle className="h-4 w-4 text-muted-foreground" />
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-16" /> : stats.shipped}</div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                  
+       <div className="flex min-h-screen w-full flex-col">
+        <Header />
+        <div className="flex flex-1">
+          <AppSidebar />
+          <main className="flex-1 overflow-y-auto p-4 md:p-6">
+            {isUserLoading ? (
+              <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>
+            ) : user ? (
+              <div className="flex flex-col gap-6">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <Card>
-                      <CardHeader>
-                        <CardTitle className="font-headline flex items-center gap-2"><Truck className="h-6 w-6"/> {t.shipmentsTitle}</CardTitle>
-                        <CardDescription>{t.shipmentsDescription}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="flex-1">
-                        {isLoadingShipments ? (
-                          <div className="flex h-full items-center justify-center text-muted-foreground"><Loader2 className="mx-2 h-4 w-4 animate-spin" /> {t.loadingShipments}</div>
-                        ) : shipments && shipments.length > 0 ? (
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>{t.tableHeaderType}</TableHead>
-                                <TableHead>{t.tableHeaderCustomer}</TableHead>
-                                <TableHead>{t.tableHeaderDate}</TableHead>
-                                <TableHead>{t.tableHeaderStatus}</TableHead>
-                                <TableHead className="text-left">{t.tableHeaderPrice}</TableHead>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">{t.statsTotalShipments}</CardTitle>
+                      <Package className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-16" /> : stats.totalShipments}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">{t.statsTotalValue}</CardTitle>
+                      <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-32" /> : `$${stats.totalValue.toLocaleString()}`}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">{t.statsInTransit}</CardTitle>
+                      <Truck className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-16" /> : stats.inTransit}</div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">{t.statsShipped}</CardTitle>
+                      <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-16" /> : stats.shipped}</div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <Card>
+                    <CardHeader>
+                      <CardTitle className="font-headline flex items-center gap-2"><Truck className="h-6 w-6"/> {t.shipmentsTitle}</CardTitle>
+                      <CardDescription>{t.shipmentsDescription}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-1">
+                      {isLoadingShipments ? (
+                        <div className="flex h-full items-center justify-center text-muted-foreground"><Loader2 className="mx-2 h-4 w-4 animate-spin" /> {t.loadingShipments}</div>
+                      ) : shipments && shipments.length > 0 ? (
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>{t.tableHeaderType}</TableHead>
+                              <TableHead>{t.tableHeaderCustomer}</TableHead>
+                              <TableHead>{t.tableHeaderDate}</TableHead>
+                              <TableHead>{t.tableHeaderStatus}</TableHead>
+                              <TableHead className="text-left">{t.tableHeaderPrice}</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {shipments.map((shipment) => (
+                              <TableRow key={shipment.id}>
+                                <TableCell className="font-medium">{shipment.shipmentType}</TableCell>
+                                <TableCell>{shipment.customer}</TableCell>
+                                <TableCell>{shipment.createdAt ? format(new Date(shipment.createdAt.seconds * 1000), "PPP", { locale: language === 'ar' ? ar : enUS }) : 'N/A'}</TableCell>
+                                <TableCell><Badge variant={shipment.status === t.shipmentStatusOption3 ? 'default' : 'secondary'}>{shipment.status}</Badge></TableCell>
+                                <TableCell className="text-left">${shipment.price.toLocaleString()}</TableCell>
                               </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {shipments.map((shipment) => (
-                                <TableRow key={shipment.id}>
-                                  <TableCell className="font-medium">{shipment.shipmentType}</TableCell>
-                                  <TableCell>{shipment.customer}</TableCell>
-                                  <TableCell>{shipment.createdAt ? format(new Date(shipment.createdAt.seconds * 1000), "PPP", { locale: language === 'ar' ? ar : enUS }) : 'N/A'}</TableCell>
-                                  <TableCell><Badge variant={shipment.status === t.shipmentStatusOption3 ? 'default' : 'secondary'}>{shipment.status}</Badge></TableCell>
-                                  <TableCell className="text-left">${shipment.price.toLocaleString()}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        ) : (
-                          <div className="flex h-full items-center justify-center">
-                              <div className="flex flex-col items-center gap-2 text-center text-muted-foreground">
-                                <Package className="h-12 w-12" />
-                                <h3 className="font-semibold">{t.noShipmentsTitle}</h3>
-                                <p className="max-w-xs text-sm">{t.noShipmentsDescription}</p>
-                              </div>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      ) : (
+                        <div className="flex h-full items-center justify-center">
+                            <div className="flex flex-col items-center gap-2 text-center text-muted-foreground">
+                              <Package className="h-12 w-12" />
+                              <h3 className="font-semibold">{t.noShipmentsTitle}</h3>
+                              <p className="max-w-xs text-sm">{t.noShipmentsDescription}</p>
                             </div>
-                        )}
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="font-headline flex items-center gap-2"><PlusCircle className="h-6 w-6"/> {t.addShipmentTitle}</CardTitle>
-                        <CardDescription>{t.addShipmentDescription}</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <Form {...form}>
-                          <form onSubmit={form.handleSubmit(handleAddShipment)} className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <FormField control={form.control} name="shipmentType" render={({ field }) => (
-                                <FormItem><FormLabel>{t.formShipmentType}</FormLabel><FormControl><Input placeholder={t.formShipmentTypePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
-                              )} />
-                              <FormField control={form.control} name="customer" render={({ field }) => (
-                                <FormItem><FormLabel>{t.formCustomer}</FormLabel><FormControl><Input placeholder={t.formCustomerPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
-                              )} />
-                              <FormField control={form.control} name="weight" render={({ field }) => (
-                                <FormItem><FormLabel>{t.formWeight}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
-                              )} />
-                              <FormField control={form.control} name="quantity" render={({ field }) => (
-                                <FormItem><FormLabel>{t.formQuantity}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
-                              )} />
-                              <FormField control={form.control} name="price" render={({ field }) => (
-                                <FormItem><FormLabel>{t.formPrice}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
-                              )} />
-                              <FormField control={form.control} name="containerNumber" render={({ field }) => (
-                                <FormItem><FormLabel>{t.formContainerNumber}</FormLabel><FormControl><Input placeholder={t.formContainerNumberPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
-                              )} />
-                            </div>
-                             <FormField control={form.control} name="status" render={({ field }) => (
-                              <FormItem><FormLabel>{t.formStatus}</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl><SelectTrigger><SelectValue placeholder={t.formStatusPlaceholder} /></SelectTrigger></FormControl>
-                                  <SelectContent>
-                                    <SelectItem value={t.shipmentStatusOption1}>{t.shipmentStatusOption1}</SelectItem>
-                                    <SelectItem value={t.shipmentStatusOption2}>{t.shipmentStatusOption2}</SelectItem>
-                                    <SelectItem value={t.shipmentStatusOption3}>{t.shipmentStatusOption3}</SelectItem>
-                                  </SelectContent>
-                                </Select><FormMessage />
-                              </FormItem>
-                            )} />
-                            <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
-                              {isSubmitting && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
-                              {t.addShipmentButton}
-                            </Button>
-                          </form>
-                        </Form>
-                      </CardContent>
-                    </Card>
+                          </div>
+                      )}
+                    </CardContent>
+                  </Card>
 
                   <Card>
                     <CardHeader>
-                      <CardTitle className="font-headline flex items-center gap-2">
-                        <Bot className="h-6 w-6" />
-                        {t.aiLabTitle}
-                      </CardTitle>
-                      <CardDescription>{t.aiLabDescription}</CardDescription>
+                      <CardTitle className="font-headline flex items-center gap-2"><PlusCircle className="h-6 w-6"/> {t.addShipmentTitle}</CardTitle>
+                      <CardDescription>{t.addShipmentDescription}</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-8">
-                      <div className="space-y-2">
-                        <h4 className="font-semibold flex items-center gap-2"><FileText /> {t.contractGeneratorTitle}</h4>
-                        <p className="text-sm text-muted-foreground">{t.contractGeneratorDescription}</p>
-                        <Button onClick={handleGenerateContract} disabled={isGeneratingContract}>
-                          {isGeneratingContract && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
-                          {t.contractGeneratorButton}
+                    <CardContent>
+                      <Form {...form}>
+                        <form onSubmit={form.handleSubmit(handleAddShipment)} className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormField control={form.control} name="shipmentType" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formShipmentType}</FormLabel><FormControl><Input placeholder={t.formShipmentTypePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="customer" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formCustomer}</FormLabel><FormControl><Input placeholder={t.formCustomerPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="weight" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formWeight}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="quantity" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formQuantity}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="price" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formPrice}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="containerNumber" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formContainerNumber}</FormLabel><FormControl><Input placeholder={t.formContainerNumberPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                          </div>
+                           <FormField control={form.control} name="status" render={({ field }) => (
+                            <FormItem><FormLabel>{t.formStatus}</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl><SelectTrigger><SelectValue placeholder={t.formStatusPlaceholder} /></SelectTrigger></FormControl>
+                                <SelectContent>
+                                  <SelectItem value={t.shipmentStatusOption1}>{t.shipmentStatusOption1}</SelectItem>
+                                  <SelectItem value={t.shipmentStatusOption2}>{t.shipmentStatusOption2}</SelectItem>
+                                  <SelectItem value={t.shipmentStatusOption3}>{t.shipmentStatusOption3}</SelectItem>
+                                </SelectContent>
+                              </Select><FormMessage />
+                            </FormItem>
+                          )} />
+                          <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
+                            {isSubmitting && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
+                            {t.addShipmentButton}
+                          </Button>
+                        </form>
+                      </Form>
+                    </CardContent>
+                  </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-headline flex items-center gap-2">
+                      <Bot className="h-6 w-6" />
+                      {t.aiLabTitle}
+                    </CardTitle>
+                    <CardDescription>{t.aiLabDescription}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-8">
+                    <div className="space-y-2">
+                      <h4 className="font-semibold flex items-center gap-2"><FileText /> {t.contractGeneratorTitle}</h4>
+                      <p className="text-sm text-muted-foreground">{t.contractGeneratorDescription}</p>
+                      <Button onClick={handleGenerateContract} disabled={isGeneratingContract}>
+                        {isGeneratingContract && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
+                        {t.contractGeneratorButton}
+                      </Button>
+                    </div>
+                    {(isGeneratingContract || contractText) && (
+                      <div className="rounded-md border bg-background p-4">
+                        <h4 className="mb-2 font-semibold text-foreground">{t.resultsTitle}</h4>
+                        {isGeneratingContract ? (
+                          <div className="flex items-center justify-center p-8">
+                            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                            <p className="mx-4 text-muted-foreground">{t.geminiAnalyzing}</p>
+                          </div>
+                        ) : (
+                          <Textarea readOnly value={contractText} className="h-auto min-h-[300px] w-full resize-y bg-muted/30 font-code text-sm" rows={20} />
+                        )}
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      <h4 className="font-semibold flex items-center gap-2"><Languages /> {t.diplomaticTranslatorTitle}</h4>
+                      <p className="text-sm text-muted-foreground">{t.diplomaticTranslatorDescription}</p>
+                      <div className="space-y-4">
+                        <Textarea value={translationInput} onChange={(e) => setTranslationInput(e.target.value)} placeholder={t.translatorInputPlaceholder} className="min-h-[100px]" />
+                        <Button onClick={handleTranslate} disabled={isTranslating}>
+                          {isTranslating && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
+                          {t.translatorButton}
                         </Button>
                       </div>
-                      {(isGeneratingContract || contractText) && (
+                    </div>
+                     {(isTranslating || translatedText) && (
                         <div className="rounded-md border bg-background p-4">
-                          <h4 className="mb-2 font-semibold text-foreground">{t.resultsTitle}</h4>
-                          {isGeneratingContract ? (
+                           <h4 className="mb-2 font-semibold text-foreground">{t.resultsTitle}</h4>
+                          {isTranslating ? (
                             <div className="flex items-center justify-center p-8">
                               <Loader2 className="h-8 w-8 animate-spin text-primary" />
                               <p className="mx-4 text-muted-foreground">{t.geminiAnalyzing}</p>
                             </div>
                           ) : (
-                            <Textarea readOnly value={contractText} className="h-auto min-h-[300px] w-full resize-y bg-muted/30 font-code text-sm" rows={20} />
+                            <Textarea readOnly value={translatedText} className="h-auto min-h-[100px] w-full resize-y bg-muted/30 font-code text-sm" rows={8}/>
                           )}
                         </div>
                       )}
+                  </CardContent>
+                </Card>
 
-                      <div className="space-y-2">
-                        <h4 className="font-semibold flex items-center gap-2"><Languages /> {t.diplomaticTranslatorTitle}</h4>
-                        <p className="text-sm text-muted-foreground">{t.diplomaticTranslatorDescription}</p>
-                        <div className="space-y-4">
-                          <Textarea value={translationInput} onChange={(e) => setTranslationInput(e.target.value)} placeholder={t.translatorInputPlaceholder} className="min-h-[100px]" />
-                          <Button onClick={handleTranslate} disabled={isTranslating}>
-                            {isTranslating && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
-                            {t.translatorButton}
-                          </Button>
-                        </div>
-                      </div>
-                       {(isTranslating || translatedText) && (
-                          <div className="rounded-md border bg-background p-4">
-                             <h4 className="mb-2 font-semibold text-foreground">{t.resultsTitle}</h4>
-                            {isTranslating ? (
-                              <div className="flex items-center justify-center p-8">
-                                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                                <p className="mx-4 text-muted-foreground">{t.geminiAnalyzing}</p>
-                              </div>
-                            ) : (
-                              <Textarea readOnly value={translatedText} className="h-auto min-h-[100px] w-full resize-y bg-muted/30 font-code text-sm" rows={8}/>
-                            )}
-                          </div>
-                        )}
-                    </CardContent>
-                  </Card>
-
+              </div>
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center">
+                  <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground" />
+                  <h2 className="mt-4 text-xl font-semibold">{t.loginRequiredTitle}</h2>
+                  <p className="mt-2 text-muted-foreground">{t.loginRequiredDescription}</p>
+                  <Button asChild className="mt-4">
+                    <a href="/login">{t.sidebarLoginButton}</a>
+                  </Button>
                 </div>
-              ) : (
-                <div className="flex h-full items-center justify-center">
-                  <div className="text-center">
-                    <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground" />
-                    <h2 className="mt-4 text-xl font-semibold">{t.loginRequiredTitle}</h2>
-                    <p className="mt-2 text-muted-foreground">{t.loginRequiredDescription}</p>
-                    <Button asChild className="mt-4">
-                      <a href="/login">{t.sidebarLoginButton}</a>
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </main>
-          </div>
-      </div>
+              </div>
+            )}
+          </main>
+        </div>
+    </div>
     </SidebarProvider>
   );
 }
