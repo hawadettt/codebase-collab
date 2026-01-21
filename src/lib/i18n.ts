@@ -251,7 +251,7 @@ export const translations = {
     settingsDescription: "Manage your application settings.",
     settingsThemeTitle: "Appearance",
     settingsThemeNileBlue: "Nile Blue",
-    settingsThemeDesertGreen: "Desert Green",
+    settingsThemeNileDark: "Nile Dark",
     settingsThemeSystem: "System",
   },
   ar: {
@@ -506,11 +506,9 @@ export const translations = {
     settingsDescription: "إدارة إعدادات التطبيق الخاص بك.",
     settingsThemeTitle: "المظهر",
     settingsThemeNileBlue: "أزرق النيل",
-    settingsThemeDesertGreen: "الأخضر الصحراوي",
+    settingsThemeNileDark: "الوضع الداكن",
     settingsThemeSystem: "النظام",
   },
 };
 
 export type TranslationKeys = keyof typeof translations.en;
-
-    

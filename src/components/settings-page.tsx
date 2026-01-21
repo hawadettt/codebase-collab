@@ -26,7 +26,7 @@ export function SettingsPage() {
             <h3 className="font-semibold">{t.settingsThemeTitle}</h3>
             <RadioGroup
               value={theme}
-              onValueChange={setTheme}
+              onValueChange={(value) => setTheme(value as any)}
               className="grid max-w-md grid-cols-1 gap-4 md:grid-cols-3"
             >
               <div>
@@ -46,8 +46,8 @@ export function SettingsPage() {
                   htmlFor="dark"
                   className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
-                  <div className="flex h-16 w-full items-center justify-center rounded-md bg-[#F5EEDD] text-[#4F423F]">
-                    {t.settingsThemeDesertGreen}
+                  <div className="flex h-16 w-full items-center justify-center rounded-md bg-[#1C2D46] text-white">
+                    {t.settingsThemeNileDark}
                   </div>
                 </Label>
               </div>
