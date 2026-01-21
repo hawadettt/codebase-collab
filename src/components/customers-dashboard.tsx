@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -15,7 +15,6 @@ import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBl
 import { collection, serverTimestamp, query, orderBy } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
-import { Skeleton } from '@/components/ui/skeleton';
 import { searchCustomers, type SearchCustomersInput, type SearchCustomersOutput } from '@/ai/flows/search-customers';
 import { Textarea } from '@/components/ui/textarea';
 import { useLanguage } from '@/context/language-provider';
@@ -24,9 +23,12 @@ export function CustomersDashboard() {
   const { language, t } = useLanguage();
 
   const customerSchema = z.object({
-    traderName: z.string().min(1, t.formCustomerRequired),
-    targetMarket: z.string().min(1, t.formTargetMarketRequired),
+    clientName: z.string().min(1, t.formCustomerRequired),
+    country: z.string().min(1, t.formCountryRequired),
     creditLimit: z.preprocess((a) => parseFloat(z.string().parse(a)), z.number().positive(t.formCreditLimitPositive)),
+    hsCodesPreferred: z.string().transform(val => val.split(',').map(s => s.trim()).filter(Boolean)),
+    incoTerms: z.string().min(1, t.formIncoTermsRequired),
+    paymentTerms: z.string().min(1, t.formPaymentTermsRequired),
   });
 
   type Customer = z.infer<typeof customerSchema> & { id: string; createdAt: { seconds: number, nanoseconds: number } };
@@ -42,9 +44,12 @@ export function CustomersDashboard() {
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),
     defaultValues: {
-      traderName: '',
-      targetMarket: '',
+      clientName: '',
+      country: '',
       creditLimit: 0,
+      hsCodesPreferred: [],
+      incoTerms: 'FOB',
+      paymentTerms: '',
     },
   });
 
@@ -128,8 +133,9 @@ export function CustomersDashboard() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t.tableHeaderTraderName}</TableHead>
-                  <TableHead>{t.tableHeaderTargetMarket}</TableHead>
+                  <TableHead>{t.tableHeaderClientName}</TableHead>
+                  <TableHead>{t.tableHeaderCountry}</TableHead>
+                  <TableHead>{t.tableHeaderIncoTerms}</TableHead>
                   <TableHead>{t.tableHeaderCreditLimit}</TableHead>
                   <TableHead>{t.tableHeaderDate}</TableHead>
                 </TableRow>
@@ -137,8 +143,9 @@ export function CustomersDashboard() {
               <TableBody>
                 {customers.map((customer) => (
                   <TableRow key={customer.id}>
-                    <TableCell className="font-medium">{customer.traderName}</TableCell>
-                    <TableCell>{customer.targetMarket}</TableCell>
+                    <TableCell className="font-medium">{customer.clientName}</TableCell>
+                    <TableCell>{customer.country}</TableCell>
+                    <TableCell>{customer.incoTerms}</TableCell>
                     <TableCell>${customer.creditLimit.toLocaleString()}</TableCell>
                     <TableCell>
                       {customer.createdAt ? format(new Date(customer.createdAt.seconds * 1000), 'PPP', { locale: language === 'ar' ? ar : enUS }) : 'N/A'}
@@ -167,15 +174,15 @@ export function CustomersDashboard() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleAddCustomer)} className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <FormField
                   control={form.control}
-                  name="traderName"
+                  name="clientName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t.formTraderName}</FormLabel>
+                      <FormLabel>{t.formClientName}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t.formTraderNamePlaceholder} {...field} />
+                        <Input placeholder={t.formClientNamePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -183,31 +190,71 @@ export function CustomersDashboard() {
                 />
                 <FormField
                   control={form.control}
-                  name="targetMarket"
+                  name="country"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t.formTargetMarket}</FormLabel>
+                      <FormLabel>{t.formCountry}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t.formTargetMarketPlaceholder} {...field} />
+                        <Input placeholder={t.formCountryPlaceholder} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="creditLimit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t.formCreditLimit}</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="incoTerms"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t.formIncoTerms}</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., FOB, CIF" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="paymentTerms"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t.formPaymentTerms}</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., L/C, CAD" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              <FormField
-                control={form.control}
-                name="creditLimit"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t.formCreditLimit}</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+               <FormField
+                  control={form.control}
+                  name="hsCodesPreferred"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t.formHsCodesPreferred}</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder={t.formHsCodesPreferredPlaceholder} {...field} />
+                      </FormControl>
+                       <CardDescription>{t.formCommaSeparated}</CardDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
                 {t.addCustomerButton}
@@ -249,8 +296,8 @@ export function CustomersDashboard() {
                 <div className="space-y-4">
                   {searchResults.customers.map((customer, index) => (
                     <div key={index} className="rounded-md border p-4">
-                      <h5 className="font-bold">{customer.traderName}</h5>
-                      <p className="text-sm text-muted-foreground">{t.tableHeaderTargetMarket}: {customer.targetMarket}</p>
+                      <h5 className="font-bold">{customer.clientName}</h5>
+                      <p className="text-sm text-muted-foreground">{t.tableHeaderCountry}: {customer.country}</p>
                       <p className="text-sm">{customer.details}</p>
                       <a href={customer.source} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline">{t.aiSource}</a>
                     </div>

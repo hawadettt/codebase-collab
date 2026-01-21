@@ -16,9 +16,9 @@ const SearchCustomersInputSchema = z.object({
 export type SearchCustomersInput = z.infer<typeof SearchCustomersInputSchema>;
 
 const CustomerSchema = z.object({
-    traderName: z.string().describe("The name of the trader or customer company."),
-    targetMarket: z.string().describe("The target market or country, e.g., Jordan."),
-    details: z.string().describe("Additional details about the customer."),
+    clientName: z.string().describe("The name of the trader or customer company."),
+    country: z.string().describe("The target country, e.g., Jordan."),
+    details: z.string().describe("Additional details about the customer, including potential products of interest."),
     source: z.string().describe("The source URL where the information was found.")
 });
 
@@ -39,7 +39,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert research assistant for the agricultural import/export industry.
 Your task is to find potential customers based on a search query.
 Search the web for companies that match the query: "{{query}}".
-For each customer you find, provide their name, target market, any other relevant details, and the source URL.
+For each customer you find, provide their company name, their country, any other relevant details, and the source URL.
 Present the results as a structured list.`,
 });
 

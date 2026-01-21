@@ -30,19 +30,41 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Supplier",
       "type": "object",
-      "description": "Represents a supplier or farm.",
+      "description": "Represents a supplier, farm, or packing station.",
       "properties": {
         "farmName": {
           "type": "string",
           "description": "The name of the farm or supplier."
         },
-        "cropType": {
+        "codificationCode": {
           "type": "string",
-          "description": "The type of crop they supply."
+          "description": "Official codification from the agricultural quarantine authority."
+        },
+        "cropVarieties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of crop varieties supplied by the supplier (e.g., Navel Orange, Spunta Potatoes)."
+        },
+        "certificationStatus": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Available quality certifications (e.g., GLOBALG.A.P, ISO 22000)."
         },
         "location": {
           "type": "string",
           "description": "Geographical location of the supplier."
+        },
+        "gpsLocation": {
+          "type": "string",
+          "description": "Precise GPS coordinates for traceability."
+        },
+        "capacity": {
+          "type": "number",
+          "description": "Estimated annual production capacity in tons."
         },
         "contactNumber": {
           "type": "string",
@@ -56,7 +78,7 @@
       },
       "required": [
         "farmName",
-        "cropType",
+        "cropVarieties",
         "location",
         "contactNumber",
         "createdAt"
@@ -66,19 +88,34 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Customer",
       "type": "object",
-      "description": "Represents a customer, typically a trader.",
+      "description": "Represents an international customer, typically a trader or importer.",
       "properties": {
-        "traderName": {
+        "clientName": {
           "type": "string",
           "description": "The name of the trader or customer company."
         },
-        "targetMarket": {
+        "country": {
           "type": "string",
-          "description": "The target market, e.g., Amman Central Market."
+          "description": "The target country for the customer, e.g., Jordan."
         },
         "creditLimit": {
           "type": "number",
           "description": "The credit limit for the customer."
+        },
+        "hsCodesPreferred": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Preferred HS Codes for the crops the client requests."
+        },
+        "incoTerms": {
+          "type": "string",
+          "description": "Approved delivery terms (e.g., FOB, CIF, CFR)."
+        },
+        "paymentTerms": {
+          "type": "string",
+          "description": "Payment terms (e.g., Letter of Credit, Documentary Collection)."
         },
         "createdAt": {
           "type": "string",
@@ -87,8 +124,8 @@
         }
       },
       "required": [
-        "traderName",
-        "targetMarket",
+        "clientName",
+        "country",
         "creditLimit",
         "createdAt"
       ]
@@ -97,7 +134,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Shipment",
       "type": "object",
-      "description": "A single shipment record.",
+      "description": "A single shipment record, representing the core logistic operation.",
       "properties": {
         "shipmentType": {
           "type": "string",
@@ -129,19 +166,33 @@
           "enum": [
             "قيد التجهيز",
             "في الميناء",
-            "تم الشحن"
+            "قيد النقل",
+            "وصلت"
           ]
         },
         "trackingNumber": {
           "type": "string",
           "description": "The tracking number for the shipment (e.g., bill of lading)."
         },
+        "acidNumber": {
+          "type": "string",
+          "description": "The Advance Cargo Information (ACI) number from the Nafeza system."
+        },
+        "carrierDetails": {
+          "type": "string",
+          "description": "Details of the shipping line or freight forwarder."
+        },
+        "isTemperatureControlled": {
+          "type": "boolean",
+          "description": "Indicates if the shipment is in a temperature-controlled container (Reefer)."
+        },
         "transportType": {
           "type": "string",
           "description": "The mode of transport.",
           "enum": [
             "Air",
-            "Land"
+            "Land",
+            "Sea"
           ]
         },
         "createdAt": {

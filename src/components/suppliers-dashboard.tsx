@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -17,14 +17,19 @@ import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { searchSuppliers, type SearchSuppliersInput, type SearchSuppliersOutput } from '@/ai/flows/search-suppliers';
 import { useLanguage } from '@/context/language-provider';
+import { Textarea } from './ui/textarea';
 
 export function SuppliersDashboard() {
   const { language, t } = useLanguage();
 
   const supplierSchema = z.object({
     farmName: z.string().min(1, t.formFarmNameRequired),
-    cropType: z.string().min(1, t.formCropTypeRequired),
+    codificationCode: z.string().optional(),
+    cropVarieties: z.string().min(1, t.formCropTypeRequired).transform(val => val.split(',').map(s => s.trim()).filter(Boolean)),
+    certificationStatus: z.string().transform(val => val.split(',').map(s => s.trim()).filter(Boolean)),
     location: z.string().min(1, t.formLocationRequired),
+    gpsLocation: z.string().optional(),
+    capacity: z.preprocess((a) => a ? parseFloat(z.string().parse(a)) : undefined, z.number().positive().optional()),
     contactNumber: z.string().min(1, t.formContactNumberRequired),
   });
 
@@ -42,8 +47,12 @@ export function SuppliersDashboard() {
     resolver: zodResolver(supplierSchema),
     defaultValues: {
       farmName: '',
-      cropType: '',
+      codificationCode: '',
+      cropVarieties: [],
+      certificationStatus: [],
       location: '',
+      gpsLocation: '',
+      capacity: undefined,
       contactNumber: '',
     },
   });
@@ -128,7 +137,7 @@ export function SuppliersDashboard() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t.tableHeaderFarmName}</TableHead>
-                  <TableHead>{t.tableHeaderCropType}</TableHead>
+                  <TableHead>{t.tableHeaderCodificationCode}</TableHead>
                   <TableHead>{t.tableHeaderLocation}</TableHead>
                   <TableHead>{t.tableHeaderContact}</TableHead>
                   <TableHead>{t.tableHeaderDate}</TableHead>
@@ -138,7 +147,7 @@ export function SuppliersDashboard() {
                 {suppliers.map((supplier) => (
                   <TableRow key={supplier.id}>
                     <TableCell className="font-medium">{supplier.farmName}</TableCell>
-                    <TableCell>{supplier.cropType}</TableCell>
+                    <TableCell>{supplier.codificationCode}</TableCell>
                     <TableCell>{supplier.location}</TableCell>
                     <TableCell>{supplier.contactNumber}</TableCell>
                     <TableCell>
@@ -168,59 +177,33 @@ export function SuppliersDashboard() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleAddSupplier)} className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <FormField control={form.control} name="farmName" render={({ field }) => (
+                    <FormItem><FormLabel>{t.formFarmName}</FormLabel><FormControl><Input placeholder={t.formFarmNamePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="codificationCode" render={({ field }) => (
+                    <FormItem><FormLabel>{t.formCodificationCode}</FormLabel><FormControl><Input placeholder="e.g. 12345" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="location" render={({ field }) => (
+                    <FormItem><FormLabel>{t.formLocation}</FormLabel><FormControl><Input placeholder={t.formLocationPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="gpsLocation" render={({ field }) => (
+                    <FormItem><FormLabel>{t.formGpsLocation}</FormLabel><FormControl><Input placeholder="e.g. 30.0444, 31.2357" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="capacity" render={({ field }) => (
+                    <FormItem><FormLabel>{t.formCapacity}</FormLabel><FormControl><Input type="number" placeholder="e.g. 5000" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+                 <FormField control={form.control} name="contactNumber" render={({ field }) => (
+                    <FormItem><FormLabel>{t.formContactNumber}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+              </div>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="farmName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formFarmName}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t.formFarmNamePlaceholder} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="cropType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formCropType}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t.formCropTypePlaceholder} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="location"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formLocation}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t.formLocationPlaceholder} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="contactNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formContactNumber}</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                 <FormField control={form.control} name="cropVarieties" render={({ field }) => (
+                    <FormItem><FormLabel>{t.formCropVarieties}</FormLabel><FormControl><Textarea placeholder={t.formCropTypePlaceholder} {...field} /></FormControl><CardDescription>{t.formCommaSeparated}</CardDescription><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="certificationStatus" render={({ field }) => (
+                    <FormItem><FormLabel>{t.formCertificationStatus}</FormLabel><FormControl><Textarea placeholder="e.g. GLOBALG.A.P, ISO 22000" {...field} /></FormControl><CardDescription>{t.formCommaSeparated}</CardDescription><FormMessage /></FormItem>
+                )} />
               </div>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
@@ -264,7 +247,7 @@ export function SuppliersDashboard() {
                   {searchResults.suppliers.map((supplier, index) => (
                     <div key={index} className="rounded-md border p-4">
                       <h5 className="font-bold">{supplier.farmName}</h5>
-                      <p className="text-sm text-muted-foreground">{t.tableHeaderCropType}: {supplier.cropType}</p>
+                      <p className="text-sm text-muted-foreground">{t.tableHeaderCropType}: {supplier.cropVarieties}</p>
                       <p className="text-sm text-muted-foreground">{t.tableHeaderLocation}: {supplier.location}</p>
                       <p className="text-sm text-muted-foreground">{t.tableHeaderContact}: {supplier.contactNumber}</p>
                       <a href={supplier.source} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline">{t.aiSource}</a>

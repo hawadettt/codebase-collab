@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { PlusCircle, Loader2, Package, AlertTriangle, Truck, DollarSign, CheckCircle, Bot, Languages, FileText } from "lucide-react";
+import { PlusCircle, Loader2, Package, AlertTriangle, Truck, DollarSign, CheckCircle, Bot, Languages, FileText, Thermometer } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from "@/firebase";
 import { collection, serverTimestamp, query, orderBy } from "firebase/firestore";
@@ -26,17 +26,21 @@ import { generateExportContract, type GenerateExportContractInput } from "@/ai/f
 import { diplomaticTranslate, type DiplomaticTranslateInput } from "@/ai/flows/diplomatic-translator";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/context/language-provider";
+import { Switch } from "./ui/switch";
 
 export default function NileKeyDashboard() {
   const { language, t } = useLanguage();
-  const shipmentStatusEnum = z.enum([t.shipmentStatusOption1, t.shipmentStatusOption2, t.shipmentStatusOption3]);
-  const transportTypeEnum = z.enum(['Air', 'Land']);
+  const shipmentStatusEnum = z.enum([t.shipmentStatusOption1, t.shipmentStatusOption2, t.shipmentStatusOption4, t.shipmentStatusOption5]);
+  const transportTypeEnum = z.enum(['Air', 'Land', 'Sea']);
 
   const shipmentSchema = z.object({
     shipmentType: z.string().min(1, t.formShipmentTypeRequired),
     weight: z.preprocess((a) => parseFloat(z.string().parse(a)), z.number().positive(t.formWeightPositive)),
     containerNumber: z.string().min(1, t.formContainerNumberRequired),
     trackingNumber: z.string().min(1, t.formTrackingNumberRequired),
+    acidNumber: z.string().optional(),
+    carrierDetails: z.string().optional(),
+    isTemperatureControlled: z.boolean().default(false),
     transportType: transportTypeEnum,
     quantity: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().int().positive(t.formQuantityPositive)),
     price: z.preprocess((a) => parseFloat(z.string().parse(a)), z.number().positive(t.formPricePositive)),
@@ -63,7 +67,10 @@ export default function NileKeyDashboard() {
       weight: 0,
       containerNumber: "",
       trackingNumber: "",
-      transportType: "Land",
+      acidNumber: "",
+      carrierDetails: "",
+      isTemperatureControlled: false,
+      transportType: "Sea",
       quantity: 0,
       price: 0,
       customer: "",
@@ -79,11 +86,11 @@ export default function NileKeyDashboard() {
   const { data: shipments, isLoading: isLoadingShipments } = useCollection<Shipment>(shipmentsQuery);
 
   const stats = useMemo(() => {
-    if (!shipments) return { totalShipments: 0, totalValue: 0, inTransit: 0, shipped: 0 };
+    if (!shipments) return { totalShipments: 0, totalValue: 0, inTransit: 0, completed: 0 };
     const totalValue = shipments.reduce((sum, s) => sum + s.price, 0);
-    const inTransit = shipments.filter(s => s.status === t.shipmentStatusOption1 || s.status === t.shipmentStatusOption2).length;
-    const shipped = shipments.filter(s => s.status === t.shipmentStatusOption3).length;
-    return { totalShipments: shipments.length, totalValue, inTransit, shipped };
+    const inTransit = shipments.filter(s => s.status === t.shipmentStatusOption4).length;
+    const completed = shipments.filter(s => s.status === t.shipmentStatusOption5).length;
+    return { totalShipments: shipments.length, totalValue, inTransit, completed };
   }, [shipments, t]);
 
   const handleAddShipment = async (values: z.infer<typeof shipmentSchema>) => {
@@ -181,11 +188,11 @@ export default function NileKeyDashboard() {
                   </Card>
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">{t.statsShipped}</CardTitle>
+                      <CardTitle className="text-sm font-medium">{t.statsCompleted}</CardTitle>
                       <CheckCircle className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-16" /> : stats.shipped}</div>
+                      <div className="text-2xl font-bold">{isLoadingShipments ? <Skeleton className="h-8 w-16" /> : stats.completed}</div>
                     </CardContent>
                   </Card>
                 </div>
@@ -206,7 +213,7 @@ export default function NileKeyDashboard() {
                               <TableHead>{t.tableHeaderCustomer}</TableHead>
                               <TableHead>{t.tableHeaderDate}</TableHead>
                               <TableHead>{t.tableHeaderStatus}</TableHead>
-                              <TableHead>{t.tableHeaderTransport}</TableHead>
+                              <TableHead>{t.tableHeaderAcidNumber}</TableHead>
                               <TableHead>{t.tableHeaderTracking}</TableHead>
                               <TableHead className="text-left">{t.tableHeaderPrice}</TableHead>
                             </TableRow>
@@ -217,8 +224,8 @@ export default function NileKeyDashboard() {
                                 <TableCell className="font-medium">{shipment.shipmentType}</TableCell>
                                 <TableCell>{shipment.customer}</TableCell>
                                 <TableCell>{shipment.createdAt ? format(new Date(shipment.createdAt.seconds * 1000), "PPP", { locale: language === 'ar' ? ar : enUS }) : 'N/A'}</TableCell>
-                                <TableCell><Badge variant={shipment.status === t.shipmentStatusOption3 ? 'default' : 'secondary'}>{shipment.status}</Badge></TableCell>
-                                <TableCell>{shipment.transportType}</TableCell>
+                                <TableCell><Badge variant={shipment.status === t.shipmentStatusOption5 ? 'default' : 'secondary'}>{shipment.status}</Badge></TableCell>
+                                <TableCell>{shipment.acidNumber}</TableCell>
                                 <TableCell>{shipment.trackingNumber}</TableCell>
                                 <TableCell className="text-left">${shipment.price.toLocaleString()}</TableCell>
                               </TableRow>
@@ -252,11 +259,17 @@ export default function NileKeyDashboard() {
                             <FormField control={form.control} name="customer" render={({ field }) => (
                               <FormItem><FormLabel>{t.formCustomer}</FormLabel><FormControl><Input placeholder={t.formCustomerPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
-                             <FormField control={form.control} name="trackingNumber" render={({ field }) => (
+                            <FormField control={form.control} name="trackingNumber" render={({ field }) => (
                               <FormItem><FormLabel>{t.formTrackingNumber}</FormLabel><FormControl><Input placeholder={t.formTrackingNumberPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                             <FormField control={form.control} name="containerNumber" render={({ field }) => (
                               <FormItem><FormLabel>{t.formContainerNumber}</FormLabel><FormControl><Input placeholder={t.formContainerNumberPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="acidNumber" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formAcidNumber}</FormLabel><FormControl><Input placeholder="e.g., 123456789" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="carrierDetails" render={({ field }) => (
+                              <FormItem><FormLabel>{t.formCarrierDetails}</FormLabel><FormControl><Input placeholder="e.g., Maersk, CMA CGM" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                             <FormField control={form.control} name="weight" render={({ field }) => (
                               <FormItem><FormLabel>{t.formWeight}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
@@ -274,6 +287,7 @@ export default function NileKeyDashboard() {
                                   <SelectContent>
                                     <SelectItem value="Land">{t.transportTypeLand}</SelectItem>
                                     <SelectItem value="Air">{t.transportTypeAir}</SelectItem>
+                                    <SelectItem value="Sea">{t.transportTypeSea}</SelectItem>
                                   </SelectContent>
                                 </Select><FormMessage />
                               </FormItem>
@@ -285,10 +299,24 @@ export default function NileKeyDashboard() {
                                   <SelectContent>
                                     <SelectItem value={t.shipmentStatusOption1}>{t.shipmentStatusOption1}</SelectItem>
                                     <SelectItem value={t.shipmentStatusOption2}>{t.shipmentStatusOption2}</SelectItem>
-                                    <SelectItem value={t.shipmentStatusOption3}>{t.shipmentStatusOption3}</SelectItem>
+                                    <SelectItem value={t.shipmentStatusOption4}>{t.shipmentStatusOption4}</SelectItem>
+                                    <SelectItem value={t.shipmentStatusOption5}>{t.shipmentStatusOption5}</SelectItem>
                                   </SelectContent>
                                 </Select><FormMessage />
                               </FormItem>
+                            )} />
+                            <FormField control={form.control} name="isTemperatureControlled" render={({ field }) => (
+                               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm mt-8">
+                                <div className="space-y-0.5">
+                                    <FormLabel>{t.formIsTemperatureControlled}</FormLabel>
+                                </div>
+                                <FormControl>
+                                    <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                </FormItem>
                             )} />
                           </div>
                           <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>

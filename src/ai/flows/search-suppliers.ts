@@ -17,7 +17,7 @@ export type SearchSuppliersInput = z.infer<typeof SearchSuppliersInputSchema>;
 
 const SupplierSchema = z.object({
     farmName: z.string().describe("The name of the farm or supplier."),
-    cropType: z.string().describe("The type of crop they supply."),
+    cropVarieties: z.string().describe("The types of crops they supply."),
     location: z.string().describe("Geographical location of the supplier."),
     contactNumber: z.string().describe("Contact phone number for the supplier (if available)."),
     source: z.string().describe("The source URL where the information was found.")
