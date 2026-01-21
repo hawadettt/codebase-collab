@@ -57,7 +57,7 @@ export function Header() {
 
         <div className="flex-1 text-center">
             <h1 
-                className="font-body text-3xl md:text-4xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color-primary)] whitespace-nowrap"
+                className="font-body text-xl font-bold text-primary drop-shadow-[0_0_8px_var(--neon-glow-color-primary)] whitespace-nowrap"
             >
                 شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)
             </h1>
