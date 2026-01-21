@@ -2,7 +2,7 @@
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Bell, Leaf, PlusCircle } from "lucide-react";
+import { Bell, Leaf } from "lucide-react";
 import { useLanguage } from "@/context/language-provider";
 
 export function Header() {
@@ -12,7 +12,7 @@ export function Header() {
     <header className="sticky top-0 z-10 flex h-20 shrink-0 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden" />
-        <div className="flex items-center gap-3">
+        <div className="hidden items-center gap-3 md:flex">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 ">
               <Leaf className="h-7 w-7 text-primary" />
             </div>
@@ -25,10 +25,6 @@ export function Header() {
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <Button variant="default" className="hidden md:flex">
-          <PlusCircle className="mx-2 h-4 w-4" />
-          {t.addShipmentTitle}
-        </Button>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Bell className="h-5 w-5" />
           <span className="sr-only">{t.headerNotifications}</span>

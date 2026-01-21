@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Header } from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
@@ -139,10 +139,9 @@ export default function NileKeyDashboard() {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AppSidebar />
-        <SidebarInset>
-          <div className="flex h-full flex-col">
+        <div className="flex w-full flex-1 flex-col">
             <Header />
-            <main className="flex-1 overflow-auto p-4 md:p-6">
+            <main className="flex-1 overflow-y-auto p-4 md:p-6">
               {isUserLoading ? (
                 <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>
               ) : user ? (
@@ -351,7 +350,6 @@ export default function NileKeyDashboard() {
               )}
             </main>
           </div>
-        </SidebarInset>
       </div>
     </SidebarProvider>
   );
