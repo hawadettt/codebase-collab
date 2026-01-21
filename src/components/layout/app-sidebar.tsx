@@ -61,7 +61,7 @@ export function AppSidebar() {
             <Leaf className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="font-headline text-lg font-semibold">
-            مفتاح النيل
+            شركة مفتاح النيل
           </span>
         </div>
       </SidebarHeader>

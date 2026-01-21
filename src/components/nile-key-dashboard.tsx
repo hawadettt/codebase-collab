@@ -31,13 +31,15 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { PlusCircle, Loader2, Package, AlertTriangle, Truck, DollarSign, CheckCircle } from "lucide-react";
+import { PlusCircle, Loader2, Package, AlertTriangle, Truck, DollarSign, CheckCircle, Bot } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from "@/firebase";
 import { collection, serverTimestamp, query, orderBy } from "firebase/firestore";
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { Skeleton } from "@/components/ui/skeleton";
+import { generateExportContract } from "@/ai/flows/generate-export-contract";
+import { Textarea } from "@/components/ui/textarea";
 
 const shipmentSchema = z.object({
   shipmentType: z.string().min(1, "نوع الشحنة مطلوب"),
@@ -56,6 +58,8 @@ export default function NileKeyDashboard() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGeneratingContract, setIsGeneratingContract] = useState(false);
+  const [contractText, setContractText] = useState("");
 
   const form = useForm<z.infer<typeof shipmentSchema>>({
     resolver: zodResolver(shipmentSchema),
@@ -127,6 +131,24 @@ export default function NileKeyDashboard() {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+  
+  const handleGenerateContract = async () => {
+    setIsGeneratingContract(true);
+    setContractText("");
+    try {
+      const result = await generateExportContract();
+      setContractText(result.contractText);
+    } catch (error) {
+      console.error("Failed to generate contract:", error);
+      toast({
+        variant: "destructive",
+        title: "فشل إنشاء العقد",
+        description: "تعذر إنشاء العقد. يرجى المحاولة مرة أخرى.",
+      });
+    } finally {
+      setIsGeneratingContract(false);
     }
   };
 
@@ -268,6 +290,49 @@ export default function NileKeyDashboard() {
                                 <p className="max-w-xs text-sm">أضف شحنتك الأولى باستخدام النموذج على اليسار.</p>
                               </div>
                             </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+                  <div className="grid grid-cols-1 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="font-headline flex items-center gap-2">
+                          <Bot className="h-6 w-6" />
+                          مختبر استراتيجيات التصدير
+                        </CardTitle>
+                        <CardDescription>
+                          استخدم الذكاء الاصطناعي لتوليد المستندات وتحليل الشحنات.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div>
+                          <h4 className="font-semibold">تحليل شحنة الأردن</h4>
+                          <p className="text-sm text-muted-foreground">
+                            قم بإنشاء فاتورة مبدئية لشحنة خس وكابوتشا إلى الأردن، مع تقديرات التكلفة.
+                          </p>
+                          <Button onClick={handleGenerateContract} disabled={isGeneratingContract} className="mt-2">
+                            {isGeneratingContract && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+                            إنشاء فاتورة مبدئية
+                          </Button>
+                        </div>
+                        {(isGeneratingContract || contractText) && (
+                          <div className="rounded-md border bg-background p-4">
+                            <h4 className="mb-2 font-semibold text-foreground">النتائج:</h4>
+                            {isGeneratingContract ? (
+                              <div className="flex items-center justify-center p-8">
+                                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                                <p className="mr-4 text-muted-foreground">...جاري التحليل بواسطة Gemini</p>
+                              </div>
+                            ) : (
+                              <Textarea
+                                readOnly
+                                value={contractText}
+                                className="h-auto min-h-[400px] w-full resize-y bg-muted/30 font-code text-sm"
+                                rows={25}
+                              />
+                            )}
+                          </div>
                         )}
                       </CardContent>
                     </Card>

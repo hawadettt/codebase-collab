@@ -4,7 +4,7 @@ import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
-  title: 'مفتاح النيل',
+  title: 'شركة مفتاح النيل للاستثمار والتجارة الدولية (ذ.م.م)',
   description: 'نظام إدارة الشحنات والمالية لشركة مفتاح النيل',
 };
 

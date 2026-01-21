@@ -14,7 +14,7 @@ export function Header() {
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden" />
         <h1 className="font-headline text-lg font-semibold md:text-xl">
-          لوحة تحكم الشحنات
+          لوحة التحكم
         </h1>
       </div>
       <div className="flex items-center gap-3">
