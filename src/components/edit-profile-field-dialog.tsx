@@ -43,9 +43,16 @@ export function EditProfileFieldDialog({
   const handleSave = async () => {
     if (!fieldName) return;
     setIsSaving(true);
-    await onSave({ [fieldName]: value });
-    setIsSaving(false);
-    onClose();
+    try {
+      await onSave({ [fieldName]: value });
+      onClose(); // Close only on success
+    } catch (e) {
+      // Error is handled and toasted by the parent component.
+      // We keep the dialog open for the user to try again.
+      console.error("Save from dialog failed", e);
+    } finally {
+      setIsSaving(false);
+    }
   };
   
   const getLabel = () => {
@@ -75,12 +82,13 @@ export function EditProfileFieldDialog({
               value={value}
               onChange={(e) => setValue(e.target.value)}
               className="col-span-3"
+              disabled={isSaving}
             />
           </div>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">{t.cancel}</Button>
+            <Button variant="outline" disabled={isSaving}>{t.cancel}</Button>
           </DialogClose>
           <Button onClick={handleSave} disabled={isSaving}>
             {isSaving && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
@@ -91,5 +99,3 @@ export function EditProfileFieldDialog({
     </Dialog>
   );
 }
-
-    

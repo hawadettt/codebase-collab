@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useLanguage } from "@/context/language-provider";
 import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2, Briefcase, Tag } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, updateDoc, DocumentReference } from 'firebase/firestore';
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
@@ -46,14 +46,30 @@ export function SettingsPage() {
   const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
   
   const handleUpdateProfile = async (data: Partial<UserProfile>) => {
-    if (!userProfileRef) return;
+    if (!userProfileRef) {
+      toast({ variant: 'destructive', title: t.profileUpdateFailed, description: "User not authenticated." });
+      return Promise.reject(new Error("User not authenticated."));
+    }
     setIsUpdating(true);
     try {
       await updateDoc(userProfileRef, data);
       toast({ title: t.profileUpdatedSuccess });
-    } catch (error) {
-      console.error(error);
-      toast({ variant: 'destructive', title: t.profileUpdateFailed, description: t.profileUpdateError });
+    } catch (error: any) {
+      console.error("Profile update failed:", error);
+      
+      const permissionError = new FirestorePermissionError({
+        path: userProfileRef.path,
+        operation: 'update',
+        requestResourceData: data,
+      });
+      errorEmitter.emit('permission-error', permissionError);
+
+      toast({
+        variant: "destructive",
+        title: t.profileUpdateFailed,
+        description: error.message || t.profileUpdateError,
+      });
+      throw error; // Re-throw the error so the caller (e.g., the dialog) knows about it.
     } finally {
       setIsUpdating(false);
     }
@@ -185,14 +201,14 @@ export function SettingsPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <div className="flex items-center gap-4">
                         <User className="h-5 w-5 text-muted-foreground" />
                         <div className="flex-1">
                             <Label>{t.formUserNameLabel}</Label>
                             <p className="text-sm">{userProfile?.userName || t.userDataNotSet}</p>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')}>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')} disabled={isUpdating}>
                             <Edit className="h-4 w-4" />
                         </Button>
                     </div>
@@ -203,7 +219,7 @@ export function SettingsPage() {
                             <Label>{t.formCompanyNameLabel}</Label>
                             <p className="text-sm">{userProfile?.companyName || t.userDataNotSet}</p>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('companyName')}>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('companyName')} disabled={isUpdating}>
                             <Edit className="h-4 w-4" />
                         </Button>
                     </div>
@@ -219,7 +235,8 @@ export function SettingsPage() {
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder={t.selectCompanyTypePlaceholder}>
-                                    {companyTypes.find(c => c.value === userProfile?.companyType)?.label || userProfile?.companyType || t.userDataNotSet}
+                                    {isUpdating && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
+                                    {!isUpdating && (companyTypes.find(c => c.value === userProfile?.companyType)?.label || userProfile?.companyType || t.userDataNotSet)}
                                 </SelectValue>
                               </SelectTrigger>
                               <SelectContent>
@@ -245,8 +262,9 @@ export function SettingsPage() {
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder={t.selectCountry}>
                                   <div className="flex items-center gap-2">
-                                    <span>{getCountryFlag(userProfile?.country)}</span>
-                                    <span>{userProfile?.country || t.userDataNotSet}</span>
+                                     {isUpdating && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
+                                    {!isUpdating && <span>{getCountryFlag(userProfile?.country)}</span>}
+                                    {!isUpdating && <span>{userProfile?.country || t.userDataNotSet}</span>}
                                   </div>
                                 </SelectValue>
                               </SelectTrigger>
@@ -270,7 +288,7 @@ export function SettingsPage() {
                             <Label>{t.formMobileLabel}</Label>
                             <p className="text-sm">{userProfile?.mobile || t.userDataNotSet}</p>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('mobile')}>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('mobile')} disabled={isUpdating}>
                             <Edit className="h-4 w-4" />
                         </Button>
                     </div>
@@ -281,7 +299,7 @@ export function SettingsPage() {
                             <Label>{t.formWhatsapp}</Label>
                             <p className="text-sm">{userProfile?.whatsapp || t.userDataNotSet}</p>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('whatsapp')}>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('whatsapp')} disabled={isUpdating}>
                             <Edit className="h-4 w-4" />
                         </Button>
                     </div>
@@ -325,5 +343,3 @@ export function SettingsPage() {
     </div>
   );
 }
-
-    
