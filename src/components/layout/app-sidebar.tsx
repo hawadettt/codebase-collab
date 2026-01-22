@@ -67,7 +67,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar side={language === 'ar' ? 'right' : 'left'}>
+    <Sidebar side={language === 'ar' ? 'right' : 'left'} collapsible="icon">
       <SidebarHeader>
         <div className="flex flex-col gap-2">
             <div className="px-2 text-xs font-medium text-muted-foreground">{t.chooseLanguage}</div>
@@ -124,7 +124,7 @@ export function AppSidebar() {
         <SidebarMenu>
             <SidebarMenuItem>
               <Link href="/">
-                <SidebarMenuButton isActive={pathname === '/'} size="sm">
+                <SidebarMenuButton isActive={pathname === '/'} size="sm" tooltip={t.sidebarHome}>
                   <Home />
                   <span>{t.sidebarHome}</span>
                 </SidebarMenuButton>
@@ -132,7 +132,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link href="/services">
-                <SidebarMenuButton isActive={pathname === '/services'} size="sm">
+                <SidebarMenuButton isActive={pathname === '/services'} size="sm" tooltip={t.sidebarServices}>
                   <Briefcase />
                   <span>{t.sidebarServices}</span>
                 </SidebarMenuButton>
@@ -140,7 +140,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link href="/dashboard">
-                <SidebarMenuButton isActive={pathname === '/dashboard'} size="sm">
+                <SidebarMenuButton isActive={pathname === '/dashboard'} size="sm" tooltip={t.sidebarDashboard}>
                   <LayoutDashboard />
                   <span>{t.sidebarDashboard}</span>
                 </SidebarMenuButton>
@@ -148,7 +148,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
              <SidebarMenuItem>
               <Link href="/shipments">
-                <SidebarMenuButton isActive={pathname === '/shipments'} size="sm">
+                <SidebarMenuButton isActive={pathname === '/shipments'} size="sm" tooltip={t.sidebarShipments}>
                   <Truck />
                   <span>{t.sidebarShipments}</span>
                 </SidebarMenuButton>
@@ -156,7 +156,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link href="/suppliers">
-                <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm">
+                <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm" tooltip={t.sidebarSuppliers}>
                   <Building2 />
                   <span>{t.sidebarSuppliers}</span>
                 </SidebarMenuButton>
@@ -164,7 +164,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link href="/customers">
-                <SidebarMenuButton isActive={pathname === '/customers'} size="sm">
+                <SidebarMenuButton isActive={pathname === '/customers'} size="sm" tooltip={t.sidebarCustomers}>
                   <Users />
                   <span>{t.sidebarCustomers}</span>
                 </SidebarMenuButton>
@@ -177,7 +177,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <Link href="/settings">
-              <SidebarMenuButton isActive={pathname === '/settings'} size="sm">
+              <SidebarMenuButton isActive={pathname === '/settings'} size="sm" tooltip={t.sidebarSettings}>
                 <Settings />
                 <span>{t.sidebarSettings}</span>
               </SidebarMenuButton>

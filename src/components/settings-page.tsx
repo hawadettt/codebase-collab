@@ -69,7 +69,7 @@ export function SettingsPage() {
         title: t.profileUpdateFailed,
         description: error.message || t.profileUpdateError,
       });
-      throw error; // Re-throw the error so the caller (e.g., the dialog) knows about it.
+      throw error;
     } finally {
       setIsUpdating(false);
     }
@@ -110,7 +110,7 @@ export function SettingsPage() {
                 <RadioGroupItem value="light" id="light" className="peer sr-only" />
                 <Label
                   htmlFor="light"
-                  className="flex h-12 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex h-10 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                    <div className="flex items-center justify-center rounded-md bg-background text-foreground">
                     {t.settingsThemeLight}
@@ -121,7 +121,7 @@ export function SettingsPage() {
                 <RadioGroupItem value="dark" id="dark" className="peer sr-only" />
                 <Label
                   htmlFor="dark"
-                  className="flex h-12 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex h-10 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                   <div className="flex items-center justify-center rounded-md bg-[hsl(var(--background))] text-[hsl(var(--foreground))] dark">
                     {t.settingsThemeDark}
@@ -149,7 +149,7 @@ export function SettingsPage() {
                 <RadioGroupItem value="en" id="en" className="peer sr-only" />
                 <Label
                   htmlFor="en"
-                  className="flex h-12 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex h-10 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                   English
                 </Label>
@@ -158,7 +158,7 @@ export function SettingsPage() {
                 <RadioGroupItem value="ar" id="ar" className="peer sr-only" />
                 <Label
                   htmlFor="ar"
-                  className="flex h-12 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex h-10 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                   العربية
                 </Label>
@@ -187,63 +187,58 @@ export function SettingsPage() {
               <div className="rounded-md border p-4">
                 {isProfileLoading ? (
                    <div className="space-y-6">
-                    <div className="flex items-center gap-4">
-                      <Skeleton className="h-6 w-6 rounded-full" />
-                      <div className="w-full space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-4 w-40" /></div>
-                    </div>
-                     <div className="flex items-center gap-4">
-                      <Skeleton className="h-6 w-6 rounded-full" />
-                      <div className="w-full space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-4 w-40" /></div>
-                    </div>
-                     <div className="flex items-center gap-4">
-                      <Skeleton className="h-6 w-6 rounded-full" />
-                      <div className="w-full space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-4 w-40" /></div>
-                    </div>
+                    <div className="flex items-center gap-4"><Skeleton className="h-6 w-6 rounded-full" /><div className="w-full space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-4 w-40" /></div></div>
+                    <div className="flex items-center gap-4"><Skeleton className="h-6 w-6 rounded-full" /><div className="w-full space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-4 w-40" /></div></div>
+                    <div className="flex items-center gap-4"><Skeleton className="h-6 w-6 rounded-full" /><div className="w-full space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-4 w-40" /></div></div>
                   </div>
                 ) : (
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-4">
-                        <User className="h-5 w-5 text-muted-foreground" />
-                        <div className="flex-1">
-                            <Label>{t.formUserNameLabel}</Label>
-                            <p className="text-sm">{userProfile?.userName || t.userDataNotSet}</p>
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                        <div className="flex items-center">
+                            <div className="flex items-center gap-2">
+                                <User className="h-5 w-5 text-muted-foreground" />
+                                <Label>{t.formUserNameLabel}</Label>
+                            </div>
+                            <div className="ml-auto">
+                                <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')} disabled={isUpdating}>
+                                    <Edit className="h-4 w-4" />
+                                </Button>
+                            </div>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')} disabled={isUpdating}>
-                            <Edit className="h-4 w-4" />
-                        </Button>
+                        <p className="pl-7 text-sm text-muted-foreground">{userProfile?.userName || t.userDataNotSet}</p>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <Briefcase className="h-5 w-5 text-muted-foreground" />
-                        <div className="flex-1">
-                            <Label>{t.formCompanyNameLabel}</Label>
-                            <p className="text-sm">{userProfile?.companyName || t.userDataNotSet}</p>
+                    <div className="space-y-1">
+                        <div className="flex items-center">
+                            <div className="flex items-center gap-2">
+                                <Briefcase className="h-5 w-5 text-muted-foreground" />
+                                <Label>{t.formCompanyNameLabel}</Label>
+                            </div>
+                            <div className="ml-auto">
+                                <Button variant="ghost" size="icon" onClick={() => setEditingField('companyName')} disabled={isUpdating}>
+                                    <Edit className="h-4 w-4" />
+                                </Button>
+                            </div>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('companyName')} disabled={isUpdating}>
-                            <Edit className="h-4 w-4" />
-                        </Button>
+                        <p className="pl-7 text-sm text-muted-foreground">{userProfile?.companyName || t.userDataNotSet}</p>
                     </div>
 
-                    <div className="flex items-start gap-4">
-                        <Tag className="h-5 w-5 text-muted-foreground mt-1" />
-                        <div className="flex-1">
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                            <Tag className="h-5 w-5 text-muted-foreground" />
                             <Label>{t.formCompanyTypeLabel}</Label>
+                        </div>
+                        <div className="pl-7">
                             <Select
                               value={userProfile?.companyType || ''}
                               onValueChange={async (value) => {
-                                try {
-                                  await handleUpdateProfile({ companyType: value })
-                                } catch (e) {
-                                  // Error is handled globally and in the function itself.
-                                  // This catch block prevents an unhandled promise rejection.
-                                }
+                                try { await handleUpdateProfile({ companyType: value }) } catch (e) { /* error handled in function */ }
                               }}
                               disabled={isUpdating}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder={t.selectCompanyTypePlaceholder}>
-                                    {isUpdating && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
-                                    {!isUpdating && (companyTypes.find(c => c.value === userProfile?.companyType)?.label || userProfile?.companyType || t.userDataNotSet)}
+                                    {isUpdating ? <Loader2 className="mx-2 h-4 w-4 animate-spin" /> : (companyTypes.find(c => c.value === userProfile?.companyType)?.label || userProfile?.companyType || t.userDataNotSet)}
                                 </SelectValue>
                               </SelectTrigger>
                               <SelectContent>
@@ -257,28 +252,24 @@ export function SettingsPage() {
                         </div>
                     </div>
                     
-                    <div className="flex items-start gap-4">
-                        <Globe className="h-5 w-5 text-muted-foreground mt-1" />
-                        <div className="flex-1">
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                            <Globe className="h-5 w-5 text-muted-foreground" />
                             <Label>{t.formCountry}</Label>
+                        </div>
+                        <div className="pl-7">
                             <Select
                               value={userProfile?.country || ''}
                               onValueChange={async (value) => {
-                                try {
-                                  await handleUpdateProfile({ country: value })
-                                } catch (e) {
-                                  // Error is handled globally and in the function itself.
-                                  // This catch block prevents an unhandled promise rejection.
-                                }
+                                try { await handleUpdateProfile({ country: value }) } catch (e) { /* error handled in function */ }
                               }}
                               disabled={isUpdating}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder={t.selectCountry}>
                                   <div className="flex items-center gap-2">
-                                     {isUpdating && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
-                                    {!isUpdating && <span>{getCountryFlag(userProfile?.country)}</span>}
-                                    {!isUpdating && <span>{userProfile?.country || t.userDataNotSet}</span>}
+                                     {isUpdating ? <Loader2 className="mx-2 h-4 w-4 animate-spin" /> : <span>{getCountryFlag(userProfile?.country)}</span>}
+                                     <span>{userProfile?.country || t.userDataNotSet}</span>
                                   </div>
                                 </SelectValue>
                               </SelectTrigger>
@@ -296,34 +287,42 @@ export function SettingsPage() {
                         </div>
                     </div>
 
-                     <div className="flex items-center gap-4">
-                        <Phone className="h-5 w-5 text-muted-foreground" />
-                        <div className="flex-1">
-                            <Label>{t.formMobileLabel}</Label>
-                            <p className="text-sm">{userProfile?.mobile || t.userDataNotSet}</p>
+                    <div className="space-y-1">
+                        <div className="flex items-center">
+                            <div className="flex items-center gap-2">
+                                <Phone className="h-5 w-5 text-muted-foreground" />
+                                <Label>{t.formMobileLabel}</Label>
+                            </div>
+                            <div className="ml-auto">
+                                <Button variant="ghost" size="icon" onClick={() => setEditingField('mobile')} disabled={isUpdating}>
+                                    <Edit className="h-4 w-4" />
+                                </Button>
+                            </div>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('mobile')} disabled={isUpdating}>
-                            <Edit className="h-4 w-4" />
-                        </Button>
+                        <p className="pl-7 text-sm text-muted-foreground">{userProfile?.mobile || t.userDataNotSet}</p>
                     </div>
 
-                     <div className="flex items-center gap-4">
-                        <Phone className="h-5 w-5 text-muted-foreground" />
-                        <div className="flex-1">
-                            <Label>{t.formWhatsapp}</Label>
-                            <p className="text-sm">{userProfile?.whatsapp || t.userDataNotSet}</p>
+                    <div className="space-y-1">
+                        <div className="flex items-center">
+                            <div className="flex items-center gap-2">
+                                <Phone className="h-5 w-5 text-muted-foreground" />
+                                <Label>{t.formWhatsapp}</Label>
+                            </div>
+                             <div className="ml-auto">
+                                <Button variant="ghost" size="icon" onClick={() => setEditingField('whatsapp')} disabled={isUpdating}>
+                                    <Edit className="h-4 w-4" />
+                                </Button>
+                            </div>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('whatsapp')} disabled={isUpdating}>
-                            <Edit className="h-4 w-4" />
-                        </Button>
+                        <p className="pl-7 text-sm text-muted-foreground">{userProfile?.whatsapp || t.userDataNotSet}</p>
                     </div>
 
-                    <div className="flex items-start gap-4">
-                        <Mail className="h-5 w-5 text-muted-foreground mt-1" />
-                        <div className="flex-1">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                            <Mail className="h-5 w-5 text-muted-foreground" />
                             <Label>{t.formEmailLabel}</Label>
-                            <p className="text-sm">{user.email}</p>
                         </div>
+                        <p className="pl-7 text-sm text-muted-foreground">{user.email}</p>
                     </div>
                     
                     <Card className="flex flex-col items-center justify-center p-6 bg-muted/50 h-48">
