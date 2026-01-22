@@ -252,7 +252,6 @@ export const translations = {
     settingsThemeTitle: "Appearance",
     settingsThemeLight: "Light",
     settingsThemeDark: "Dark",
-    settingsThemeSystem: "System",
     settingsLanguageTitle: "Language",
   },
   ar: {
@@ -508,7 +507,6 @@ export const translations = {
     settingsThemeTitle: "المظهر",
     settingsThemeLight: "فاتح",
     settingsThemeDark: "داكن",
-    settingsThemeSystem: "النظام",
     settingsLanguageTitle: "اللغة",
   },
 };
