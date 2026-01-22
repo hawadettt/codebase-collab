@@ -288,7 +288,7 @@ export const translations = {
     sidebarShipments: 'الشحنات',
     sidebarSuppliers: 'الموردين',
     sidebarCustomers: 'العملاء',
-    sidebarSettings: 'اعدادات وبيانات المستخدم',
+    sidebarSettings: 'اعدادات و بيانات المستخدم',
     sidebarUser: 'مستخدم',
     sidebarLoginButton: 'تسجيل الدخول / إنشاء حساب',
     chooseLanguage: 'اللغة',
