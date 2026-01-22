@@ -12,7 +12,7 @@ export default function ImportantSitesCategoryPage({ params }: { params: { categ
         <div className="flex flex-1">
           <AppSidebar />
           <main className="flex-1 overflow-y-auto p-4 md:p-6">
-            <ImportantSitesPage categoryId={params.categoryId} />
+            <ImportantSitesPage params={params} />
           </main>
         </div>
       </div>

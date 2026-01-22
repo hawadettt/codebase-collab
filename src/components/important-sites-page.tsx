@@ -78,7 +78,8 @@ const ALL_CATEGORIES: Category[] = [
 ];
 
 
-export function ImportantSitesPage({ categoryId }: { categoryId: string }) {
+export function ImportantSitesPage({ params }: { params: { categoryId: string } }) {
+  const { categoryId } = params;
   const { t } = useLanguage();
 
   const category = ALL_CATEGORIES.find(c => c.id === categoryId);
