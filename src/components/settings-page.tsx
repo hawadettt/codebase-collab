@@ -230,7 +230,14 @@ export function SettingsPage() {
                             <Label>{t.formCompanyTypeLabel}</Label>
                             <Select
                               value={userProfile?.companyType || ''}
-                              onValueChange={(value) => handleUpdateProfile({ companyType: value })}
+                              onValueChange={async (value) => {
+                                try {
+                                  await handleUpdateProfile({ companyType: value })
+                                } catch (e) {
+                                  // Error is handled globally and in the function itself.
+                                  // This catch block prevents an unhandled promise rejection.
+                                }
+                              }}
                               disabled={isUpdating}
                             >
                               <SelectTrigger className="w-full">
@@ -256,7 +263,14 @@ export function SettingsPage() {
                             <Label>{t.formCountry}</Label>
                             <Select
                               value={userProfile?.country || ''}
-                              onValueChange={(value) => handleUpdateProfile({ country: value })}
+                              onValueChange={async (value) => {
+                                try {
+                                  await handleUpdateProfile({ country: value })
+                                } catch (e) {
+                                  // Error is handled globally and in the function itself.
+                                  // This catch block prevents an unhandled promise rejection.
+                                }
+                              }}
                               disabled={isUpdating}
                             >
                               <SelectTrigger className="w-full">
