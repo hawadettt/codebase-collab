@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useLanguage } from "@/context/language-provider";
-import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2, Briefcase } from "lucide-react";
+import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2, Briefcase, Tag } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, updateDoc, DocumentReference } from 'firebase/firestore';
@@ -20,17 +20,13 @@ import { useToast } from "@/hooks/use-toast";
 type UserProfile = {
     userName?: string;
     companyName?: string;
+    companyType?: string;
     email?: string;
     whatsapp?: string;
     mobile?: string;
     country?: string;
     gpsLocation?: string;
 };
-
-const supportedLanguages = [
-  { code: 'en', name: 'English' },
-  { code: 'ar', name: 'العربية' },
-];
 
 export function SettingsPage() {
   const { setTheme, theme } = useTheme();
@@ -67,6 +63,14 @@ export function SettingsPage() {
     const country = countries.find(c => c.name === countryName);
     return country ? country.flag : '🏳️';
   }
+
+  const companyTypes = [
+    { value: 'Exporter', label: t.companyTypeExporter },
+    { value: 'Importer', label: t.companyTypeImporter },
+    { value: 'Freight Forwarder', label: t.companyTypeFreightForwarder },
+    { value: 'Producer/Farm', label: t.companyTypeProducerFarm },
+    { value: 'Other', label: t.companyTypeOther },
+  ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -113,7 +117,7 @@ export function SettingsPage() {
           
           <Separator/>
 
-          <div className="space-y-4">
+           <div className="space-y-4">
              <div className="flex items-center gap-2">
                 <h3 className="font-semibold flex items-center gap-2">
                   <Languages className="h-5 w-5" />
@@ -125,17 +129,24 @@ export function SettingsPage() {
               onValueChange={(value) => setLanguage(value as 'en' | 'ar')}
               className="grid max-w-md grid-cols-2 gap-4"
             >
-               {supportedLanguages.map(lang => (
-                <div key={lang.code}>
-                    <RadioGroupItem value={lang.code} id={lang.code} className="peer sr-only" />
-                    <Label
-                    htmlFor={lang.code}
-                    className="flex h-12 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                    >
-                    {lang.name}
-                    </Label>
-                </div>
-                ))}
+              <div>
+                <RadioGroupItem value="en" id="en" className="peer sr-only" />
+                <Label
+                  htmlFor="en"
+                  className="flex h-12 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                >
+                  English
+                </Label>
+              </div>
+              <div>
+                <RadioGroupItem value="ar" id="ar" className="peer sr-only" />
+                <Label
+                  htmlFor="ar"
+                  className="flex h-12 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                >
+                  العربية
+                </Label>
+              </div>
             </RadioGroup>
           </div>
 
@@ -196,6 +207,31 @@ export function SettingsPage() {
                             <Edit className="h-4 w-4" />
                         </Button>
                     </div>
+
+                    <div className="flex items-start gap-4">
+                        <Tag className="h-5 w-5 text-muted-foreground mt-1" />
+                        <div className="flex-1">
+                            <Label>{t.formCompanyTypeLabel}</Label>
+                            <Select
+                              value={userProfile?.companyType || ''}
+                              onValueChange={(value) => handleUpdateProfile({ companyType: value })}
+                              disabled={isUpdating}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder={t.selectCompanyTypePlaceholder}>
+                                    {companyTypes.find(c => c.value === userProfile?.companyType)?.label || userProfile?.companyType || t.userDataNotSet}
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {companyTypes.map((type) => (
+                                  <SelectItem key={type.value} value={type.value}>
+                                    {type.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
                     
                     <div className="flex items-start gap-4">
                         <Globe className="h-5 w-5 text-muted-foreground mt-1" />
@@ -204,6 +240,7 @@ export function SettingsPage() {
                             <Select
                               value={userProfile?.country || ''}
                               onValueChange={(value) => handleUpdateProfile({ country: value })}
+                              disabled={isUpdating}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder={t.selectCountry}>

@@ -23,6 +23,10 @@
           "type": "string",
           "description": "The user's company name."
         },
+        "companyType": {
+          "type": "string",
+          "description": "The type of the user's company."
+        },
         "whatsapp": {
           "type": "string",
           "description": "User's WhatsApp number, including country code."
@@ -319,5 +323,3 @@
     ]
   }
 }
-
-    

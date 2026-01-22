@@ -270,7 +270,14 @@ export const translations = {
     selectCountry: "Select a country",
     profileUpdatedSuccess: "Profile Updated",
     profileUpdateFailed: "Update Failed",
-    profileUpdateError: "Could not update profile. Please try again."
+    profileUpdateError: "Could not update profile. Please try again.",
+    formCompanyTypeLabel: "Company Type",
+    selectCompanyTypePlaceholder: "Select company type",
+    companyTypeExporter: "Exporter",
+    companyTypeImporter: "Importer",
+    companyTypeFreightForwarder: "Freight Forwarder",
+    companyTypeProducerFarm: "Producer/Farm",
+    companyTypeOther: "Other"
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -529,7 +536,6 @@ export const translations = {
     settingsUserDataTitle: "الملف الشخصي",
     settingsUserDataDescription: "عرض وتعديل معلوماتك الشخصية.",
     formUserNameLabel: "اسم المستخدم",
-    formCompanyNameLabel: "اسم الشركة",
     formMobileLabel: "رقم الجوال",
     userDataNotSet: "لم يتم التعيين",
     loginToViewProfile: "يرجى تسجيل الدخول لعرض ملفك الشخصي.",
@@ -543,10 +549,16 @@ export const translations = {
     selectCountry: "اختر دولة",
     profileUpdatedSuccess: "تم تحديث الملف الشخصي",
     profileUpdateFailed: "فشل التحديث",
-    profileUpdateError: "تعذر تحديث الملف الشخصي. يرجى المحاولة مرة أخرى."
+    profileUpdateError: "تعذر تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.",
+    formCompanyNameLabel: "اسم الشركة",
+    formCompanyTypeLabel: "نوع الشركة",
+    selectCompanyTypePlaceholder: "اختر نوع الشركة",
+    companyTypeExporter: "مصدّر",
+    companyTypeImporter: "مستورد",
+    companyTypeFreightForwarder: "وكيل شحن",
+    companyTypeProducerFarm: "منتج/مزرعة",
+    companyTypeOther: "أخرى"
   },
 };
 
 export type TranslationKeys = keyof typeof translations.en;
-
-    
