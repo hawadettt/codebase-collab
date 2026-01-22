@@ -33,12 +33,17 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/context/language-provider";
-import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
+const supportedLanguages = [
+  { code: 'en', name: 'English' },
+  { code: 'ar', name: 'العربية' },
+];
+
 export function AppSidebar() {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t, isTranslating } = useLanguage();
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const { toast } = useToast();
@@ -64,14 +69,19 @@ export function AppSidebar() {
   return (
     <Sidebar side={language === 'ar' ? 'right' : 'left'}>
       <SidebarHeader>
-        <div className="flex flex-col gap-4">
-            <div className="flex flex-col items-center gap-1 text-center">
-                <div className="text-xs font-medium text-muted-foreground">{t.chooseLanguage}</div>
-                <div className="flex items-center rounded-md border bg-background/50 p-1">
-                    <Button variant={language === 'en' ? 'secondary' : 'ghost'} size="sm" className="h-7 px-2" onClick={() => setLanguage('en')}>English</Button>
-                    <Separator orientation="vertical" className="h-4" />
-                    <Button variant={language === 'ar' ? 'secondary' : 'ghost'} size="sm" className="h-7 px-2" onClick={() => setLanguage('ar')}>العربية</Button>
-                </div>
+        <div className="flex flex-col gap-2">
+            <div className="px-2 text-xs font-medium text-muted-foreground">{t.chooseLanguage}</div>
+            <div className="px-2">
+              <Select value={language} onValueChange={(value) => setLanguage(value)} disabled={isTranslating || !supportedLanguages.some(l => l.code === language)}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder={t.chooseLanguage} />
+                  </SelectTrigger>
+                  <SelectContent align="center">
+                      {supportedLanguages.map(lang => (
+                        <SelectItem key={lang.code} value={lang.code}>{lang.name}</SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
             </div>
         </div>
       </SidebarHeader>
