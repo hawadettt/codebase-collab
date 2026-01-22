@@ -16,7 +16,7 @@ import { useLanguage } from '@/context/language-provider';
 import { Loader2 } from 'lucide-react';
 
 interface EditProfileFieldDialogProps {
-  fieldName: 'userName' | 'whatsapp' | 'mobile' | null;
+  fieldName: 'userName' | 'companyName' | 'whatsapp' | 'mobile' | null;
   currentValue: string | undefined | null;
   isOpen: boolean;
   onClose: () => void;
@@ -50,6 +50,7 @@ export function EditProfileFieldDialog({
   
   const getLabel = () => {
     if (fieldName === 'userName') return t.formUserNameLabel;
+    if (fieldName === 'companyName') return t.formCompanyNameLabel;
     if (fieldName === 'whatsapp') return t.formWhatsapp;
     if (fieldName === 'mobile') return t.formMobileLabel;
     return '';
@@ -79,7 +80,7 @@ export function EditProfileFieldDialog({
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">{t.sidebarLoginButton === 'Login / Sign Up' ? 'Cancel' : 'إلغاء'}</Button>
+            <Button variant="outline">{t.cancel}</Button>
           </DialogClose>
           <Button onClick={handleSave} disabled={isSaving}>
             {isSaving && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
@@ -90,3 +91,5 @@ export function EditProfileFieldDialog({
     </Dialog>
   );
 }
+
+    

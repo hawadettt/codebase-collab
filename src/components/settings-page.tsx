@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useLanguage } from "@/context/language-provider";
-import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2 } from "lucide-react";
+import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2, Briefcase } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, updateDoc, DocumentReference } from 'firebase/firestore';
@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 
 type UserProfile = {
     userName?: string;
+    companyName?: string;
     email?: string;
     whatsapp?: string;
     mobile?: string;
@@ -38,7 +39,7 @@ export function SettingsPage() {
   const firestore = useFirestore();
   const { toast } = useToast();
 
-  const [editingField, setEditingField] = useState<'userName' | 'whatsapp' | 'mobile' | null>(null);
+  const [editingField, setEditingField] = useState<'userName' | 'companyName' | 'whatsapp' | 'mobile' | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
   const userProfileRef = useMemoFirebase(() => {
@@ -174,20 +175,28 @@ export function SettingsPage() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <Card className="flex flex-col items-center justify-center p-6 bg-muted/50 h-48 mb-4">
-                        <MapPin className="h-12 w-12 text-muted-foreground" />
-                        <p className="mt-2 text-muted-foreground">{t.mapPlaceholderTitle}</p>
-                        <p className="text-sm text-muted-foreground">{t.mapPlaceholderDescription}</p>
-                    </Card>
-
-                    <div className="flex items-start gap-4">
-                        <Mail className="h-5 w-5 text-muted-foreground mt-1" />
+                    <div className="flex items-center gap-4">
+                        <User className="h-5 w-5 text-muted-foreground" />
                         <div className="flex-1">
-                            <Label>{t.formEmailLabel}</Label>
-                            <p className="text-sm">{user.email}</p>
+                            <Label>{t.formUserNameLabel}</Label>
+                            <p className="text-sm">{userProfile?.userName || t.userDataNotSet}</p>
                         </div>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')}>
+                            <Edit className="h-4 w-4" />
+                        </Button>
                     </div>
 
+                    <div className="flex items-center gap-4">
+                        <Briefcase className="h-5 w-5 text-muted-foreground" />
+                        <div className="flex-1">
+                            <Label>{t.formCompanyNameLabel}</Label>
+                            <p className="text-sm">{userProfile?.companyName || t.userDataNotSet}</p>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('companyName')}>
+                            <Edit className="h-4 w-4" />
+                        </Button>
+                    </div>
+                    
                     <div className="flex items-start gap-4">
                         <Globe className="h-5 w-5 text-muted-foreground mt-1" />
                         <div className="flex-1">
@@ -218,13 +227,13 @@ export function SettingsPage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <User className="h-5 w-5 text-muted-foreground" />
+                     <div className="flex items-center gap-4">
+                        <Phone className="h-5 w-5 text-muted-foreground" />
                         <div className="flex-1">
-                            <Label>{t.formUserNameLabel}</Label>
-                            <p className="text-sm">{userProfile?.userName || t.userDataNotSet}</p>
+                            <Label>{t.formMobileLabel}</Label>
+                            <p className="text-sm">{userProfile?.mobile || t.userDataNotSet}</p>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')}>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('mobile')}>
                             <Edit className="h-4 w-4" />
                         </Button>
                     </div>
@@ -240,16 +249,19 @@ export function SettingsPage() {
                         </Button>
                     </div>
 
-                     <div className="flex items-center gap-4">
-                        <Phone className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex items-start gap-4">
+                        <Mail className="h-5 w-5 text-muted-foreground mt-1" />
                         <div className="flex-1">
-                            <Label>{t.formMobileLabel}</Label>
-                            <p className="text-sm">{userProfile?.mobile || t.userDataNotSet}</p>
+                            <Label>{t.formEmailLabel}</Label>
+                            <p className="text-sm">{user.email}</p>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField('mobile')}>
-                            <Edit className="h-4 w-4" />
-                        </Button>
                     </div>
+                    
+                    <Card className="flex flex-col items-center justify-center p-6 bg-muted/50 h-48">
+                        <MapPin className="h-12 w-12 text-muted-foreground" />
+                        <p className="mt-2 text-muted-foreground">{t.mapPlaceholderTitle}</p>
+                        <p className="text-sm text-muted-foreground">{t.mapPlaceholderDescription}</p>
+                    </Card>
                   </div>
                 )}
               </div>
@@ -276,3 +288,5 @@ export function SettingsPage() {
     </div>
   );
 }
+
+    
