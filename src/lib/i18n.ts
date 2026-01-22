@@ -257,7 +257,9 @@ export const translations = {
     settingsLanguageArabic: "Arabic",
     settingsLanguageEnglish: "English",
     settingsLanguageAI: "Automatic (AI)",
-    settingsLanguageAIDescription: "Coming soon"
+    settingsLanguageAIDescription: "Translate using AI",
+    aiTranslationFailTitle: 'AI Translation Failed',
+    aiTranslationFailDescription: 'Could not translate content. Falling back to default language.',
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -517,7 +519,9 @@ export const translations = {
     settingsLanguageArabic: "العربية",
     settingsLanguageEnglish: "الإنجليزية",
     settingsLanguageAI: "تلقائي (بالذكاء الاصطناعي)",
-    settingsLanguageAIDescription: "قريباً",
+    settingsLanguageAIDescription: "ترجمة باستخدام الذكاء الاصطناعي",
+    aiTranslationFailTitle: 'فشل الترجمة بالذكاء الاصطناعي',
+    aiTranslationFailDescription: 'تعذر ترجمة المحتوى. سيتم الرجوع إلى اللغة الافتراضية.',
   },
 };
 

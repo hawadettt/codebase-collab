@@ -9,3 +9,4 @@ import '@/ai/flows/generate-export-contract.ts';
 import '@/ai/flows/diplomatic-translator.ts';
 import '@/ai/flows/search-suppliers.ts';
 import '@/ai/flows/search-customers.ts';
+import '@/ai/flows/translate-text.ts';
