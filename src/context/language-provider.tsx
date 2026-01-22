@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import { translations, TranslationKeys } from '@/lib/i18n';
 import { useToast } from '@/hooks/use-toast';
 import { translateText } from '@/ai/flows/translate-text';
@@ -69,13 +69,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
   };
   
-  let t: Record<TranslationKeys, string>;
-  if (language === 'ai') {
-    const browserLang = navigator.language.split('-')[0] || 'en';
-    t = aiTranslationsCache[browserLang] || translations.en;
-  } else {
-    t = translations[language] || translations.ar;
-  }
+  const t = useMemo(() => {
+    if (language === 'ai') {
+      // This is safe because `language` is only set to 'ai' on the client side.
+      // To be extra safe and avoid hydration mismatches, we ensure this only runs on the client.
+      if (typeof window !== 'undefined') {
+        const browserLang = navigator.language.split('-')[0] || 'en';
+        return aiTranslationsCache[browserLang] || translations.en;
+      }
+      // For SSR, if language was 'ai' for some reason, fallback to a default.
+      return translations.ar;
+    }
+    return translations[language] || translations.ar;
+  }, [language, aiTranslationsCache]);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t, isTranslating }}>
