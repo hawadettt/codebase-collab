@@ -250,8 +250,14 @@ export const translations = {
     settingsTitle: "Settings",
     settingsDescription: "Manage your application settings.",
     settingsThemeTitle: "Appearance",
-    settingsThemeNileDark: "Nile Dark",
+    settingsThemeNileDark: "Dark Mode",
     settingsThemeSystem: "System",
+    settingsLanguageTitle: "Language",
+    settingsLanguageDescription: "Choose the application display language.",
+    settingsLanguageArabic: "Arabic",
+    settingsLanguageEnglish: "English",
+    settingsLanguageAI: "Automatic (AI)",
+    settingsLanguageAIDescription: "Coming soon"
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -506,6 +512,12 @@ export const translations = {
     settingsThemeTitle: "المظهر",
     settingsThemeNileDark: "الوضع الداكن",
     settingsThemeSystem: "النظام",
+    settingsLanguageTitle: "اللغة",
+    settingsLanguageDescription: "اختر لغة عرض التطبيق.",
+    settingsLanguageArabic: "العربية",
+    settingsLanguageEnglish: "الإنجليزية",
+    settingsLanguageAI: "تلقائي (بالذكاء الاصطناعي)",
+    settingsLanguageAIDescription: "قريباً",
   },
 };
 
