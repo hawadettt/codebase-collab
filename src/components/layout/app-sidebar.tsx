@@ -178,12 +178,11 @@ export function AppSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Collapsible defaultOpen={pathname.startsWith('/important-sites')}>
-                <CollapsibleTrigger className="w-full group">
+                <CollapsibleTrigger asChild>
                    <SidebarMenuButton
                       isActive={pathname.startsWith('/important-sites')}
                       size="sm"
-                      className="justify-between"
-                      asChild={false}
+                      className="w-full justify-between group"
                    >
                      <div className="flex items-center gap-2">
                         <Globe />
