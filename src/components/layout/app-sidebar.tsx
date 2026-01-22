@@ -25,6 +25,7 @@ import {
   Building2,
   Briefcase,
   Globe,
+  ChevronRight,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useUser } from "@/firebase";
@@ -34,6 +35,11 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/context/language-provider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
@@ -171,12 +177,54 @@ export function AppSidebar() {
               </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <Link href="/important-sites">
-                <SidebarMenuButton isActive={pathname === '/important-sites'} size="sm">
-                  <Globe />
-                  <span>{t.sidebarImportantSites}</span>
-                </SidebarMenuButton>
-              </Link>
+              <Collapsible defaultOpen={pathname.startsWith('/important-sites')}>
+                <CollapsibleTrigger className="w-full group">
+                   <SidebarMenuButton
+                      isActive={pathname.startsWith('/important-sites')}
+                      size="sm"
+                      className="justify-between"
+                      asChild={false}
+                   >
+                     <div className="flex items-center gap-2">
+                        <Globe />
+                        <span>{t.sidebarImportantSites}</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90" />
+                   </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-1">
+                  <SidebarMenu className="pl-7">
+                      <SidebarMenuItem>
+                        <Link href="/important-sites/sovereign">
+                          <SidebarMenuButton isActive={pathname === '/important-sites/sovereign'} size="sm">
+                            <span>{t.sitesCategorySovereign}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <Link href="/important-sites/logistics">
+                          <SidebarMenuButton isActive={pathname === '/important-sites/logistics'} size="sm">
+                            <span>{t.sitesCategoryLogistics}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <Link href="/important-sites/market-intel">
+                          <SidebarMenuButton isActive={pathname === '/important-sites/market-intel'} size="sm">
+                            <span>{t.sitesCategoryMarketIntel}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <Link href="/important-sites/technical">
+                          <SidebarMenuButton isActive={pathname === '/important-sites/technical'} size="sm">
+                            <span>{t.sitesCategoryTechnical}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                  </SidebarMenu>
+                </CollapsibleContent>
+              </Collapsible>
             </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
