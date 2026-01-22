@@ -79,10 +79,9 @@ const ALL_CATEGORIES: Category[] = [
 
 
 export function ImportantSitesPage({ params }: { params: { categoryId: string } }) {
-  const { categoryId } = params;
   const { t } = useLanguage();
 
-  const category = ALL_CATEGORIES.find(c => c.id === categoryId);
+  const category = ALL_CATEGORIES.find(c => c.id === params.categoryId);
 
   if (!category) {
     return (
@@ -90,7 +89,7 @@ export function ImportantSitesPage({ params }: { params: { categoryId: string } 
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Category Not Found</AlertTitle>
             <AlertDescription>
-                The requested category '{categoryId}' does not exist.
+                The requested category '{params.categoryId}' does not exist.
             </AlertDescription>
         </Alert>
     )
