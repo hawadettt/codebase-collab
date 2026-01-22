@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
 import { translations, TranslationKeys } from '@/lib/i18n';
 
 interface LanguageContextType {
@@ -12,13 +12,32 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<string>('ar');
+  const storageKey = 'nile-key-language';
+  const defaultLanguage = 'ar';
 
-  const setLanguage = useCallback((langCode: string) => {
-    if (langCode === 'en' || langCode === 'ar') {
-      setLanguageState(langCode);
+  const [language, setLanguage] = useState<string>(defaultLanguage);
+
+  useEffect(() => {
+    // This runs once on the client after hydration
+    let storedLanguage: string;
+    try {
+        storedLanguage = localStorage.getItem(storageKey) || defaultLanguage;
+    } catch (e) {
+        storedLanguage = defaultLanguage;
+    }
+    if (storedLanguage && ['en', 'ar'].includes(storedLanguage)) {
+        setLanguage(storedLanguage);
     }
   }, []);
+
+  useEffect(() => {
+    // This runs whenever the language state changes
+    try {
+      localStorage.setItem(storageKey, language);
+    } catch (e) {
+      console.error("Failed to save language to localStorage", e);
+    }
+  }, [language]);
   
   const t = useMemo(() => {
     return translations[language as 'en' | 'ar'] || translations.ar;

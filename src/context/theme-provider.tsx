@@ -25,38 +25,36 @@ export function ThemeProvider({
   defaultTheme?: Theme
   storageKey?: string
 }) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === 'undefined') {
-      return defaultTheme;
-    }
-    try {
-      const storedTheme = localStorage.getItem(storageKey) as Theme | null
-      if (storedTheme && ['light', 'dark'].includes(storedTheme)) {
-        return storedTheme
-      }
-    } catch (e) {
-      // Ignore
-    }
-    return defaultTheme
-  });
-
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   useEffect(() => {
-    const root = window.document.documentElement
-    root.classList.remove("light", "dark")
-    root.classList.add(theme)
-  }, [theme])
+    // This runs once on the client after hydration
+    let storedTheme: Theme;
+    try {
+      storedTheme = (localStorage.getItem(storageKey) as Theme) || defaultTheme;
+    } catch (e) {
+      storedTheme = defaultTheme;
+    }
+    if (storedTheme && ['light', 'dark'].includes(storedTheme)) {
+        setTheme(storedTheme);
+    }
+  }, [defaultTheme, storageKey]);
+
+  useEffect(() => {
+    // This runs whenever the theme state changes
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    try {
+      localStorage.setItem(storageKey, theme);
+    } catch (e) {
+      console.error("Failed to save theme to localStorage", e);
+    }
+  }, [theme, storageKey]);
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      try {
-        localStorage.setItem(storageKey, theme)
-      } catch (e) {
-        // Ignore
-      }
-      setTheme(theme)
-    },
+    setTheme,
   }
 
   return (
