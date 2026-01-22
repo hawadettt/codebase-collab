@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import React from "react";
 import { usePathname } from "next/navigation";
 import {
@@ -67,7 +66,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar side={language === 'ar' ? 'right' : 'left'} collapsible="icon">
+    <Sidebar side={language === 'ar' ? 'right' : 'left'}>
       <SidebarHeader>
         <div className="flex flex-col gap-2">
             <div className="px-2 text-xs font-medium text-muted-foreground">{t.chooseLanguage}</div>
@@ -124,7 +123,7 @@ export function AppSidebar() {
         <SidebarMenu>
             <SidebarMenuItem>
               <Link href="/">
-                <SidebarMenuButton isActive={pathname === '/'} size="sm" tooltip={t.sidebarHome}>
+                <SidebarMenuButton isActive={pathname === '/'} size="sm">
                   <Home />
                   <span>{t.sidebarHome}</span>
                 </SidebarMenuButton>
@@ -132,7 +131,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link href="/services">
-                <SidebarMenuButton isActive={pathname === '/services'} size="sm" tooltip={t.sidebarServices}>
+                <SidebarMenuButton isActive={pathname === '/services'} size="sm">
                   <Briefcase />
                   <span>{t.sidebarServices}</span>
                 </SidebarMenuButton>
@@ -140,7 +139,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link href="/dashboard">
-                <SidebarMenuButton isActive={pathname === '/dashboard'} size="sm" tooltip={t.sidebarDashboard}>
+                <SidebarMenuButton isActive={pathname === '/dashboard'} size="sm">
                   <LayoutDashboard />
                   <span>{t.sidebarDashboard}</span>
                 </SidebarMenuButton>
@@ -148,7 +147,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
              <SidebarMenuItem>
               <Link href="/shipments">
-                <SidebarMenuButton isActive={pathname === '/shipments'} size="sm" tooltip={t.sidebarShipments}>
+                <SidebarMenuButton isActive={pathname === '/shipments'} size="sm">
                   <Truck />
                   <span>{t.sidebarShipments}</span>
                 </SidebarMenuButton>
@@ -156,7 +155,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link href="/suppliers">
-                <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm" tooltip={t.sidebarSuppliers}>
+                <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm">
                   <Building2 />
                   <span>{t.sidebarSuppliers}</span>
                 </SidebarMenuButton>
@@ -164,7 +163,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link href="/customers">
-                <SidebarMenuButton isActive={pathname === '/customers'} size="sm" tooltip={t.sidebarCustomers}>
+                <SidebarMenuButton isActive={pathname === '/customers'} size="sm">
                   <Users />
                   <span>{t.sidebarCustomers}</span>
                 </SidebarMenuButton>
@@ -177,7 +176,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <Link href="/settings">
-              <SidebarMenuButton isActive={pathname === '/settings'} size="sm" tooltip={t.sidebarSettings}>
+              <SidebarMenuButton isActive={pathname === '/settings'} size="sm">
                 <Settings />
                 <span>{t.sidebarSettings}</span>
               </SidebarMenuButton>
