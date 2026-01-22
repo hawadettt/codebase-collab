@@ -8,7 +8,7 @@ import { useLanguage } from "@/context/language-provider";
 import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2, Briefcase, Tag } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useUser, useFirestore, useDoc, useMemoFirebase, errorEmitter, FirestorePermissionError } from '@/firebase';
-import { doc, updateDoc, DocumentReference } from 'firebase/firestore';
+import { doc, setDoc, DocumentReference } from 'firebase/firestore';
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useToast } from "@/hooks/use-toast";
 
 type UserProfile = {
+    id?: string;
     userName?: string;
     companyName?: string;
     companyType?: string;
@@ -46,21 +47,35 @@ export function SettingsPage() {
   const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
   
   const handleUpdateProfile = async (data: Partial<UserProfile>) => {
-    if (!userProfileRef) {
+    if (!userProfileRef || !user) {
       toast({ variant: 'destructive', title: t.profileUpdateFailed, description: "User not authenticated." });
       return Promise.reject(new Error("User not authenticated."));
     }
     setIsUpdating(true);
+
+    const dataToSave = { ...data };
+
+    // If the user profile document doesn't exist, we are creating it.
+    // The security rule requires the 'id' field on create to match the user's UID.
+    if (!userProfile) {
+      dataToSave.id = user.uid;
+      if (user.email) {
+        dataToSave.email = user.email;
+      }
+    }
+
     try {
-      await updateDoc(userProfileRef, data);
+      // Use setDoc with { merge: true } to perform an "upsert".
+      // This will CREATE the document if it doesn't exist, or UPDATE it if it does.
+      await setDoc(userProfileRef, dataToSave, { merge: true });
       toast({ title: t.profileUpdatedSuccess });
     } catch (error: any) {
       console.error("Profile update failed:", error);
       
       const permissionError = new FirestorePermissionError({
         path: userProfileRef.path,
-        operation: 'update',
-        requestResourceData: data,
+        operation: 'write', // 'write' covers both create and update.
+        requestResourceData: dataToSave,
       });
       errorEmitter.emit('permission-error', permissionError);
 
@@ -69,7 +84,7 @@ export function SettingsPage() {
         title: t.profileUpdateFailed,
         description: error.message || t.profileUpdateError,
       });
-      throw error;
+      throw error; // Re-throw to be caught by the caller if needed
     } finally {
       setIsUpdating(false);
     }
@@ -110,7 +125,7 @@ export function SettingsPage() {
                 <RadioGroupItem value="light" id="light" className="peer sr-only" />
                 <Label
                   htmlFor="light"
-                  className="flex h-10 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex h-9 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 text-sm hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                    <div className="flex items-center justify-center rounded-md bg-background text-foreground">
                     {t.settingsThemeLight}
@@ -121,7 +136,7 @@ export function SettingsPage() {
                 <RadioGroupItem value="dark" id="dark" className="peer sr-only" />
                 <Label
                   htmlFor="dark"
-                  className="flex h-10 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex h-9 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 text-sm hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                   <div className="flex items-center justify-center rounded-md bg-[hsl(var(--background))] text-[hsl(var(--foreground))] dark">
                     {t.settingsThemeDark}
@@ -149,7 +164,7 @@ export function SettingsPage() {
                 <RadioGroupItem value="en" id="en" className="peer sr-only" />
                 <Label
                   htmlFor="en"
-                  className="flex h-10 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex h-9 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 text-sm hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                   English
                 </Label>
@@ -158,7 +173,7 @@ export function SettingsPage() {
                 <RadioGroupItem value="ar" id="ar" className="peer sr-only" />
                 <Label
                   htmlFor="ar"
-                  className="flex h-10 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  className="flex h-9 cursor-pointer items-center justify-center rounded-md border-2 border-muted bg-popover p-2 text-sm hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                   العربية
                 </Label>
@@ -192,53 +207,40 @@ export function SettingsPage() {
                     <div className="flex items-center gap-4"><Skeleton className="h-6 w-6 rounded-full" /><div className="w-full space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-4 w-40" /></div></div>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    <div className="space-y-1">
-                        <div className="flex items-center">
-                            <div className="flex items-center gap-2">
-                                <User className="h-5 w-5 text-muted-foreground" />
-                                <Label>{t.formUserNameLabel}</Label>
-                            </div>
-                            <div className="ml-auto">
-                                <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')} disabled={isUpdating}>
-                                    <Edit className="h-4 w-4" />
-                                </Button>
-                            </div>
+                  <div className="space-y-6">
+                    <div className="flex">
+                        <div className="flex-grow space-y-1">
+                            <Label className="flex items-center gap-2"><User className="h-4 w-4 text-muted-foreground" /> {t.formUserNameLabel}</Label>
+                            <p className="pl-6 text-sm text-muted-foreground">{userProfile?.userName || t.userDataNotSet}</p>
                         </div>
-                        <p className="pl-7 text-sm text-muted-foreground">{userProfile?.userName || t.userDataNotSet}</p>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')} disabled={isUpdating}>
+                            <Edit className="h-4 w-4" />
+                        </Button>
                     </div>
 
-                    <div className="space-y-1">
-                        <div className="flex items-center">
-                            <div className="flex items-center gap-2">
-                                <Briefcase className="h-5 w-5 text-muted-foreground" />
-                                <Label>{t.formCompanyNameLabel}</Label>
-                            </div>
-                            <div className="ml-auto">
-                                <Button variant="ghost" size="icon" onClick={() => setEditingField('companyName')} disabled={isUpdating}>
-                                    <Edit className="h-4 w-4" />
-                                </Button>
-                            </div>
+                    <div className="flex">
+                        <div className="flex-grow space-y-1">
+                             <Label className="flex items-center gap-2"><Briefcase className="h-4 w-4 text-muted-foreground" /> {t.formCompanyNameLabel}</Label>
+                            <p className="pl-6 text-sm text-muted-foreground">{userProfile?.companyName || t.userDataNotSet}</p>
                         </div>
-                        <p className="pl-7 text-sm text-muted-foreground">{userProfile?.companyName || t.userDataNotSet}</p>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('companyName')} disabled={isUpdating}>
+                            <Edit className="h-4 w-4" />
+                        </Button>
                     </div>
 
                     <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                            <Tag className="h-5 w-5 text-muted-foreground" />
-                            <Label>{t.formCompanyTypeLabel}</Label>
-                        </div>
-                        <div className="pl-7">
+                        <Label className="flex items-center gap-2"><Tag className="h-4 w-4 text-muted-foreground" /> {t.formCompanyTypeLabel}</Label>
+                        <div className="pl-6">
                             <Select
                               value={userProfile?.companyType || ''}
                               onValueChange={async (value) => {
-                                try { await handleUpdateProfile({ companyType: value }) } catch (e) { /* error handled in function */ }
+                                try { await handleUpdateProfile({ companyType: value }) } catch (e) { /* error is handled in function and toast is shown */ }
                               }}
                               disabled={isUpdating}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder={t.selectCompanyTypePlaceholder}>
-                                    {isUpdating ? <Loader2 className="mx-2 h-4 w-4 animate-spin" /> : (companyTypes.find(c => c.value === userProfile?.companyType)?.label || userProfile?.companyType || t.userDataNotSet)}
+                                    {isUpdating && userProfile?.companyType !== companyTypes.find(c => c.value === userProfile?.companyType)?.value ? <Loader2 className="mx-2 h-4 w-4 animate-spin" /> : (companyTypes.find(c => c.value === userProfile?.companyType)?.label || userProfile?.companyType || t.userDataNotSet)}
                                 </SelectValue>
                               </SelectTrigger>
                               <SelectContent>
@@ -253,22 +255,19 @@ export function SettingsPage() {
                     </div>
                     
                     <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                            <Globe className="h-5 w-5 text-muted-foreground" />
-                            <Label>{t.formCountry}</Label>
-                        </div>
-                        <div className="pl-7">
+                        <Label className="flex items-center gap-2"><Globe className="h-4 w-4 text-muted-foreground" /> {t.formCountry}</Label>
+                        <div className="pl-6">
                             <Select
                               value={userProfile?.country || ''}
                               onValueChange={async (value) => {
-                                try { await handleUpdateProfile({ country: value }) } catch (e) { /* error handled in function */ }
+                                try { await handleUpdateProfile({ country: value }) } catch (e) { /* error is handled in function and toast is shown */ }
                               }}
                               disabled={isUpdating}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder={t.selectCountry}>
                                   <div className="flex items-center gap-2">
-                                     {isUpdating ? <Loader2 className="mx-2 h-4 w-4 animate-spin" /> : <span>{getCountryFlag(userProfile?.country)}</span>}
+                                     {isUpdating && userProfile?.country !== countries.find(c => c.name === userProfile?.country)?.name ? <Loader2 className="mx-2 h-4 w-4 animate-spin" /> : <span>{getCountryFlag(userProfile?.country)}</span>}
                                      <span>{userProfile?.country || t.userDataNotSet}</span>
                                   </div>
                                 </SelectValue>
@@ -287,42 +286,29 @@ export function SettingsPage() {
                         </div>
                     </div>
 
-                    <div className="space-y-1">
-                        <div className="flex items-center">
-                            <div className="flex items-center gap-2">
-                                <Phone className="h-5 w-5 text-muted-foreground" />
-                                <Label>{t.formMobileLabel}</Label>
-                            </div>
-                            <div className="ml-auto">
-                                <Button variant="ghost" size="icon" onClick={() => setEditingField('mobile')} disabled={isUpdating}>
-                                    <Edit className="h-4 w-4" />
-                                </Button>
-                            </div>
+                    <div className="flex">
+                        <div className="flex-grow space-y-1">
+                            <Label className="flex items-center gap-2"><Phone className="h-4 w-4 text-muted-foreground" /> {t.formMobileLabel}</Label>
+                            <p className="pl-6 text-sm text-muted-foreground">{userProfile?.mobile || t.userDataNotSet}</p>
                         </div>
-                        <p className="pl-7 text-sm text-muted-foreground">{userProfile?.mobile || t.userDataNotSet}</p>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('mobile')} disabled={isUpdating}>
+                            <Edit className="h-4 w-4" />
+                        </Button>
+                    </div>
+
+                     <div className="flex">
+                        <div className="flex-grow space-y-1">
+                            <Label className="flex items-center gap-2"><Phone className="h-4 w-4 text-muted-foreground" /> {t.formWhatsapp}</Label>
+                            <p className="pl-6 text-sm text-muted-foreground">{userProfile?.whatsapp || t.userDataNotSet}</p>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('whatsapp')} disabled={isUpdating}>
+                            <Edit className="h-4 w-4" />
+                        </Button>
                     </div>
 
                     <div className="space-y-1">
-                        <div className="flex items-center">
-                            <div className="flex items-center gap-2">
-                                <Phone className="h-5 w-5 text-muted-foreground" />
-                                <Label>{t.formWhatsapp}</Label>
-                            </div>
-                             <div className="ml-auto">
-                                <Button variant="ghost" size="icon" onClick={() => setEditingField('whatsapp')} disabled={isUpdating}>
-                                    <Edit className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </div>
-                        <p className="pl-7 text-sm text-muted-foreground">{userProfile?.whatsapp || t.userDataNotSet}</p>
-                    </div>
-
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                            <Mail className="h-5 w-5 text-muted-foreground" />
-                            <Label>{t.formEmailLabel}</Label>
-                        </div>
-                        <p className="pl-7 text-sm text-muted-foreground">{user.email}</p>
+                        <Label className="flex items-center gap-2"><Mail className="h-4 w-4 text-muted-foreground" /> {t.formEmailLabel}</Label>
+                        <p className="pl-6 text-sm text-muted-foreground">{user.email}</p>
                     </div>
                     
                     <Card className="flex flex-col items-center justify-center p-6 bg-muted/50 h-48">
