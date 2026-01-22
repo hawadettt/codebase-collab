@@ -153,28 +153,109 @@ export function AppSidebar() {
               </Link>
             </SidebarMenuItem>
              <SidebarMenuItem>
-              <Link href="/shipments">
-                <SidebarMenuButton isActive={pathname === '/shipments'} size="sm">
-                  <Truck />
-                  <span>{t.sidebarShipments}</span>
-                </SidebarMenuButton>
-              </Link>
+              <Collapsible defaultOpen={pathname.startsWith('/shipments')}>
+                <CollapsibleTrigger asChild>
+                   <SidebarMenuButton
+                      isActive={pathname.startsWith('/shipments')}
+                      size="sm"
+                      className="w-full justify-between group"
+                   >
+                     <div className="flex items-center gap-2">
+                        <Truck />
+                        <span>{t.sidebarShipments}</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90" />
+                   </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-1">
+                  <SidebarMenu className="pl-7">
+                      <SidebarMenuItem>
+                        <Link href="/shipments">
+                          <SidebarMenuButton isActive={pathname === '/shipments'} size="sm">
+                            <span>{t.sidebarViewAll}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <Link href="/shipments/new">
+                          <SidebarMenuButton isActive={pathname === '/shipments/new'} size="sm">
+                            <span>{t.sidebarAddNew}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                  </SidebarMenu>
+                </CollapsibleContent>
+              </Collapsible>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <Link href="/suppliers">
-                <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm">
-                  <Building2 />
-                  <span>{t.sidebarSuppliers}</span>
-                </SidebarMenuButton>
-              </Link>
+              <Collapsible defaultOpen={pathname.startsWith('/suppliers')}>
+                <CollapsibleTrigger asChild>
+                   <SidebarMenuButton
+                      isActive={pathname.startsWith('/suppliers')}
+                      size="sm"
+                      className="w-full justify-between group"
+                   >
+                     <div className="flex items-center gap-2">
+                        <Building2 />
+                        <span>{t.sidebarSuppliers}</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90" />
+                   </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-1">
+                  <SidebarMenu className="pl-7">
+                      <SidebarMenuItem>
+                        <Link href="/suppliers">
+                          <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm">
+                            <span>{t.sidebarViewAll}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <Link href="/suppliers/new">
+                          <SidebarMenuButton isActive={pathname === '/suppliers/new'} size="sm">
+                            <span>{t.sidebarAddNew}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                  </SidebarMenu>
+                </CollapsibleContent>
+              </Collapsible>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <Link href="/customers">
-                <SidebarMenuButton isActive={pathname === '/customers'} size="sm">
-                  <Users />
-                  <span>{t.sidebarCustomers}</span>
-                </SidebarMenuButton>
-              </Link>
+              <Collapsible defaultOpen={pathname.startsWith('/customers')}>
+                <CollapsibleTrigger asChild>
+                   <SidebarMenuButton
+                      isActive={pathname.startsWith('/customers')}
+                      size="sm"
+                      className="w-full justify-between group"
+                   >
+                     <div className="flex items-center gap-2">
+                        <Users />
+                        <span>{t.sidebarCustomers}</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90" />
+                   </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-1">
+                  <SidebarMenu className="pl-7">
+                      <SidebarMenuItem>
+                        <Link href="/customers">
+                          <SidebarMenuButton isActive={pathname === '/customers'} size="sm">
+                            <span>{t.sidebarViewAll}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <Link href="/customers/new">
+                          <SidebarMenuButton isActive={pathname === '/customers/new'} size="sm">
+                            <span>{t.sidebarAddNew}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                  </SidebarMenu>
+                </CollapsibleContent>
+              </Collapsible>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Collapsible defaultOpen={pathname.startsWith('/important-sites')}>

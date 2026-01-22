@@ -9,10 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { PlusCircle, Loader2, Users, Bot, Search, AlertTriangle, FileText } from 'lucide-react';
+import { Loader2, Users, Bot, Search, AlertTriangle, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
-import { collection, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { searchCustomers, type SearchCustomersInput, type SearchCustomersOutput } from '@/ai/flows/search-customers';
@@ -21,15 +21,6 @@ import { useLanguage } from '@/context/language-provider';
 
 export function CustomersDashboard() {
   const { language, t } = useLanguage();
-
-  const customerSchema = z.object({
-    clientName: z.string().min(1, t.formCustomerRequired),
-    country: z.string().min(1, t.formCountryRequired),
-    creditLimit: z.preprocess((a) => parseFloat(z.string().parse(a)), z.number().positive(t.formCreditLimitPositive)),
-    hsCodesPreferred: z.string().transform(val => val.split(',').map(s => s.trim()).filter(Boolean)),
-    incoTerms: z.string().min(1, t.formIncoTermsRequired),
-    paymentTerms: z.string().min(1, t.formPaymentTermsRequired),
-  });
 
   const rfqSchema = z.object({
     companyName: z.string().min(1, t.formCompanyNameRequired),
@@ -43,28 +34,22 @@ export function CustomersDashboard() {
     additionalNotes: z.string().optional(),
   });
 
-  type Customer = z.infer<typeof customerSchema> & { id: string; createdAt: { seconds: number, nanoseconds: number } };
+  type Customer = { 
+    id: string; 
+    createdAt: { seconds: number, nanoseconds: number };
+    clientName: string;
+    country: string;
+    incoTerms: string;
+    creditLimit: number;
+   };
 
   const { toast } = useToast();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchCustomersOutput | null>(null);
   const [isRfqSubmitting, setIsRfqSubmitting] = useState(false);
-
-  const form = useForm<z.infer<typeof customerSchema>>({
-    resolver: zodResolver(customerSchema),
-    defaultValues: {
-      clientName: '',
-      country: '',
-      creditLimit: 0,
-      hsCodesPreferred: [],
-      incoTerms: 'FOB',
-      paymentTerms: '',
-    },
-  });
   
   const rfqForm = useForm<z.infer<typeof rfqSchema>>({
     resolver: zodResolver(rfqSchema),
@@ -87,25 +72,6 @@ export function CustomersDashboard() {
   }, [firestore, user]);
 
   const { data: customers, isLoading: isLoadingCustomers } = useCollection<Customer>(customersQuery);
-
-  const handleAddCustomer = async (values: z.infer<typeof customerSchema>) => {
-    if (!user) {
-      toast({ variant: 'destructive', title: t.authErrorTitle, description: t.authErrorDescription });
-      return;
-    }
-    setIsSubmitting(true);
-    try {
-      const collectionRef = collection(firestore, 'users', user.uid, 'customers');
-      await addDocumentNonBlocking(collectionRef, { ...values, createdAt: serverTimestamp() });
-      toast({ title: t.addCustomerSuccessTitle, description: t.addCustomerSuccessDescription });
-      form.reset();
-    } catch (error) {
-      console.error('Failed to add customer:', error);
-      toast({ variant: 'destructive', title: t.addCustomerFailTitle, description: t.addCustomerFailDescription });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
   
   const handleRfqSubmit = async (values: z.infer<typeof rfqSchema>) => {
     setIsRfqSubmitting(true);
@@ -206,106 +172,6 @@ export function CustomersDashboard() {
               <p className="max-w-xs text-sm">{t.noCustomersDescription}</p>
             </div>
           )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2">
-            <PlusCircle className="h-6 w-6" /> {t.addCustomerTitle}
-          </CardTitle>
-          <CardDescription>{t.addCustomerDescription}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleAddCustomer)} className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <FormField
-                  control={form.control}
-                  name="clientName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formClientName}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t.formClientNamePlaceholder} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="country"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formCountry}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t.formCountryPlaceholder} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={form.control}
-                  name="creditLimit"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formCreditLimit}</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={form.control}
-                  name="incoTerms"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formIncoTerms}</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., FOB, CIF" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="paymentTerms"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formPaymentTerms}</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., L/C, CAD" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-               <FormField
-                  control={form.control}
-                  name="hsCodesPreferred"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formHsCodesPreferred}</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder={t.formHsCodesPreferredPlaceholder} {...field} />
-                      </FormControl>
-                       <CardDescription>{t.formCommaSeparated}</CardDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mx-2 h-4 w-4 animate-spin" />}
-                {t.addCustomerButton}
-              </Button>
-            </form>
-          </Form>
         </CardContent>
       </Card>
 
