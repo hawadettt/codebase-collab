@@ -23,7 +23,8 @@ import {
   LogIn,
   Users,
   Building2,
-  Briefcase
+  Briefcase,
+  Globe,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useUser } from "@/firebase";
@@ -71,7 +72,7 @@ export function AppSidebar() {
         <div className="flex flex-col gap-2">
             <div className="px-2 text-xs font-medium text-muted-foreground">{t.chooseLanguage}</div>
             <div className="px-2">
-              <Select value={language} onValueChange={(value) => setLanguage(value)}>
+              <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'ar')}>
                   <SelectTrigger className="h-9">
                     <SelectValue placeholder={t.chooseLanguage} />
                   </SelectTrigger>
@@ -166,6 +167,14 @@ export function AppSidebar() {
                 <SidebarMenuButton isActive={pathname === '/customers'} size="sm">
                   <Users />
                   <span>{t.sidebarCustomers}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href="/important-sites">
+                <SidebarMenuButton isActive={pathname === '/important-sites'} size="sm">
+                  <Globe />
+                  <span>{t.sidebarImportantSites}</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
