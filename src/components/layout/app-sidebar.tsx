@@ -43,7 +43,7 @@ const supportedLanguages = [
 ];
 
 export function AppSidebar() {
-  const { language, setLanguage, t, isTranslating } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const { toast } = useToast();
@@ -72,7 +72,7 @@ export function AppSidebar() {
         <div className="flex flex-col gap-2">
             <div className="px-2 text-xs font-medium text-muted-foreground">{t.chooseLanguage}</div>
             <div className="px-2">
-              <Select value={language} onValueChange={(value) => setLanguage(value)} disabled={isTranslating || !supportedLanguages.some(l => l.code === language)}>
+              <Select value={language} onValueChange={(value) => setLanguage(value)}>
                   <SelectTrigger className="h-9">
                     <SelectValue placeholder={t.chooseLanguage} />
                   </SelectTrigger>

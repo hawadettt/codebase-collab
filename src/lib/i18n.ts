@@ -254,11 +254,6 @@ export const translations = {
     settingsThemeDark: "Dark",
     settingsThemeSystem: "System",
     settingsLanguageTitle: "Language",
-    settingsLanguageSelect: "Select a language...",
-    settingsLanguageBuiltIn: "Built-in Languages",
-    settingsLanguageAI: "AI Translation",
-    aiTranslationFailTitle: 'AI Translation Failed',
-    aiTranslationFailDescription: 'Could not translate content. Falling back to previous language.',
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -515,11 +510,6 @@ export const translations = {
     settingsThemeDark: "داكن",
     settingsThemeSystem: "النظام",
     settingsLanguageTitle: "اللغة",
-    settingsLanguageSelect: "اختر لغة...",
-    settingsLanguageBuiltIn: "لغات مدمجة",
-    settingsLanguageAI: "ترجمة بالذكاء الاصطناعي",
-    aiTranslationFailTitle: 'فشل الترجمة بالذكاء الاصطناعي',
-    aiTranslationFailDescription: 'تعذر ترجمة المحتوى. سيتم الرجوع إلى اللغة السابقة.',
   },
 };
 
