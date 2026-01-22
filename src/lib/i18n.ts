@@ -287,6 +287,13 @@ export const translations = {
     siteGoeicDesc: 'The official body for quality control, inspection, and issuing certificates of origin for exports and imports.',
     siteCustomsTitle: 'Egyptian Customs Authority',
     siteCustomsDesc: 'Official website for customs regulations, tariffs, and procedures.',
+    siteGafiTitle: 'General Authority for Investment and Free Zones (GAFI)',
+    siteGafiDesc: 'The primary government body responsible for regulating and promoting investment in Egypt. GAFI provides comprehensive information on investment opportunities, incentives, and procedures.',
+    siteExpolinkTitle: 'Egyptian Exporters Association (Expolink)',
+    siteExpolinkDesc: 'A non-governmental organization that aims to enhance Egyptian exports by providing support, consultation, and networking opportunities for exporters to connect with global markets.',
+    siteAecTitle: 'Agricultural Export Council (AEC)',
+    siteAecDesc: 'An entity dedicated to increasing and developing Egyptian agricultural exports by studying foreign markets, providing information to exporters, and participating in international exhibitions.',
+    visitSiteButton: 'Visit Site',
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -576,6 +583,13 @@ export const translations = {
     siteGoeicDesc: 'الهيئة الرسمية لمراقبة الجودة والفحص وإصدار شهادات المنشأ للصادرات والواردات.',
     siteCustomsTitle: 'مصلحة الجمارك المصرية',
     siteCustomsDesc: 'الموقع الرسمي للوائح الجمركية والتعريفات والإجراءات.',
+    siteGafiTitle: 'الهيئة العامة للاستثمار والمناطق الحرة (GAFI)',
+    siteGafiDesc: 'الجهة الحكومية الرئيسية المسؤولة عن تنظيم وتشجيع الاستثمار في مصر. توفر الهيئة معلومات شاملة عن الفرص الاستثمارية والحوافز والإجراءات اللازمة لبدء الأعمال التجارية.',
+    siteExpolinkTitle: 'جمعية المصدرين المصريين (Expolink)',
+    siteExpolinkDesc: 'منظمة غير حكومية تهدف إلى تعزيز الصادرات المصرية من خلال تقديم الدعم والمشورة وفرص التواصل للمصدرين للوصول إلى الأسواق العالمية.',
+    siteAecTitle: 'المجلس التصديري للحاصلات الزراعية (AEC)',
+    siteAecDesc: 'كيان يهدف إلى زيادة الصادرات الزراعية المصرية وتطويرها من خلال دراسة الأسواق الخارجية، وتوفير المعلومات للمصدرين، والمشاركة في المعارض الدولية.',
+    visitSiteButton: 'زيارة الموقع',
   },
 };
 
