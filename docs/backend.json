@@ -18,6 +18,18 @@
         "userName": {
           "type": "string",
           "description": "The user's chosen user name."
+        },
+        "whatsapp": {
+          "type": "string",
+          "description": "User's WhatsApp number, including country code."
+        },
+        "mobile": {
+          "type": "string",
+          "description": "User's mobile phone number."
+        },
+        "country": {
+          "type": "string",
+          "description": "User's country of residence."
         }
       },
       "required": [

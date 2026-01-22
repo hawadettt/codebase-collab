@@ -253,6 +253,12 @@ export const translations = {
     settingsThemeLight: "Light",
     settingsThemeDark: "Dark",
     settingsLanguageTitle: "Language",
+    settingsUserDataTitle: "User Profile",
+    settingsUserDataDescription: "View your personal information.",
+    formUserNameLabel: "Username",
+    formMobileLabel: "Mobile Number",
+    userDataNotSet: "Not set",
+    loginToViewProfile: "Please log in to view your profile.",
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -508,6 +514,12 @@ export const translations = {
     settingsThemeLight: "فاتح",
     settingsThemeDark: "داكن",
     settingsLanguageTitle: "اللغة",
+    settingsUserDataTitle: "الملف الشخصي",
+    settingsUserDataDescription: "عرض معلوماتك الشخصية.",
+    formUserNameLabel: "اسم المستخدم",
+    formMobileLabel: "رقم الجوال",
+    userDataNotSet: "لم يتم التعيين",
+    loginToViewProfile: "يرجى تسجيل الدخول لعرض ملفك الشخصي.",
   },
 };
 
