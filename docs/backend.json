@@ -30,6 +30,10 @@
         "country": {
           "type": "string",
           "description": "User's country of residence."
+        },
+        "gpsLocation": {
+          "type": "string",
+          "description": "User's GPS coordinates."
         }
       },
       "required": [

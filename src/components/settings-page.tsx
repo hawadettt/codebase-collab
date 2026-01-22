@@ -5,12 +5,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useLanguage } from "@/context/language-provider";
-import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle } from "lucide-react";
+import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { doc, updateDoc, DocumentReference } from 'firebase/firestore';
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
+import { useState } from "react";
+import { EditProfileFieldDialog } from "./edit-profile-field-dialog";
+import { countries } from "@/lib/countries";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { useToast } from "@/hooks/use-toast";
+
+type UserProfile = {
+    userName?: string;
+    email?: string;
+    whatsapp?: string;
+    mobile?: string;
+    country?: string;
+    gpsLocation?: string;
+};
 
 const supportedLanguages = [
   { code: 'en', name: 'English' },
@@ -22,13 +36,36 @@ export function SettingsPage() {
   const { language, setLanguage, t } = useLanguage();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
+  const { toast } = useToast();
+
+  const [editingField, setEditingField] = useState<'userName' | 'whatsapp' | 'mobile' | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
-    return doc(firestore, 'users', user.uid);
+    return doc(firestore, 'users', user.uid) as DocumentReference<UserProfile>;
   }, [firestore, user]);
 
-  const { data: userProfile, isLoading: isProfileLoading } = useDoc(userProfileRef);
+  const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
+  
+  const handleUpdateProfile = async (data: Partial<UserProfile>) => {
+    if (!userProfileRef) return;
+    setIsUpdating(true);
+    try {
+      await updateDoc(userProfileRef, data);
+      toast({ title: t.profileUpdatedSuccess });
+    } catch (error) {
+      console.error(error);
+      toast({ variant: 'destructive', title: t.profileUpdateFailed, description: t.profileUpdateError });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+  
+  const getCountryFlag = (countryName?: string) => {
+    const country = countries.find(c => c.name === countryName);
+    return country ? country.flag : '🏳️';
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -137,13 +174,12 @@ export function SettingsPage() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <div className="flex items-start gap-4">
-                        <User className="h-5 w-5 text-muted-foreground mt-1" />
-                        <div className="flex-1">
-                            <Label>{t.formUserNameLabel}</Label>
-                            <p className="text-sm">{userProfile?.userName || user.displayName || t.userDataNotSet}</p>
-                        </div>
-                    </div>
+                    <Card className="flex flex-col items-center justify-center p-6 bg-muted/50 h-48 mb-4">
+                        <MapPin className="h-12 w-12 text-muted-foreground" />
+                        <p className="mt-2 text-muted-foreground">{t.mapPlaceholderTitle}</p>
+                        <p className="text-sm text-muted-foreground">{t.mapPlaceholderDescription}</p>
+                    </Card>
+
                     <div className="flex items-start gap-4">
                         <Mail className="h-5 w-5 text-muted-foreground mt-1" />
                         <div className="flex-1">
@@ -151,26 +187,68 @@ export function SettingsPage() {
                             <p className="text-sm">{user.email}</p>
                         </div>
                     </div>
-                     <div className="flex items-start gap-4">
-                        <Phone className="h-5 w-5 text-muted-foreground mt-1" />
+
+                    <div className="flex items-start gap-4">
+                        <Globe className="h-5 w-5 text-muted-foreground mt-1" />
+                        <div className="flex-1">
+                            <Label>{t.formCountry}</Label>
+                            <Select
+                              value={userProfile?.country || ''}
+                              onValueChange={(value) => handleUpdateProfile({ country: value })}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder={t.selectCountry}>
+                                  <div className="flex items-center gap-2">
+                                    <span>{getCountryFlag(userProfile?.country)}</span>
+                                    <span>{userProfile?.country || t.userDataNotSet}</span>
+                                  </div>
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {countries.map((country) => (
+                                  <SelectItem key={country.code} value={country.name}>
+                                    <div className="flex items-center gap-2">
+                                      <span>{country.flag}</span>
+                                      <span>{country.name} ({country.dial_code})</span>
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <User className="h-5 w-5 text-muted-foreground" />
+                        <div className="flex-1">
+                            <Label>{t.formUserNameLabel}</Label>
+                            <p className="text-sm">{userProfile?.userName || t.userDataNotSet}</p>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')}>
+                            <Edit className="h-4 w-4" />
+                        </Button>
+                    </div>
+
+                     <div className="flex items-center gap-4">
+                        <Phone className="h-5 w-5 text-muted-foreground" />
                         <div className="flex-1">
                             <Label>{t.formWhatsapp}</Label>
                             <p className="text-sm">{userProfile?.whatsapp || t.userDataNotSet}</p>
                         </div>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('whatsapp')}>
+                            <Edit className="h-4 w-4" />
+                        </Button>
                     </div>
-                     <div className="flex items-start gap-4">
-                        <Phone className="h-5 w-5 text-muted-foreground mt-1" />
+
+                     <div className="flex items-center gap-4">
+                        <Phone className="h-5 w-5 text-muted-foreground" />
                         <div className="flex-1">
                             <Label>{t.formMobileLabel}</Label>
                             <p className="text-sm">{userProfile?.mobile || t.userDataNotSet}</p>
                         </div>
-                    </div>
-                     <div className="flex items-start gap-4">
-                        <Globe className="h-5 w-5 text-muted-foreground mt-1" />
-                        <div className="flex-1">
-                            <Label>{t.formCountry}</Label>
-                            <p className="text-sm">{userProfile?.country || t.userDataNotSet}</p>
-                        </div>
+                        <Button variant="ghost" size="icon" onClick={() => setEditingField('mobile')}>
+                            <Edit className="h-4 w-4" />
+                        </Button>
                     </div>
                   </div>
                 )}
@@ -185,9 +263,16 @@ export function SettingsPage() {
               </div>
             )}
           </div>
-
         </CardContent>
       </Card>
+      
+      <EditProfileFieldDialog
+        fieldName={editingField}
+        currentValue={editingField ? userProfile?.[editingField] : ''}
+        isOpen={!!editingField}
+        onClose={() => setEditingField(null)}
+        onSave={handleUpdateProfile}
+      />
     </div>
   );
 }
