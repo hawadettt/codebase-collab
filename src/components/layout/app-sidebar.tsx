@@ -33,6 +33,7 @@ import {
   Shield,
   Landmark,
   Sprout,
+  Book,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useCollection, useFirestore, useMemoFirebase, useUser } from "@/firebase";
@@ -379,6 +380,14 @@ export function AppSidebar() {
                   </SidebarMenu>
                 </CollapsibleContent>
               </Collapsible>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href="/exporters-guide">
+                <SidebarMenuButton isActive={pathname === '/exporters-guide'} size="sm">
+                  <Book />
+                  <span>{t.sidebarExportersGuide}</span>
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
