@@ -267,6 +267,27 @@
         "icon",
         "createdAt"
       ]
+    },
+    "Site": {
+      "title": "Site",
+      "type": "object",
+      "description": "Represents a single important site link within a category.",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "title",
+        "url"
+      ]
     }
   },
   "auth": {
@@ -360,6 +381,16 @@
             "$ref": "#/backend/entities/SiteCategory"
           },
           "description": "Stores user-created categories for important sites."
+        }
+      },
+      {
+        "path": "/users/{userId}/siteCategories/{categoryId}/sites/{siteId}",
+        "definition": {
+          "entityName": "Site",
+          "schema": {
+            "$ref": "#/backend/entities/Site"
+          },
+          "description": "Stores site links for a user-created category."
         }
       }
     ]

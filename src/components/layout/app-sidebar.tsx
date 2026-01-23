@@ -45,7 +45,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { collection, orderBy, query } from "firebase/firestore";
+import { collection, query, orderBy } from "firebase/firestore";
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
@@ -306,14 +306,6 @@ export function AppSidebar() {
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pt-1">
                   <SidebarMenu className="pl-7">
-                      <SidebarMenuItem>
-                        <Link href="/important-sites/egyptian-government">
-                          <SidebarMenuButton isActive={pathname === '/important-sites/egyptian-government'} size="sm">
-                            <Building2 className="h-4 w-4" />
-                            <span>{t.sitesCategoryEgyptianGovernment}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
                       <SidebarMenuItem>
                         <Link href="/important-sites/sovereign">
                           <SidebarMenuButton isActive={pathname === '/important-sites/sovereign'} size="sm">

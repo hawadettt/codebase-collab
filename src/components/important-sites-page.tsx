@@ -1,9 +1,9 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/language-provider";
-import { ExternalLink, Globe, Shield, Search, Database, Code, Briefcase, Building2 } from "lucide-react";
+import { ExternalLink, Globe, Shield, Search, Database, Code, Briefcase, Building2, AlertTriangle, PlusCircle, Trash2, Loader2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -13,15 +13,19 @@ import {
 import { Button } from "./ui/button";
 import type { TranslationKeys } from "@/lib/i18n";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { AlertTriangle } from "lucide-react";
-import { useDoc, useFirestore, useUser, useMemoFirebase } from '@/firebase';
-import { doc, DocumentReference } from 'firebase/firestore';
+import { useCollection, useDoc, useFirestore, useUser, useMemoFirebase, deleteDocumentNonBlocking } from '@/firebase';
+import { collection, doc, DocumentReference, query, orderBy } from 'firebase/firestore';
 import { Skeleton } from './ui/skeleton';
-
+import React, { useState } from 'react';
+import { DeleteCategoryAlert } from './delete-category-alert';
+import { AddSiteDialog } from './add-site-dialog';
 
 type Site = {
-  titleKey: TranslationKeys;
-  descriptionKey: TranslationKeys;
+  id?: string;
+  titleKey?: TranslationKeys;
+  title?: string;
+  descriptionKey?: TranslationKeys;
+  description?: string;
   url: string;
 }
 
@@ -54,15 +58,7 @@ function isMultiUrl(site: Site | SiteWithMultipleUrls): site is SiteWithMultiple
     return 'urls' in site;
 }
 
-
 const ALL_CATEGORIES: Category[] = [
-  {
-    id: 'egyptian-government',
-    titleKey: 'sitesCategoryEgyptianGovernment',
-    descriptionKey: 'sitesCategoryEgyptianGovernmentDesc',
-    icon: <Building2 className="h-8 w-8" />,
-    sites: []
-  },
   {
     id: 'sovereign',
     titleKey: 'sitesCategorySovereign',
@@ -115,10 +111,61 @@ const ALL_CATEGORIES: Category[] = [
   }
 ];
 
+function CustomCategorySites({ categoryId }: { categoryId: string }) {
+  const { user } = useUser();
+  const firestore = useFirestore();
+  const { t } = useLanguage();
+
+  const sitesQuery = useMemoFirebase(() => {
+    if (!user || !categoryId) return null;
+    return query(collection(firestore, 'users', user.uid, 'siteCategories', categoryId, 'sites'), orderBy('title', 'asc'));
+  }, [firestore, user, categoryId]);
+
+  const { data: sites, isLoading } = useCollection<Site>(sitesQuery);
+
+  if (isLoading) {
+    return <div className="space-y-2"><Skeleton className="h-12 w-full" /><Skeleton className="h-12 w-full" /></div>;
+  }
+
+  if (!sites || sites.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-md border-2 border-dashed border-muted-foreground/30 bg-muted/20 p-12 text-center">
+        <p className="text-muted-foreground">{t.featureComingSoonSites}</p>
+      </div>
+    );
+  }
+
+  return (
+    <Accordion type="single" collapsible className="w-full space-y-2">
+      {sites.map((site, siteIndex) => (
+        <AccordionItem value={`site-${siteIndex}`} key={site.id} className="border-b-0 rounded-md border bg-muted/30">
+          <AccordionTrigger className="px-4 py-3 text-base font-medium hover:no-underline text-start">
+            {site.title}
+          </AccordionTrigger>
+          <AccordionContent className="space-y-4 px-4 pb-4 text-sm">
+            <p className="text-muted-foreground">{site.description}</p>
+            <Button asChild variant="outline" size="sm">
+              <a href={site.url.startsWith('http') ? site.url : `https://${site.url}`} target="_blank" rel="noopener noreferrer">
+                {t.visitSiteButton}
+                <ExternalLink className="ms-2 h-4 w-4" />
+              </a>
+            </Button>
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  );
+}
+
+
 function CustomCategoryDisplay({ categoryId }: { categoryId: string }) {
     const { user } = useUser();
     const firestore = useFirestore();
     const { t } = useLanguage();
+    const router = useRouter();
+
+    const [isAddSiteOpen, setIsAddSiteOpen] = useState(false);
+    const [isDeleteCategoryOpen, setIsDeleteCategoryOpen] = useState(false);
 
     const categoryRef = useMemoFirebase(() => {
         if (!user || !categoryId) return null;
@@ -137,7 +184,7 @@ function CustomCategoryDisplay({ categoryId }: { categoryId: string }) {
                 <AlertTriangle className="h-4 w-4" />
                 <AlertTitle>Category Not Found</AlertTitle>
                 <AlertDescription>
-                    The custom category '{categoryId}' does not exist or you don't have permission to view it.
+                    The custom category does not exist or you do not have permission to view it.
                 </AlertDescription>
             </Alert>
         )
@@ -146,20 +193,43 @@ function CustomCategoryDisplay({ categoryId }: { categoryId: string }) {
     const IconComponent = iconComponents[category.icon] || iconComponents.Default;
 
     return (
+      <>
         <Card>
             <CardHeader>
-                <CardTitle className="font-headline text-3xl flex items-center gap-3">
-                    {IconComponent}
-                    {category.title}
-                </CardTitle>
-                <CardDescription className="text-base">{category.description}</CardDescription>
+                <div className="flex justify-between items-start">
+                  <div className='flex-1'>
+                    <CardTitle className="font-headline text-3xl flex items-center gap-3">
+                        {IconComponent}
+                        {category.title}
+                    </CardTitle>
+                    <CardDescription className="text-base pt-2">{category.description}</CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon" onClick={() => setIsAddSiteOpen(true)}>
+                          <PlusCircle className="h-5 w-5 text-muted-foreground" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => setIsDeleteCategoryOpen(true)}>
+                          <Trash2 className="h-5 w-5 text-destructive" />
+                      </Button>
+                  </div>
+                </div>
             </CardHeader>
             <CardContent>
-                <div className="flex flex-col items-center justify-center rounded-md border-2 border-dashed border-muted-foreground/30 bg-muted/20 p-12 text-center">
-                    <p className="text-muted-foreground">{t.featureComingSoonSites}</p>
-                </div>
+                <CustomCategorySites categoryId={categoryId} />
             </CardContent>
         </Card>
+        <AddSiteDialog
+          isOpen={isAddSiteOpen}
+          onOpenChange={setIsAddSiteOpen}
+          categoryId={categoryId}
+        />
+        <DeleteCategoryAlert
+          isOpen={isDeleteCategoryOpen}
+          onOpenChange={setIsDeleteCategoryOpen}
+          categoryId={categoryId}
+          onDeleted={() => router.push('/important-sites/sovereign')}
+        />
+      </>
     );
 }
 
@@ -190,10 +260,10 @@ export function ImportantSitesPage() {
               {category.sites.map((site, siteIndex) => (
                  <AccordionItem value={`site-${siteIndex}`} key={siteIndex} className="border-b-0 rounded-md border bg-muted/30">
                     <AccordionTrigger className="px-4 py-3 text-base font-medium hover:no-underline text-start">
-                      {t[site.titleKey]}
+                      {t[site.titleKey!]}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-4 px-4 pb-4 text-sm">
-                       <p className="text-muted-foreground">{t[site.descriptionKey]}</p>
+                       <p className="text-muted-foreground">{t[site.descriptionKey!]}</p>
                        {isMultiUrl(site) ? (
                            <div className="flex gap-2">
                             {site.urls.map((link, linkIndex) => (

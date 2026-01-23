@@ -56,6 +56,14 @@ service cloud.firestore {
        */
       match /siteCategories/{categoryId} {
         allow read, write: if isOwner(userId);
+        
+        /**
+         * @description Controls access to sites within a category.
+         * @path /users/{userId}/siteCategories/{categoryId}/sites/{siteId}
+         */
+        match /sites/{siteId} {
+          allow read, write: if isOwner(userId);
+        }
       }
     }
   }
