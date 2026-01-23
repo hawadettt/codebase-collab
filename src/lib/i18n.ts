@@ -326,6 +326,10 @@ export const translations = {
     formCustomerCode: 'Customer Code',
     formCustomerCodePlaceholder: 'e.g., C-101',
     tableHeaderCustomerCode: 'Code',
+    sidebarAddNewCategory: 'Add New Category',
+    addCategoryPageTitle: 'Add New Category',
+    addCategoryPageDescription: 'Create a new category for important sites.',
+    featureComingSoon: 'This feature is under development and will be available soon.',
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -653,6 +657,10 @@ export const translations = {
     formCustomerCode: 'كود العميل',
     formCustomerCodePlaceholder: 'مثال: C-101',
     tableHeaderCustomerCode: 'الكود',
+    sidebarAddNewCategory: 'إضافة تصنيف جديد',
+    addCategoryPageTitle: 'إضافة تصنيف جديد',
+    addCategoryPageDescription: 'أنشئ تصنيفًا جديدًا للمواقع الهامة.',
+    featureComingSoon: 'هذه الميزة قيد التطوير وستكون متاحة قريبًا.',
   },
 };
 

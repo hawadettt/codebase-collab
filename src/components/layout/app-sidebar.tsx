@@ -26,6 +26,7 @@ import {
   Briefcase,
   Globe,
   ChevronRight,
+  PlusCircle,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useUser } from "@/firebase";
@@ -299,6 +300,14 @@ export function AppSidebar() {
                         <Link href="/important-sites/technical">
                           <SidebarMenuButton isActive={pathname === '/important-sites/technical'} size="sm">
                             <span>{t.sitesCategoryTechnical}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <Link href="/important-sites/new">
+                          <SidebarMenuButton isActive={pathname === '/important-sites/new'} size="sm">
+                            <PlusCircle className="h-4 w-4" />
+                            <span>{t.sidebarAddNewCategory}</span>
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
