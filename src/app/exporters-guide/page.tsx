@@ -4,7 +4,7 @@ import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Header } from "@/components/layout/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/language-provider";
-import { Book, Star, Landmark, FileText, CheckCircle, Ship, ExternalLink } from "lucide-react";
+import { Book, Star, Landmark, FileText, CheckCircle, Ship, ExternalLink, Banknote, AreaChart } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -67,6 +67,23 @@ function ExportersGuidePageContent() {
       links: [
         { title: t.siteTradlinxTitle, url: 'https://blogs.tradlinx.com' },
         { title: t.siteSearatesTitle, url: 'https://www.searates.com' },
+      ],
+    },
+    {
+      title: t.guideFinanceTitle,
+      content: t.guideFinanceContent,
+      icon: <Banknote className="h-5 w-5 text-primary" />,
+      links: [
+        { title: t.guideFinanceLinkEBE, url: 'http://www.ebebank.com' },
+      ],
+    },
+    {
+      title: t.guideMarketAnalysisTitle,
+      content: t.guideMarketAnalysisContent,
+      icon: <AreaChart className="h-5 w-5 text-primary" />,
+      links: [
+        { title: t.guideMarketAnalysisLinkHS, url: 'https://www.trade-tariff.service.gov.uk/find_commodity' },
+        { title: t.guideMarketAnalysisLinkTridge, url: 'https://www.tridge.com' },
       ],
     },
   ];
