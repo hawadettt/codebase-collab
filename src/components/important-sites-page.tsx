@@ -1,5 +1,6 @@
 'use client';
 
+import { useParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/language-provider";
 import { ExternalLink, Globe, Shield, Search, Database, Code } from "lucide-react";
@@ -20,13 +21,24 @@ type Site = {
   url: string;
 }
 
+type SiteWithMultipleUrls = {
+    titleKey: TranslationKeys;
+    descriptionKey: TranslationKeys;
+    urls: { label: string; url: string }[];
+}
+
 type Category = {
   id: string;
   titleKey: TranslationKeys;
   descriptionKey: TranslationKeys;
   icon: React.ReactNode;
-  sites: Site[];
+  sites: (Site | SiteWithMultipleUrls)[];
 }
+
+function isMultiUrl(site: Site | SiteWithMultipleUrls): site is SiteWithMultipleUrls {
+    return 'urls' in site;
+}
+
 
 const ALL_CATEGORIES: Category[] = [
   {
@@ -59,8 +71,10 @@ const ALL_CATEGORIES: Category[] = [
     icon: <Database className="h-8 w-8" />,
     sites: [
       { titleKey: 'siteTridgeTitle', descriptionKey: 'siteTridgeDesc', url: 'https://www.tridge.com' },
-      { titleKey: 'siteFlexportTitle', descriptionKey: 'siteFlexportDesc', url: 'https://www.flexport.com' },
-      { titleKey: 'siteEgypteMarketTitle', descriptionKey: 'siteEgypteMarketDesc', url: 'https://www.egypte-market.com' },
+      { titleKey: 'siteHsCodesTitle', descriptionKey: 'siteHsCodesDesc', urls: [
+          { label: 'Flexport', url: 'https://www.flexport.com/hs-code' },
+          { label: 'Egypte-Market', url: 'https://www.egypte-market.com' }
+      ] },
     ]
   },
   {
@@ -71,16 +85,19 @@ const ALL_CATEGORIES: Category[] = [
     sites: [
       { titleKey: 'siteFirestoreBestPracticesTitle', descriptionKey: 'siteFirestoreBestPracticesDesc', url: 'https://firebase.google.com/docs/firestore/best-practices' },
       { titleKey: 'siteAgriErpTitle', descriptionKey: 'siteAgriErpDesc', url: 'https://www.agrierp.com' },
-      { titleKey: 'siteDribbbleFarmerUiTitle', descriptionKey: 'siteDribbbleFarmerUiDesc', url: 'https://dribbble.com/search/farmer-ui' },
-      { titleKey: 'siteDribbbleAgriDashboardTitle', descriptionKey: 'siteDribbbleAgriDashboardDesc', url: 'https://dribbble.com/search/agriculture-dashboard' },
+      { titleKey: 'siteDribbbleFarmerUiTitle', descriptionKey: 'siteDribbbleFarmerUiDesc', urls: [
+          { label: 'Farmer UI', url: 'https://dribbble.com/search/farmer-ui' },
+          { label: 'Agriculture Dashboard', url: 'https://dribbble.com/search/agriculture-dashboard' }
+      ] },
     ]
   }
 ];
 
 
-export function ImportantSitesPage({ params }: { params: { categoryId: string } }) {
+export function ImportantSitesPage() {
+  const params = useParams();
   const { t } = useLanguage();
-  const categoryId = params.categoryId;
+  const categoryId = params.categoryId as string;
 
   const category = ALL_CATEGORIES.find(c => c.id === categoryId);
 
@@ -115,12 +132,25 @@ export function ImportantSitesPage({ params }: { params: { categoryId: string } 
                     </AccordionTrigger>
                     <AccordionContent className="space-y-4 px-4 pb-4 text-sm">
                        <p className="text-muted-foreground">{t[site.descriptionKey]}</p>
-                       <Button asChild variant="outline" size="sm">
-                          <a href={site.url.startsWith('http') ? site.url : `https://${site.url}`} target="_blank" rel="noopener noreferrer">
-                            {t.visitSiteButton}
-                            <ExternalLink className="ms-2 h-4 w-4" />
-                          </a>
-                      </Button>
+                       {isMultiUrl(site) ? (
+                           <div className="flex gap-2">
+                            {site.urls.map((link, linkIndex) => (
+                                <Button asChild variant="outline" size="sm" key={linkIndex}>
+                                    <a href={link.url.startsWith('http') ? link.url : `https://${link.url}`} target="_blank" rel="noopener noreferrer">
+                                        {link.label}
+                                        <ExternalLink className="ms-2 h-4 w-4" />
+                                    </a>
+                                </Button>
+                            ))}
+                           </div>
+                       ) : (
+                        <Button asChild variant="outline" size="sm">
+                            <a href={site.url.startsWith('http') ? site.url : `https://${site.url}`} target="_blank" rel="noopener noreferrer">
+                                {t.visitSiteButton}
+                                <ExternalLink className="ms-2 h-4 w-4" />
+                            </a>
+                        </Button>
+                       )}
                     </AccordionContent>
                  </AccordionItem>
               ))}
