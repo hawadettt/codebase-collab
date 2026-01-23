@@ -19,6 +19,7 @@ import { Skeleton } from './ui/skeleton';
 import React, { useState } from 'react';
 import { DeleteCategoryAlert } from './delete-category-alert';
 import { AddSiteDialog } from './add-site-dialog';
+import { useRouter } from 'next/navigation';
 
 type Site = {
   id?: string;
@@ -65,12 +66,27 @@ const ALL_CATEGORIES: Category[] = [
     titleKey: 'sitesCategoryEgyptianGovernment',
     descriptionKey: 'sitesCategoryEgyptianGovernmentDesc',
     icon: <Landmark className="h-8 w-8" />,
-    sites: []
+    sites: [
+      { titleKey: 'siteGoeicTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'https://www.goeic.gov.eg' },
+      { titleKey: 'siteHeiaTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'http://heiaegypt.com/' },
+      { titleKey: 'siteEbeBankTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'http://www.ebebank.com/AR/Pages/Default.aspx' },
+      { titleKey: 'siteCapmasTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'https://www.capmas.gov.eg' },
+      { titleKey: 'siteEdfTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'http://www.mti.gov.eg/' },
+      { titleKey: 'siteCfiTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'http://www.egycfi.org.eg/en' },
+      { titleKey: 'siteAecGovTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'https://www.aecegypt.com' },
+      { titleKey: 'siteEnccTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'http://www.encc.org.eg/' },
+      { titleKey: 'siteCustomsTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'http://www.customs.gov.eg/' },
+      { titleKey: 'siteTpegyptTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'https://www.tpegypt.gov.eg' },
+      { titleKey: 'siteEmaTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'http://ema.gov.eg/' },
+      { titleKey: 'siteMtiTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'https://www.mti.gov.eg' },
+      { titleKey: 'siteMsitTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'https://www.msit.gov.eg' },
+      { titleKey: 'siteAgrEgyptTitle', descriptionKey: 'siteEgyptianGovernmentGenericDesc', url: 'http://www.agr-egypt.gov.eg/' },
+    ]
   },
   {
     id: 'sovereign',
     titleKey: 'sitesCategorySovereign',
-    descriptionKey: 'importantSitesDescription', // Re-using general description
+    descriptionKey: 'importantSitesDescription',
     icon: <Shield className="h-8 w-8" />,
     sites: [
       { titleKey: 'siteNafezaTitle', descriptionKey: 'siteNafezaDesc', url: 'https://www.nafeza.gov.eg' },
