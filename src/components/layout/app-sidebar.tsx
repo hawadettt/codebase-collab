@@ -45,7 +45,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { collection, orderBy } from "firebase/firestore";
+import { collection, orderBy, query } from "firebase/firestore";
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
@@ -134,7 +134,7 @@ export function AppSidebar() {
                 </div>
             </div>
             ) : user ? (
-            <div className="flex items-center gap-3 rounded-md border border-sidebar-border/50 p-2">
+            <div className="flex items-center gap-3 rounded-md border border-sidebar-border/50 bg-sidebar-accent p-2">
                 <Avatar className="h-9 w-9">
                 {user?.photoURL && <AvatarImage src={user.photoURL} />}
                 {!user?.photoURL && userAvatar && <AvatarImage src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} />}
@@ -309,6 +309,7 @@ export function AppSidebar() {
                       <SidebarMenuItem>
                         <Link href="/important-sites/sovereign">
                           <SidebarMenuButton isActive={pathname === '/important-sites/sovereign'} size="sm">
+                            <Shield className="h-4 w-4" />
                             <span>{t.sitesCategorySovereign}</span>
                           </SidebarMenuButton>
                         </Link>
@@ -316,6 +317,7 @@ export function AppSidebar() {
                       <SidebarMenuItem>
                         <Link href="/important-sites/logistics">
                           <SidebarMenuButton isActive={pathname === '/important-sites/logistics'} size="sm">
+                            <Search className="h-4 w-4" />
                             <span>{t.sitesCategoryLogistics}</span>
                           </SidebarMenuButton>
                         </Link>
@@ -323,6 +325,7 @@ export function AppSidebar() {
                       <SidebarMenuItem>
                         <Link href="/important-sites/market-intel">
                           <SidebarMenuButton isActive={pathname === '/important-sites/market-intel'} size="sm">
+                            <Database className="h-4 w-4" />
                             <span>{t.sitesCategoryMarketIntel}</span>
                           </SidebarMenuButton>
                         </Link>
@@ -330,6 +333,7 @@ export function AppSidebar() {
                       <SidebarMenuItem>
                         <Link href="/important-sites/technical">
                           <SidebarMenuButton isActive={pathname === '/important-sites/technical'} size="sm">
+                            <Code className="h-4 w-4" />
                             <span>{t.sitesCategoryTechnical}</span>
                           </SidebarMenuButton>
                         </Link>
