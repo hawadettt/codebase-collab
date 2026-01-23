@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/language-provider";
-import { ExternalLink, Globe, Shield, Search, Database, Code, Briefcase, Building2, AlertTriangle, PlusCircle, Trash2, Loader2, Landmark } from "lucide-react";
+import { ExternalLink, Globe, Shield, Search, Database, Code, Briefcase, Building2, AlertTriangle, PlusCircle, Trash2, Loader2, Landmark, Sprout } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -53,6 +53,7 @@ const iconComponents: { [key: string]: React.ReactNode } = {
   Briefcase: <Briefcase className="h-8 w-8" />,
   Building2: <Building2 className="h-8 w-8" />,
   Landmark: <Landmark className="h-8 w-8" />,
+  Sprout: <Sprout className="h-8 w-8" />,
   Default: <Globe className="h-8 w-8" />,
 };
 
@@ -81,6 +82,28 @@ const ALL_CATEGORIES: Category[] = [
       { titleKey: 'siteMtiTitle', descriptionKey: 'siteMtiDesc', url: 'https://www.mti.gov.eg' },
       { titleKey: 'siteMsitTitle', descriptionKey: 'siteMsitDesc', url: 'https://www.msit.gov.eg' },
       { titleKey: 'siteAgrEgyptTitle', descriptionKey: 'siteAgrEgyptDesc', url: 'http://www.agr-egypt.gov.eg/' },
+    ]
+  },
+  {
+    id: 'agricultural',
+    titleKey: 'sitesCategoryAgricultural',
+    descriptionKey: 'sitesCategoryAgriculturalDesc',
+    icon: <Sprout className="h-8 w-8" />,
+    sites: [
+        { titleKey: 'siteQcapTitle', descriptionKey: 'siteQcapDesc', url: 'http://www.qcap-egypt.com' },
+        { titleKey: 'siteUpehcTitle', descriptionKey: 'siteUpehcDesc', url: 'http://www.upehc.org/' },
+        { titleKey: 'siteAecBstanyTitle', descriptionKey: 'siteAecBstanyDesc', url: 'http://www.aecegypt.com/WebPages/Common/Home.aspx' },
+        { titleKey: 'siteFaoTitle', descriptionKey: 'siteFaoDesc', url: 'https://www.fao.org' },
+        { titleKey: 'siteArcTitle', descriptionKey: 'siteArcDesc', url: 'http://www.arc.sci.eg/' },
+        { titleKey: 'siteHriTitle', descriptionKey: 'siteHriDesc', url: 'http://www.horticulture-egypt.com/hri/index.php?lang=en' },
+        { titleKey: 'siteClacTitle', descriptionKey: 'siteClacDesc', url: 'http://www.clac.edu.eg/' },
+        { titleKey: 'siteIloTitle', descriptionKey: 'siteIloDesc', url: 'http://www.ilo.org/global/lang--en/index.htm' },
+        { titleKey: 'siteEnalTitle', descriptionKey: 'siteEnalDesc', url: 'http://nile.enal.sci.eg/' },
+        { titleKey: 'siteAgriNewsTitle', descriptionKey: 'siteAgriNewsDesc', url: 'http://agriculturenews.net/' },
+        { titleKey: 'siteIsaaaTitle', descriptionKey: 'siteIsaaaDesc', url: 'http://isaaa.org/' },
+        { titleKey: 'siteAatfTitle', descriptionKey: 'siteAatfDesc', url: 'http://aatf-africa.org/' },
+        { titleKey: 'siteCiheamTitle', descriptionKey: 'siteCiheamDesc', url: 'http://www.ciheam.org/index.php/en' },
+        { titleKey: 'siteCiatTitle', descriptionKey: 'siteCiatDesc', url: 'http://ciat.cgiar.org/' },
     ]
   },
   {

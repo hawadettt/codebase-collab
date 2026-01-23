@@ -32,6 +32,7 @@ import {
   Code,
   Shield,
   Landmark,
+  Sprout,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useCollection, useFirestore, useMemoFirebase, useUser } from "@/firebase";
@@ -64,6 +65,7 @@ const iconComponents: { [key: string]: React.ReactNode } = {
   Briefcase: <Briefcase className="h-4 w-4" />,
   Building2: <Building2 className="h-4 w-4" />,
   Landmark: <Landmark className="h-4 w-4" />,
+  Sprout: <Sprout className="h-4 w-4" />,
   Default: <ChevronRight className="h-4 w-4" />,
 };
 
@@ -313,6 +315,14 @@ export function AppSidebar() {
                           <SidebarMenuButton isActive={pathname === '/important-sites/egyptian-government'} size="sm">
                             <Landmark className="h-4 w-4" />
                             <span>{t.sitesCategoryEgyptianGovernment}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                       <SidebarMenuItem>
+                        <Link href="/important-sites/agricultural">
+                          <SidebarMenuButton isActive={pathname === '/important-sites/agricultural'} size="sm">
+                            <Sprout className="h-4 w-4" />
+                            <span>{t.sitesCategoryAgricultural}</span>
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
