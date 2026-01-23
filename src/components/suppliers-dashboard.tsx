@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, Building2, Bot, Search, AlertTriangle } from 'lucide-react';
+import { Loader2, Building2, Bot, Search, AlertTriangle, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
@@ -83,6 +83,26 @@ export function SuppliersDashboard() {
             <Building2 className="h-6 w-6" /> {t.suppliersTitle}
           </CardTitle>
           <CardDescription>{t.suppliersDescription}</CardDescription>
+            <div className="mt-4 rounded-lg border bg-card p-4 text-card-foreground text-left">
+                <div className="flex items-start gap-3">
+                    <Info className="h-5 w-5 flex-shrink-0 text-primary" />
+                    <div className="flex-1">
+                        <h4 className="font-semibold text-base">{t.suppliersDbQuestion}</h4>
+                        <ul className="list-disc list-inside space-y-1.5 mt-2 text-sm text-muted-foreground">
+                            <li>{t.suppliersDbPoint1}</li>
+                            <li>{t.suppliersDbPoint2}</li>
+                            <li>{t.suppliersDbPoint3}</li>
+                            <li>{t.suppliersDbPoint4}</li>
+                        </ul>
+                        <div className="mt-4 flex items-start gap-3 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+                            <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+                            <div className="flex-1">
+                                <span className="font-semibold">{t.suppliersDbWarningTitle}</span> {t.suppliersDbWarningText}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </CardHeader>
         <CardContent>
           {isLoadingSuppliers ? (
