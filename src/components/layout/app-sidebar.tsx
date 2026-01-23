@@ -307,6 +307,14 @@ export function AppSidebar() {
                 <CollapsibleContent className="pt-1">
                   <SidebarMenu className="pl-7">
                       <SidebarMenuItem>
+                        <Link href="/important-sites/egyptian-government">
+                          <SidebarMenuButton isActive={pathname === '/important-sites/egyptian-government'} size="sm">
+                            <Building2 className="h-4 w-4" />
+                            <span>{t.sitesCategoryEgyptianGovernment}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
                         <Link href="/important-sites/sovereign">
                           <SidebarMenuButton isActive={pathname === '/important-sites/sovereign'} size="sm">
                             <Shield className="h-4 w-4" />

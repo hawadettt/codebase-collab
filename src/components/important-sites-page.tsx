@@ -57,6 +57,13 @@ function isMultiUrl(site: Site | SiteWithMultipleUrls): site is SiteWithMultiple
 
 const ALL_CATEGORIES: Category[] = [
   {
+    id: 'egyptian-government',
+    titleKey: 'sitesCategoryEgyptianGovernment',
+    descriptionKey: 'sitesCategoryEgyptianGovernmentDesc',
+    icon: <Building2 className="h-8 w-8" />,
+    sites: []
+  },
+  {
     id: 'sovereign',
     titleKey: 'sitesCategorySovereign',
     descriptionKey: 'importantSitesDescription', // Re-using general description
