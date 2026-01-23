@@ -37,6 +37,7 @@ export function CustomersDashboard() {
   type Customer = { 
     id: string; 
     createdAt: { seconds: number, nanoseconds: number };
+    customerCode?: string;
     clientName: string;
     country: string;
     incoTerms: string;
@@ -144,6 +145,7 @@ export function CustomersDashboard() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>{t.tableHeaderCustomerCode}</TableHead>
                   <TableHead>{t.tableHeaderClientName}</TableHead>
                   <TableHead>{t.tableHeaderCountry}</TableHead>
                   <TableHead>{t.tableHeaderIncoTerms}</TableHead>
@@ -154,6 +156,7 @@ export function CustomersDashboard() {
               <TableBody>
                 {customers.map((customer) => (
                   <TableRow key={customer.id}>
+                    <TableCell className="font-medium">{customer.customerCode || '-'}</TableCell>
                     <TableCell className="font-medium">{customer.clientName}</TableCell>
                     <TableCell>{customer.country}</TableCell>
                     <TableCell>{customer.incoTerms}</TableCell>

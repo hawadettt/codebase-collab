@@ -27,6 +27,7 @@ function AddCustomerForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const customerSchema = z.object({
+    customerCode: z.string().optional(),
     clientName: z.string().min(1, t.formCustomerRequired),
     country: z.string().min(1, t.formCountryRequired),
     creditLimit: z.preprocess((a) => parseFloat(z.string().parse(a)), z.number().positive(t.formCreditLimitPositive)),
@@ -38,6 +39,7 @@ function AddCustomerForm() {
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),
     defaultValues: {
+      customerCode: '',
       clientName: '',
       country: '',
       creditLimit: 0,
@@ -79,6 +81,19 @@ function AddCustomerForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleAddCustomer)} className="space-y-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="customerCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t.formCustomerCode}</FormLabel>
+                    <FormControl>
+                      <Input placeholder={t.formCustomerCodePlaceholder} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="clientName"

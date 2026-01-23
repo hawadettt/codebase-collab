@@ -323,6 +323,9 @@ export const translations = {
     addPageDescriptionSuppliers: 'Enter the details for the new supplier.',
     addPageTitleCustomers: 'Add New Customer',
     addPageDescriptionCustomers: 'Enter the details for the new customer.',
+    formCustomerCode: 'Customer Code',
+    formCustomerCodePlaceholder: 'e.g., C-101',
+    tableHeaderCustomerCode: 'Code',
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -647,6 +650,9 @@ export const translations = {
     addPageDescriptionSuppliers: 'أدخل تفاصيل المورد الجديد.',
     addPageTitleCustomers: 'إضافة عميل جديد',
     addPageDescriptionCustomers: 'أدخل تفاصيل العميل الجديد.',
+    formCustomerCode: 'كود العميل',
+    formCustomerCodePlaceholder: 'مثال: C-101',
+    tableHeaderCustomerCode: 'الكود',
   },
 };
 

@@ -114,6 +114,10 @@
       "type": "object",
       "description": "Represents an international customer, typically a trader or importer.",
       "properties": {
+        "customerCode": {
+          "type": "string",
+          "description": "A unique code for the customer."
+        },
         "clientName": {
           "type": "string",
           "description": "The name of the trader or customer company."
