@@ -244,7 +244,7 @@ export function AppSidebar() {
                       <SidebarMenuItem>
                         <Link href="/suppliers">
                           <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm">
-                            <span>{t.sidebarViewAll}</span>
+                            <span>{t.sidebarSuppliersDatabase}</span>
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
