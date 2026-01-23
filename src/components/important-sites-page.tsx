@@ -1,9 +1,9 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/language-provider";
-import { ExternalLink, Globe, Shield, Search, Database, Code, Briefcase, Building2, AlertTriangle, PlusCircle, Trash2, Loader2 } from "lucide-react";
+import { ExternalLink, Globe, Shield, Search, Database, Code, Briefcase, Building2, AlertTriangle, PlusCircle, Trash2, Loader2, Landmark } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -51,6 +51,7 @@ const iconComponents: { [key: string]: React.ReactNode } = {
   Code: <Code className="h-8 w-8" />,
   Briefcase: <Briefcase className="h-8 w-8" />,
   Building2: <Building2 className="h-8 w-8" />,
+  Landmark: <Landmark className="h-8 w-8" />,
   Default: <Globe className="h-8 w-8" />,
 };
 
@@ -59,6 +60,13 @@ function isMultiUrl(site: Site | SiteWithMultipleUrls): site is SiteWithMultiple
 }
 
 const ALL_CATEGORIES: Category[] = [
+  {
+    id: 'egyptian-government',
+    titleKey: 'sitesCategoryEgyptianGovernment',
+    descriptionKey: 'sitesCategoryEgyptianGovernmentDesc',
+    icon: <Landmark className="h-8 w-8" />,
+    sites: []
+  },
   {
     id: 'sovereign',
     titleKey: 'sitesCategorySovereign',
