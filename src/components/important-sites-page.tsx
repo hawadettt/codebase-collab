@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/language-provider";
-import { ExternalLink, Globe, Shield, Search, Database, Code } from "lucide-react";
+import { ExternalLink, Globe, Shield, Search, Database, Code, Briefcase, Building2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -14,6 +14,10 @@ import { Button } from "./ui/button";
 import type { TranslationKeys } from "@/lib/i18n";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertTriangle } from "lucide-react";
+import { useDoc, useFirestore, useUser, useMemoFirebase } from '@/firebase';
+import { doc, DocumentReference } from 'firebase/firestore';
+import { Skeleton } from './ui/skeleton';
+
 
 type Site = {
   titleKey: TranslationKeys;
@@ -34,6 +38,17 @@ type Category = {
   icon: React.ReactNode;
   sites: (Site | SiteWithMultipleUrls)[];
 }
+
+const iconComponents: { [key: string]: React.ReactNode } = {
+  Globe: <Globe className="h-8 w-8" />,
+  Shield: <Shield className="h-8 w-8" />,
+  Search: <Search className="h-8 w-8" />,
+  Database: <Database className="h-8 w-8" />,
+  Code: <Code className="h-8 w-8" />,
+  Briefcase: <Briefcase className="h-8 w-8" />,
+  Building2: <Building2 className="h-8 w-8" />,
+  Default: <Globe className="h-8 w-8" />,
+};
 
 function isMultiUrl(site: Site | SiteWithMultipleUrls): site is SiteWithMultipleUrls {
     return 'urls' in site;
@@ -93,6 +108,54 @@ const ALL_CATEGORIES: Category[] = [
   }
 ];
 
+function CustomCategoryDisplay({ categoryId }: { categoryId: string }) {
+    const { user } = useUser();
+    const firestore = useFirestore();
+    const { t } = useLanguage();
+
+    const categoryRef = useMemoFirebase(() => {
+        if (!user || !categoryId) return null;
+        return doc(firestore, 'users', user.uid, 'siteCategories', categoryId) as DocumentReference<any>;
+    }, [firestore, user, categoryId]);
+
+    const { data: category, isLoading } = useDoc<any>(categoryRef);
+
+    if (isLoading) {
+        return <Card><CardHeader><Skeleton className="h-8 w-1/2" /></CardHeader><CardContent><Skeleton className="h-40 w-full" /></CardContent></Card>;
+    }
+    
+    if (!category) {
+        return (
+            <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Category Not Found</AlertTitle>
+                <AlertDescription>
+                    The custom category '{categoryId}' does not exist or you don't have permission to view it.
+                </AlertDescription>
+            </Alert>
+        )
+    }
+    
+    const IconComponent = iconComponents[category.icon] || iconComponents.Default;
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="font-headline text-3xl flex items-center gap-3">
+                    {IconComponent}
+                    {category.title}
+                </CardTitle>
+                <CardDescription className="text-base">{category.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="flex flex-col items-center justify-center rounded-md border-2 border-dashed border-muted-foreground/30 bg-muted/20 p-12 text-center">
+                    <p className="text-muted-foreground">{t.featureComingSoonSites}</p>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
 
 export function ImportantSitesPage() {
   const params = useParams();
@@ -102,15 +165,7 @@ export function ImportantSitesPage() {
   const category = ALL_CATEGORIES.find(c => c.id === categoryId);
 
   if (!category) {
-    return (
-        <Alert variant="destructive">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>Category Not Found</AlertTitle>
-            <AlertDescription>
-                The requested category '{categoryId}' does not exist.
-            </AlertDescription>
-        </Alert>
-    )
+    return <CustomCategoryDisplay categoryId={categoryId} />;
   }
 
   return (

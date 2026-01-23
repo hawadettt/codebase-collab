@@ -49,6 +49,14 @@ service cloud.firestore {
       match /customers/{customerId} {
         allow read, write: if isOwner(userId);
       }
+
+      /**
+       * @description Controls access to user-created site categories.
+       * @path /users/{userId}/siteCategories/{categoryId}
+       */
+      match /siteCategories/{categoryId} {
+        allow read, write: if isOwner(userId);
+      }
     }
   }
 }

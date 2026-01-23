@@ -239,6 +239,34 @@
         "status",
         "createdAt"
       ]
+    },
+    "SiteCategory": {
+      "title": "Site Category",
+      "type": "object",
+      "description": "Represents a user-created category for important sites.",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the category."
+        },
+        "description": {
+          "type": "string",
+          "description": "The description for the category."
+        },
+        "icon": {
+          "type": "string",
+          "description": "The name of the lucide-react icon."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "title",
+        "icon",
+        "createdAt"
+      ]
     }
   },
   "auth": {
@@ -322,6 +350,16 @@
               "description": "Unique ID for the customer."
             }
           ]
+        }
+      },
+      {
+        "path": "/users/{userId}/siteCategories/{categoryId}",
+        "definition": {
+          "entityName": "SiteCategory",
+          "schema": {
+            "$ref": "#/backend/entities/SiteCategory"
+          },
+          "description": "Stores user-created categories for important sites."
         }
       }
     ]

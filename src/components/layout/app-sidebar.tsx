@@ -27,9 +27,13 @@ import {
   Globe,
   ChevronRight,
   PlusCircle,
+  Search,
+  Database,
+  Code,
+  Shield,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { useAuth, useUser } from "@/firebase";
+import { useAuth, useCollection, useFirestore, useMemoFirebase, useUser } from "@/firebase";
 import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -41,6 +45,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { collection, orderBy } from "firebase/firestore";
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
@@ -49,12 +54,38 @@ const supportedLanguages = [
   { code: 'ar', name: 'العربية' },
 ];
 
+const iconComponents: { [key: string]: React.ReactNode } = {
+  Globe: <Globe className="h-4 w-4" />,
+  Shield: <Shield className="h-4 w-4" />,
+  Search: <Search className="h-4 w-4" />,
+  Database: <Database className="h-4 w-4" />,
+  Code: <Code className="h-4 w-4" />,
+  Briefcase: <Briefcase className="h-4 w-4" />,
+  Building2: <Building2 className="h-4 w-4" />,
+  Default: <ChevronRight className="h-4 w-4" />,
+};
+
+type SiteCategory = {
+  id: string;
+  title: string;
+  icon: string;
+}
+
 export function AppSidebar() {
   const { language, setLanguage, t } = useLanguage();
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
+  const firestore = useFirestore();
   const { toast } = useToast();
   const pathname = usePathname();
+
+  const customCategoriesQuery = useMemoFirebase(() => {
+    if (!user) return null;
+    return query(collection(firestore, 'users', user.uid, 'siteCategories'), orderBy('createdAt', 'asc'));
+  }, [firestore, user]);
+
+  const { data: customCategories } = useCollection<SiteCategory>(customCategoriesQuery);
+
 
   const handleLogout = async () => {
     try {
@@ -303,6 +334,16 @@ export function AppSidebar() {
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
+                      {customCategories && customCategories.map(category => (
+                        <SidebarMenuItem key={category.id}>
+                            <Link href={`/important-sites/${category.id}`}>
+                              <SidebarMenuButton isActive={pathname === `/important-sites/${category.id}`} size="sm">
+                                  {iconComponents[category.icon] || iconComponents.Default}
+                                  <span>{category.title}</span>
+                              </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                      ))}
                       <SidebarMenuItem>
                         <Link href="/important-sites/new">
                           <SidebarMenuButton isActive={pathname === '/important-sites/new'} size="sm">
