@@ -94,7 +94,7 @@ export function SuppliersDashboard() {
                             <li>{t.suppliersDbPoint3}</li>
                             <li>{t.suppliersDbPoint4}</li>
                         </ul>
-                        <div className="mt-4 flex items-start gap-3 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+                        <div className="mt-4 flex items-start gap-3 rounded-md bg-destructive p-3 text-sm text-destructive-foreground">
                             <AlertTriangle className="h-5 w-5 flex-shrink-0" />
                             <div className="flex-1">
                                 <span className="font-semibold">{t.suppliersDbWarningTitle}</span> {t.suppliersDbWarningText}

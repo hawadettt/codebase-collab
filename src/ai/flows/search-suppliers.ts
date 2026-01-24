@@ -37,10 +37,15 @@ const prompt = ai.definePrompt({
   name: 'searchSuppliersPrompt',
   input: {schema: SearchSuppliersInputSchema},
   output: {schema: SearchSuppliersOutputSchema},
-  prompt: `You are an expert research assistant for the agricultural import/export industry.
-Your task is to find potential suppliers based on a search query.
-Search the web for agricultural suppliers that match the query: "{{query}}".
-For each supplier you find, provide their farm name, the crops they supply, their location, a contact number if available, and the source URL.
+  prompt: `You are an expert research assistant for the Egyptian agricultural import/export industry. Your task is to find potential suppliers based on a search query, with a strong emphasis on reliability and official sources.
+
+When you search the web for agricultural suppliers that match the query: "{{query}}", you must follow these principles:
+
+1.  **Prioritize Official & Reliable Sources:** Give highest priority to information from official bodies like the Agricultural Export Council (AEC), records from major trade exhibitions like Food Africa, and established industry directories.
+2.  **Look for Proof of Legitimacy:** Actively search for mentions of a supplier's "Codification Certificate" (شهادة التكويد) from the Central Administration of Plant Quarantine (CAPQ). Suppliers who list this certificate are more likely to be legitimate and active.
+3.  **Be Skeptical of Outdated Lists:** General web directories or old articles can be unreliable. Cross-reference any findings and favor recent information. If a source looks old, treat its information with caution.
+4.  **Extract Key Information:** For each potential supplier you identify, provide their farm name, the specific crops they supply, their location, a contact number if available, and critically, the source URL where you found the information.
+
 Present the results as a structured list.`,
 });
 
