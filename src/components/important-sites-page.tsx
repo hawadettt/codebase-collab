@@ -4,7 +4,7 @@
 import { useParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/language-provider";
-import { ExternalLink, Globe, Shield, Search, Database, Code, Briefcase, Building2, AlertTriangle, PlusCircle, Trash2, Loader2, Landmark, Sprout } from "lucide-react";
+import { ExternalLink, Globe, Shield, Search, Database, Code, Briefcase, Building2, AlertTriangle, PlusCircle, Trash2, Loader2, Landmark, Sprout, Plane } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -55,6 +55,7 @@ const iconComponents: { [key: string]: React.ReactNode } = {
   Building2: <Building2 className="h-8 w-8" />,
   Landmark: <Landmark className="h-8 w-8" />,
   Sprout: <Sprout className="h-8 w-8" />,
+  Plane: <Plane className="h-8 w-8" />,
   Default: <Globe className="h-8 w-8" />,
 };
 
@@ -129,6 +130,7 @@ const ALL_CATEGORIES: Category[] = [
       { titleKey: 'siteTradlinxTitle', descriptionKey: 'siteTradlinxDesc', url: 'https://blogs.tradlinx.com' },
       { titleKey: 'siteSearatesTitle', descriptionKey: 'siteSearatesDesc', url: 'https://www.searates.com' },
       { titleKey: 'siteProject44Title', descriptionKey: 'siteProject44Desc', url: 'https://developers.project44.com' },
+      { titleKey: 'siteAirCargoNewsTitle', descriptionKey: 'siteAirCargoNewsDesc', url: 'https://www.aircargonews.net' },
     ]
   },
   {
