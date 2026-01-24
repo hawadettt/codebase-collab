@@ -138,6 +138,8 @@ const ALL_CATEGORIES: Category[] = [
     icon: <Database className="h-8 w-8" />,
     sites: [
       { titleKey: 'siteTridgeTitle', descriptionKey: 'siteTridgeDesc', url: 'https://www.tridge.com' },
+      { titleKey: 'siteTradeMapTitle', descriptionKey: 'siteTradeMapDesc', url: 'https://www.trademap.org' },
+      { titleKey: 'siteFreshPlazaTitle', descriptionKey: 'siteFreshPlazaDesc', url: 'https://www.freshplaza.com' },
       { titleKey: 'siteHsCodesTitle', descriptionKey: 'siteHsCodesDesc', urls: [
           { label: 'Flexport', url: 'https://www.flexport.com/hs-code' },
           { label: 'Egypte-Market', url: 'https://www.egypte-market.com' }
