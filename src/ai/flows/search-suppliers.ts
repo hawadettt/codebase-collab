@@ -9,6 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { googleSearch } from '@genkit-ai/google-cloud';
 
 const SearchSuppliersInputSchema = z.object({
   query: z.string().describe('Search query for agricultural suppliers (e.g., "lettuce farms in Egypt").'),
@@ -37,6 +38,7 @@ const prompt = ai.definePrompt({
   name: 'searchSuppliersPrompt',
   input: {schema: SearchSuppliersInputSchema},
   output: {schema: SearchSuppliersOutputSchema},
+  tools: [googleSearch],
   prompt: `You are an expert research assistant for the Egyptian agricultural import/export industry. Your task is to find potential suppliers based on a search query, with a strong emphasis on reliability and official sources.
 
 When you search for agricultural suppliers that match the query: "{{query}}", you must follow these principles:
