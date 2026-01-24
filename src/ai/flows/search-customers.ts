@@ -9,7 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { googleSearch } from '@genkit-ai/google-cloud';
+// import { googleSearch } from '@genkit-ai/google-cloud'; // Temporarily disabled
 
 const SearchCustomersInputSchema = z.object({
   query: z.string().describe('Search query for potential customers (e.g., "fruit importers in Jordan").'),
@@ -37,8 +37,8 @@ const prompt = ai.definePrompt({
   name: 'searchCustomersPrompt',
   input: {schema: SearchCustomersInputSchema},
   output: {schema: SearchCustomersOutputSchema},
-  tools: [googleSearch],
-  prompt: `You are an expert research assistant specializing in international trade for the agricultural sector. Your primary task is to find potential customers (importers, traders, distributors) based on a user's search query. You must perform a live web search to gather the most current information.
+  // tools: [googleSearch], // Temporarily disabled to prevent crashes
+  prompt: `You are an expert research assistant specializing in international trade for the agricultural sector. Your primary task is to find potential customers (importers, traders, distributors) based on a user's search query. You must use your internal knowledge as live web search is temporarily disabled.
 
 When searching for customers that match the query "{{query}}", follow these principles:
 1.  **Prioritize Business Directories & Trade Portals:** Focus on results from B2B platforms, official trade directories, and associations related to food and agriculture.
