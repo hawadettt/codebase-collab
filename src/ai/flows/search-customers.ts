@@ -9,7 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import {googleAI} from '@genkit-ai/google-genai';
+import {search} from '@genkit-ai/google-genai';
 
 const SearchCustomersInputSchema = z.object({
   query: z.string().describe('Search query for potential customers (e.g., "fruit importers in Jordan").'),
@@ -37,7 +37,7 @@ const prompt = ai.definePrompt({
   name: 'searchCustomersPrompt',
   input: {schema: SearchCustomersInputSchema},
   output: {schema: SearchCustomersOutputSchema},
-  tools: [googleAI.search],
+  tools: [search],
   prompt: `You are an expert research assistant for the agricultural import/export industry.
 Your task is to find potential customers based on a search query.
 Search the web for companies that match the query: "{{query}}".
