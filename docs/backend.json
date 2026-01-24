@@ -108,6 +108,52 @@
         "createdAt"
       ]
     },
+    "NfsaSupplier": {
+      "title": "NFSA Whitelisted Supplier",
+      "type": "object",
+      "description": "Represents a supplier listed on the National Food Safety Authority (NFSA) whitelist.",
+      "properties": {
+        "supplierName": {
+          "type": "string",
+          "description": "The name of the company/facility."
+        },
+        "governorate": {
+          "type": "string",
+          "description": "The governorate where the supplier is located."
+        },
+        "activityType": {
+          "type": "string",
+          "description": "The type of activity the supplier is approved for (e.g., Packing Station, Manufacturing)."
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of products the supplier is approved for."
+        },
+        "approvalDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date when the supplier was added to the whitelist."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the approval.",
+          "enum": [
+            "ساري",
+            "موقوف"
+          ]
+        }
+      },
+      "required": [
+        "supplierName",
+        "governorate",
+        "activityType",
+        "approvalDate",
+        "status"
+      ]
+    },
     "Customer": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Customer",
@@ -349,6 +395,26 @@
             {
               "name": "supplierId",
               "description": "Unique ID for the supplier."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/nfsaSuppliers/{supplierId}",
+        "definition": {
+          "entityName": "NfsaSupplier",
+          "schema": {
+            "$ref": "#/backend/entities/NfsaSupplier"
+          },
+          "description": "Stores whitelisted supplier records for a user from the NFSA list.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the owner user."
+            },
+            {
+              "name": "supplierId",
+              "description": "Unique ID for the whitelisted supplier."
             }
           ]
         }
