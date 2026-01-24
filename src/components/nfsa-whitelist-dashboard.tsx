@@ -45,7 +45,7 @@ export function NfsaWhitelistDashboard() {
     if (!suppliers) return [];
     return suppliers.filter(s => {
       const nameMatch = s.supplierName.toLowerCase().includes(nameFilter.toLowerCase());
-      const govMatch = govFilter ? s.governorate === govFilter : true;
+      const govMatch = !govFilter || govFilter === 'all' ? true : s.governorate === govFilter;
       const activityMatch = activityFilter ? s.activityType.toLowerCase().includes(activityFilter.toLowerCase()) : true;
       return nameMatch && govMatch && activityMatch;
     });
@@ -91,7 +91,7 @@ export function NfsaWhitelistDashboard() {
               <SelectValue placeholder={t.filterByGovPlaceholder} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{language === 'ar' ? 'كل المحافظات' : 'All Governorates'}</SelectItem>
+              <SelectItem value="all">{language === 'ar' ? 'كل المحافظات' : 'All Governorates'}</SelectItem>
               {governorates.map(gov => (
                 <SelectItem key={gov.code} value={language === 'ar' ? gov.ar : gov.en}>
                   {language === 'ar' ? gov.ar : gov.en}
