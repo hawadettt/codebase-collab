@@ -87,28 +87,6 @@ const ALL_CATEGORIES: Category[] = [
     ]
   },
   {
-    id: 'agricultural',
-    titleKey: 'sitesCategoryAgricultural',
-    descriptionKey: 'sitesCategoryAgriculturalDesc',
-    icon: <Sprout className="h-8 w-8" />,
-    sites: [
-        { titleKey: 'siteQcapTitle', descriptionKey: 'siteQcapDesc', url: 'http://www.qcap-egypt.com' },
-        { titleKey: 'siteUpehcTitle', descriptionKey: 'siteUpehcDesc', url: 'http://www.upehc.org/' },
-        { titleKey: 'siteAecBstanyTitle', descriptionKey: 'siteAecBstanyDesc', url: 'http://www.aecegypt.com/WebPages/Common/Home.aspx' },
-        { titleKey: 'siteFaoTitle', descriptionKey: 'siteFaoDesc', url: 'https://www.fao.org' },
-        { titleKey: 'siteArcTitle', descriptionKey: 'siteArcDesc', url: 'http://www.arc.sci.eg/' },
-        { titleKey: 'siteHriTitle', descriptionKey: 'siteHriDesc', url: 'http://www.horticulture-egypt.com/hri/index.php?lang=en' },
-        { titleKey: 'siteClacTitle', descriptionKey: 'siteClacDesc', url: 'http://www.clac.edu.eg/' },
-        { titleKey: 'siteIloTitle', descriptionKey: 'siteIloDesc', url: 'http://www.ilo.org/global/lang--en/index.htm' },
-        { titleKey: 'siteEnalTitle', descriptionKey: 'siteEnalDesc', url: 'http://nile.enal.sci.eg/' },
-        { titleKey: 'siteAgriNewsTitle', descriptionKey: 'siteAgriNewsDesc', url: 'http://agriculturenews.net/' },
-        { titleKey: 'siteIsaaaTitle', descriptionKey: 'siteIsaaaDesc', url: 'http://isaaa.org/' },
-        { titleKey: 'siteAatfTitle', descriptionKey: 'siteAatfDesc', url: 'http://aatf-africa.org/' },
-        { titleKey: 'siteCiheamTitle', descriptionKey: 'siteCiheamDesc', url: 'http://www.ciheam.org/index.php/en' },
-        { titleKey: 'siteCiatTitle', descriptionKey: 'siteCiatDesc', url: 'http://ciat.cgiar.org/' },
-    ]
-  },
-  {
     id: 'sovereign',
     titleKey: 'sitesCategorySovereign',
     descriptionKey: 'importantSitesDescription',
@@ -162,6 +140,28 @@ const ALL_CATEGORIES: Category[] = [
       ] },
       { titleKey: 'siteHeiaGuideTitle', descriptionKey: 'siteHeiaGuideDesc', url: 'https://heia.org.eg' },
       { titleKey: 'siteKompassTitle', descriptionKey: 'siteKompassDesc', url: 'https://eg.kompass.com' },
+    ]
+  },
+  {
+    id: 'agricultural',
+    titleKey: 'sitesCategoryAgricultural',
+    descriptionKey: 'sitesCategoryAgriculturalDesc',
+    icon: <Sprout className="h-8 w-8" />,
+    sites: [
+        { titleKey: 'siteQcapTitle', descriptionKey: 'siteQcapDesc', url: 'http://www.qcap-egypt.com' },
+        { titleKey: 'siteUpehcTitle', descriptionKey: 'siteUpehcDesc', url: 'http://www.upehc.org/' },
+        { titleKey: 'siteAecBstanyTitle', descriptionKey: 'siteAecBstanyDesc', url: 'http://www.aecegypt.com/WebPages/Common/Home.aspx' },
+        { titleKey: 'siteFaoTitle', descriptionKey: 'siteFaoDesc', url: 'https://www.fao.org' },
+        { titleKey: 'siteArcTitle', descriptionKey: 'siteArcDesc', url: 'http://www.arc.sci.eg/' },
+        { titleKey: 'siteHriTitle', descriptionKey: 'siteHriDesc', url: 'http://www.horticulture-egypt.com/hri/index.php?lang=en' },
+        { titleKey: 'siteClacTitle', descriptionKey: 'siteClacDesc', url: 'http://www.clac.edu.eg/' },
+        { titleKey: 'siteIloTitle', descriptionKey: 'siteIloDesc', url: 'http://www.ilo.org/global/lang--en/index.htm' },
+        { titleKey: 'siteEnalTitle', descriptionKey: 'siteEnalDesc', url: 'http://nile.enal.sci.eg/' },
+        { titleKey: 'siteAgriNewsTitle', descriptionKey: 'siteAgriNewsDesc', url: 'http://agriculturenews.net/' },
+        { titleKey: 'siteIsaaaTitle', descriptionKey: 'siteIsaaaDesc', url: 'http://isaaa.org/' },
+        { titleKey: 'siteAatfTitle', descriptionKey: 'siteAatfDesc', url: 'http://aatf-africa.org/' },
+        { titleKey: 'siteCiheamTitle', descriptionKey: 'siteCiheamDesc', url: 'http://www.ciheam.org/index.php/en' },
+        { titleKey: 'siteCiatTitle', descriptionKey: 'siteCiatDesc', url: 'http://ciat.cgiar.org/' },
     ]
   }
 ];

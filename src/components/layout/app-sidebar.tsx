@@ -319,14 +319,6 @@ export function AppSidebar() {
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
-                       <SidebarMenuItem>
-                        <Link href="/important-sites/agricultural">
-                          <SidebarMenuButton isActive={pathname === '/important-sites/agricultural'} size="sm">
-                            <Sprout className="h-4 w-4" />
-                            <span>{t.sitesCategoryAgricultural}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
                       <SidebarMenuItem>
                         <Link href="/important-sites/sovereign">
                           <SidebarMenuButton isActive={pathname === '/important-sites/sovereign'} size="sm">
@@ -356,6 +348,14 @@ export function AppSidebar() {
                           <SidebarMenuButton isActive={pathname === '/important-sites/technical'} size="sm">
                             <Code className="h-4 w-4" />
                             <span>{t.sitesCategoryTechnical}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                       <SidebarMenuItem>
+                        <Link href="/important-sites/agricultural">
+                          <SidebarMenuButton isActive={pathname === '/important-sites/agricultural'} size="sm">
+                            <Sprout className="h-4 w-4" />
+                            <span>{t.sitesCategoryAgricultural}</span>
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
