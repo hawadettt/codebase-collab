@@ -38,11 +38,18 @@ const prompt = ai.definePrompt({
   input: {schema: SearchCustomersInputSchema},
   output: {schema: SearchCustomersOutputSchema},
   tools: [googleSearch],
-  prompt: `You are an expert research assistant for the agricultural import/export industry.
-Your task is to find potential customers based on a search query.
-Search the web for companies that match the query: "{{query}}".
-For each customer you find, provide their company name, their country, any other relevant details, and the source URL.
-Present the results as a structured list.`,
+  prompt: `You are an expert research assistant specializing in international trade for the agricultural sector. Your primary task is to find potential customers (importers, traders, distributors) based on a user's search query. You must perform a live web search to gather the most current information.
+
+When searching for customers that match the query "{{query}}", follow these principles:
+1.  **Prioritize Business Directories & Trade Portals:** Focus on results from B2B platforms, official trade directories, and associations related to food and agriculture.
+2.  **Verify Information:** Look for company websites to confirm their business. Be skeptical of generic or outdated lists.
+3.  **Extract Actionable Data:** For each potential customer you identify, you must provide:
+    - The company's name (\`clientName\`).
+    - Their country (\`country\`).
+    - A brief summary of relevant details, such as the types of products they import or their market focus (\`details\`).
+    - The specific URL of the webpage where you found the information (\`source\`).
+
+Return a structured list of the customers you find.`,
 });
 
 const searchCustomersFlow = ai.defineFlow(

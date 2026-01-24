@@ -39,7 +39,7 @@ const prompt = ai.definePrompt({
   input: {schema: SearchSuppliersInputSchema},
   output: {schema: SearchSuppliersOutputSchema},
   tools: [googleSearch],
-  prompt: `You are an expert research assistant for the Egyptian agricultural import/export industry. Your task is to find potential suppliers based on a search query, with a strong emphasis on reliability and official sources.
+  prompt: `You are an expert research assistant for the Egyptian agricultural import/export industry. Your task is to find potential suppliers based on a search query, with a strong emphasis on reliability and official sources. You must perform a live web search to get up-to-date information.
 
 When you search for agricultural suppliers that match the query: "{{query}}", you must follow these principles:
 
