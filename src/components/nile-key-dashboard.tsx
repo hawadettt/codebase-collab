@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, Package, AlertTriangle, Truck, DollarSign, CheckCircle, Bot, Languages, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useUser, useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { useUser, useFirestore, useCollection } from "@/firebase";
 import { collection, query, orderBy } from "firebase/firestore";
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateExportContract, type GenerateExportContractInput } from "@/ai/flows/generate-export-contract";
@@ -39,7 +39,7 @@ export default function NileKeyDashboard() {
   const [translationInput, setTranslationInput] = useState("");
   const [translatedText, setTranslatedText] = useState("");
 
-  const shipmentsQuery = useMemoFirebase(() => {
+  const shipmentsQuery = useMemo(() => {
     if (!user) return null;
     return query(collection(firestore, 'users', user.uid, 'shipments'), orderBy('createdAt', 'desc'));
   }, [firestore, user]);
@@ -218,3 +218,5 @@ export default function NileKeyDashboard() {
     </SidebarProvider>
   );
 }
+
+    

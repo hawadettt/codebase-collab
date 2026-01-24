@@ -43,14 +43,6 @@ service cloud.firestore {
       }
 
       /**
-       * @description Controls access to a user's private NFSA whitelisted suppliers.
-       * @path /users/{userId}/nfsaSuppliers/{supplierId}
-       */
-      match /nfsaSuppliers/{supplierId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      /**
        * @description Controls access to a user's private customers.
        * @path /users/{userId}/customers/{customerId}
        */
@@ -76,3 +68,5 @@ service cloud.firestore {
     }
   }
 }
+
+    

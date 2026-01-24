@@ -108,38 +108,6 @@
         "createdAt"
       ]
     },
-    "NfsaSupplier": {
-      "title": "NFSA Whitelisted Supplier",
-      "type": "object",
-      "description": "Represents a supplier listed on the National Food Safety Authority (NFSA) whitelist.",
-      "properties": {
-        "supplierName": {
-          "type": "string",
-          "description": "The name of the company/facility."
-        },
-        "address": {
-          "type": "string",
-          "description": "The address of the supplier."
-        },
-        "activityType": {
-          "type": "string",
-          "description": "The type of activity the supplier is approved for."
-        },
-        "phoneNumber": {
-          "type": "string",
-          "description": "Contact phone number for the supplier."
-        },
-        "notes": {
-          "type": "string",
-          "description": "Additional notes about the supplier."
-        }
-      },
-      "required": [
-        "supplierName",
-        "address",
-        "activityType"
-      ]
-    },
     "Customer": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Customer",
@@ -386,26 +354,6 @@
         }
       },
       {
-        "path": "/users/{userId}/nfsaSuppliers/{supplierId}",
-        "definition": {
-          "entityName": "NfsaSupplier",
-          "schema": {
-            "$ref": "#/backend/entities/NfsaSupplier"
-          },
-          "description": "Stores whitelisted supplier records for a user from the NFSA list.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The Firebase Auth UID of the owner user."
-            },
-            {
-              "name": "supplierId",
-              "description": "Unique ID for the whitelisted supplier."
-            }
-          ]
-        }
-      },
-      {
         "path": "/users/{userId}/customers/{customerId}",
         "definition": {
           "entityName": "Customer",
@@ -448,3 +396,5 @@
     ]
   }
 }
+
+    

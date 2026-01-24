@@ -7,11 +7,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useLanguage } from "@/context/language-provider";
 import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2, Briefcase, Tag } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { useUser, useFirestore, useDoc, useMemoFirebase, errorEmitter, FirestorePermissionError } from '@/firebase';
+import { useUser, useFirestore, useDoc, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, setDoc, DocumentReference } from 'firebase/firestore';
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { EditProfileFieldDialog } from "./edit-profile-field-dialog";
 import { countries } from "@/lib/countries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
@@ -39,7 +39,7 @@ export function SettingsPage() {
   const [editingField, setEditingField] = useState<'userName' | 'companyName' | 'whatsapp' | 'mobile' | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const userProfileRef = useMemoFirebase(() => {
+  const userProfileRef = useMemo(() => {
     if (!user) return null;
     return doc(firestore, 'users', user.uid) as DocumentReference<UserProfile>;
   }, [firestore, user]);
@@ -342,3 +342,5 @@ export function SettingsPage() {
     </div>
   );
 }
+
+    

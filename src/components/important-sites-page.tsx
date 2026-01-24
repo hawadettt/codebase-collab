@@ -14,10 +14,10 @@ import {
 import { Button } from "./ui/button";
 import type { TranslationKeys } from "@/lib/i18n";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { useCollection, useDoc, useFirestore, useUser, useMemoFirebase, deleteDocumentNonBlocking } from '@/firebase';
+import { useCollection, useDoc, useFirestore, useUser, deleteDocumentNonBlocking } from '@/firebase';
 import { collection, doc, DocumentReference, query, orderBy } from 'firebase/firestore';
 import { Skeleton } from './ui/skeleton';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { DeleteCategoryAlert } from './delete-category-alert';
 import { AddSiteDialog } from './add-site-dialog';
 import { useRouter } from 'next/navigation';
@@ -171,7 +171,7 @@ function CustomCategorySites({ categoryId }: { categoryId: string }) {
   const firestore = useFirestore();
   const { t } = useLanguage();
 
-  const sitesQuery = useMemoFirebase(() => {
+  const sitesQuery = useMemo(() => {
     if (!user || !categoryId) return null;
     return query(collection(firestore, 'users', user.uid, 'siteCategories', categoryId, 'sites'), orderBy('title', 'asc'));
   }, [firestore, user, categoryId]);
@@ -222,7 +222,7 @@ function CustomCategoryDisplay({ categoryId }: { categoryId: string }) {
     const [isAddSiteOpen, setIsAddSiteOpen] = useState(false);
     const [isDeleteCategoryOpen, setIsDeleteCategoryOpen] = useState(false);
 
-    const categoryRef = useMemoFirebase(() => {
+    const categoryRef = useMemo(() => {
         if (!user || !categoryId) return null;
         return doc(firestore, 'users', user.uid, 'siteCategories', categoryId) as DocumentReference<any>;
     }, [firestore, user, categoryId]);
@@ -347,3 +347,5 @@ export function ImportantSitesPage() {
     </div>
   )
 }
+
+    

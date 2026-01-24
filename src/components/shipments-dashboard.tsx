@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Package, AlertTriangle, Truck } from "lucide-react";
-import { useUser, useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { useUser, useFirestore, useCollection } from "@/firebase";
 import { collection, query, orderBy } from "firebase/firestore";
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
@@ -30,7 +30,7 @@ export function ShipmentsDashboard() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
 
-  const shipmentsQuery = useMemoFirebase(() => {
+  const shipmentsQuery = useMemo(() => {
     if (!user) return null;
     return query(collection(firestore, 'users', user.uid, 'shipments'), orderBy('createdAt', 'desc'));
   }, [firestore, user]);
@@ -107,3 +107,5 @@ export function ShipmentsDashboard() {
       </div>
   );
 }
+
+    

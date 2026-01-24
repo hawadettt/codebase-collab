@@ -34,10 +34,9 @@ import {
   Landmark,
   Sprout,
   Book,
-  BadgeCheck,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { useAuth, useCollection, useFirestore, useMemoFirebase, useUser } from "@/firebase";
+import { useAuth, useCollection, useFirestore, useUser } from "@/firebase";
 import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -85,7 +84,7 @@ export function AppSidebar() {
   const { toast } = useToast();
   const pathname = usePathname();
 
-  const customCategoriesQuery = useMemoFirebase(() => {
+  const customCategoriesQuery = React.useMemo(() => {
     if (!user) return null;
     return query(collection(firestore, 'users', user.uid, 'siteCategories'), orderBy('createdAt', 'asc'));
   }, [firestore, user]);
@@ -245,15 +244,7 @@ export function AppSidebar() {
                       <SidebarMenuItem>
                         <Link href="/suppliers">
                           <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm">
-                            <span>{t.sidebarSuppliersDatabase}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <Link href="/suppliers/whitelist">
-                          <SidebarMenuButton isActive={pathname === '/suppliers/whitelist'} size="sm">
-                             <BadgeCheck className="h-4 w-4 text-green-500" />
-                            <span>{t.sidebarNfsaWhitelist}</span>
+                            <span>{t.sidebarViewAll}</span>
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
@@ -416,3 +407,5 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
+
+    
