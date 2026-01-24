@@ -10,7 +10,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { AlertTriangle, BadgeCheck, Loader2, PlusCircle, Building2 } from 'lucide-react';
+import { AlertTriangle, BadgeCheck, Loader2, PlusCircle, Building2, Search } from 'lucide-react';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { Badge } from './ui/badge';
@@ -25,13 +25,62 @@ type NfsaSupplier = {
   status: string;
 };
 
+const sampleSuppliers: NfsaSupplier[] = [
+  {
+    id: 'sample-1',
+    supplierName: 'الشركة المتحدة للتصدير والتصنيع الزراعي',
+    governorate: 'البحيرة',
+    activityType: 'محطة تعبئة وتغليف',
+    products: ['برتقال', 'ليمون', 'يوسفي'],
+    approvalDate: { seconds: Math.floor(new Date('2023-05-15').getTime() / 1000), nanoseconds: 0 },
+    status: 'ساري',
+  },
+  {
+    id: 'sample-2',
+    supplierName: 'أجرين فروت للتجميد',
+    governorate: 'الإسكندرية',
+    activityType: 'منشأة تجميد خضروات وفاكهة',
+    products: ['فراولة مجمدة', 'بازلاء مجمدة', 'خرشوف مجمد'],
+    approvalDate: { seconds: Math.floor(new Date('2022-11-20').getTime() / 1000), nanoseconds: 0 },
+    status: 'ساري',
+  },
+  {
+    id: 'sample-3',
+    supplierName: 'مزارع النوبارية الحديثة',
+    governorate: 'الإسماعيلية',
+    activityType: 'محطة فرز وتعبئة',
+    products: ['عنب', 'رمان', 'مانجو'],
+    approvalDate: { seconds: Math.floor(new Date('2023-09-01').getTime() / 1000), nanoseconds: 0 },
+    status: 'ساري',
+  },
+  {
+    id: 'sample-4',
+    supplierName: 'الأعشاب الذهبية للتجارة',
+    governorate: 'الشرقية',
+    activityType: 'تجهيز وتجفيف أعشاب',
+    products: ['ريحان مجفف', 'نعناع مجفف'],
+    approvalDate: { seconds: Math.floor(new Date('2022-02-10').getTime() / 1000), nanoseconds: 0 },
+    status: 'موقوف',
+  },
+    {
+    id: 'sample-5',
+    supplierName: 'دلتا فروت للتصدير',
+    governorate: 'الغربية',
+    activityType: 'محطة تعبئة موالح',
+    products: ['برتقال فالنسيا', 'برتقال أبو سرة'],
+    approvalDate: { seconds: Math.floor(new Date('2024-01-15').getTime() / 1000), nanoseconds: 0 },
+    status: 'ساري',
+  },
+];
+
+
 export function NfsaWhitelistDashboard() {
   const { language, t } = useLanguage();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
 
   const [nameFilter, setNameFilter] = useState('');
-  const [govFilter, setGovFilter] = useState('');
+  const [govFilter, setGovFilter] = useState('all');
   const [activityFilter, setActivityFilter] = useState('');
 
   const nfsaSuppliersQuery = useMemoFirebase(() => {
@@ -42,14 +91,17 @@ export function NfsaWhitelistDashboard() {
   const { data: suppliers, isLoading: isLoadingSuppliers } = useCollection<NfsaSupplier>(nfsaSuppliersQuery);
 
   const filteredSuppliers = useMemo(() => {
-    if (!suppliers) return [];
-    return suppliers.filter(s => {
+    if (isLoadingSuppliers && !suppliers) return [];
+
+    const dataSet = (suppliers && suppliers.length > 0) ? suppliers : sampleSuppliers;
+
+    return dataSet.filter(s => {
       const nameMatch = s.supplierName.toLowerCase().includes(nameFilter.toLowerCase());
       const govMatch = !govFilter || govFilter === 'all' ? true : s.governorate === govFilter;
       const activityMatch = activityFilter ? s.activityType.toLowerCase().includes(activityFilter.toLowerCase()) : true;
       return nameMatch && govMatch && activityMatch;
     });
-  }, [suppliers, nameFilter, govFilter, activityFilter]);
+  }, [suppliers, isLoadingSuppliers, nameFilter, govFilter, activityFilter]);
   
   if (isUserLoading) {
     return <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -148,9 +200,9 @@ export function NfsaWhitelistDashboard() {
           </Table>
         ) : (
           <div className="flex h-60 flex-col items-center justify-center gap-2 text-center text-muted-foreground">
-            <Building2 className="h-12 w-12" />
-            <h3 className="font-semibold">{t.noNfsaSuppliersTitle}</h3>
-            <p className="max-w-xs text-sm">{t.noNfsaSuppliersDescription}</p>
+            <Search className="h-12 w-12" />
+            <h3 className="font-semibold">{t.noFilterResultsTitle}</h3>
+            <p className="max-w-xs text-sm">{t.noFilterResultsDescription}</p>
           </div>
         )}
       </CardContent>

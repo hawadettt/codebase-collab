@@ -484,7 +484,9 @@ export const translations = {
     statusActive: "Active",
     statusSuspended: "Suspended",
     addNfsaSupplierSuccess: "Whitelisted supplier added successfully.",
-    addNfsaSupplierFailure: "Failed to add whitelisted supplier."
+    addNfsaSupplierFailure: "Failed to add whitelisted supplier.",
+    noFilterResultsTitle: 'No Matches Found',
+    noFilterResultsDescription: 'Try adjusting your search filters to find what you are looking for.',
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -970,7 +972,9 @@ export const translations = {
     statusActive: "ساري",
     statusSuspended: "موقوف",
     addNfsaSupplierSuccess: "تمت إضافة المورد المعتمد بنجاح.",
-    addNfsaSupplierFailure: "فشل في إضافة المورد المعتمد."
+    addNfsaSupplierFailure: "فشل في إضافة المورد المعتمد.",
+    noFilterResultsTitle: 'لم يتم العثور على نتائج',
+    noFilterResultsDescription: 'حاول تعديل فلاتر البحث للعثور على ما تبحث عنه.',
   },
 };
 
