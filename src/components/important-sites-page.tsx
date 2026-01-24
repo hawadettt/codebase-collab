@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useParams } from 'next/navigation';
@@ -116,6 +117,7 @@ const ALL_CATEGORIES: Category[] = [
       { titleKey: 'siteCapqTitle', descriptionKey: 'siteCapqDesc', url: 'https://www.capq.gov.eg' },
       { titleKey: 'siteCargoXTitle', descriptionKey: 'siteCargoXDesc', url: 'https://cargox.help' },
       { titleKey: 'siteAecTitle', descriptionKey: 'siteAecDesc', url: 'https://aec-egypt.org' },
+      { titleKey: 'siteNfsaTitle', descriptionKey: 'siteNfsaDesc', url: 'https://www.nfsa.gov.eg' },
     ]
   },
   {
