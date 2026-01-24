@@ -268,5 +268,229 @@ export const nfsaSampleData: NfsaSupplierSample[] = [
     "activityType": "محطة فرز وتعبئة وتصدير حاصلات زراعية",
     "phoneNumber": "",
     "notes": ""
+  },
+  {
+    "supplierName": "دلتا فروت للتصدير",
+    "address": "شبين الكوم, المنوفية",
+    "activityType": "فرز وتعبئة الموالح",
+    "phoneNumber": "01098765432",
+    "notes": "متخصص في البرتقال الصيفي"
+  },
+  {
+    "supplierName": "الصعيدي للمحاصيل الزراعية",
+    "address": "أسيوط, أسيوط",
+    "activityType": "فرز وتعبئة رمان وبصل",
+    "phoneNumber": "0881234567",
+    "notes": ""
+  },
+  {
+    "supplierName": "سينا فريش",
+    "address": "العريش, شمال سيناء",
+    "activityType": "تعبئة وتغليف زيتون وخوخ",
+    "phoneNumber": "",
+    "notes": "منتجات عضوية"
+  },
+  {
+    "supplierName": "جودة الوادي",
+    "address": "الخارجة, الوادي الجديد",
+    "activityType": "تعبئة تمور",
+    "phoneNumber": "",
+    "notes": "تصدير للخليج"
+  },
+  {
+    "supplierName": "كنوز النيل",
+    "address": "إدفو, أسوان",
+    "activityType": "فرز وتعبئة مانجو",
+    "phoneNumber": "0971234567",
+    "notes": ""
+  },
+  {
+    "supplierName": "إمكو للزراعة",
+    "address": "النوبارية, البحيرة",
+    "activityType": "محطة فرز و تعبئة الخضر و الفاكهة الطازجة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "أجرين سيرف",
+    "address": "مدينة السادات, المنوفية",
+    "activityType": "فرز و تعبئة الخضر و الفاكهة الطازجة",
+    "phoneNumber": "",
+    "notes": "ISO 9001"
+  },
+  {
+    "supplierName": "أجرين هاوس",
+    "address": "النوبارية, البحيرة",
+    "activityType": "محطة فرز و تعبئة الخضر و الفاكهة الطازجة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "أراب أورجانيك",
+    "address": "بلبيس, الشرقية",
+    "activityType": "فرز و تعبئة و تجميد خضراوات و فاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "إيجيبت جرين",
+    "address": "النوبارية, البحيرة",
+    "activityType": "فرز وتعبئة الحاصلات الزراعية",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "إيجيبت فودز",
+    "address": "مدينة السادات, المنوفية",
+    "activityType": "تجميد و تعبئة الخضر و الفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "الأمين",
+    "address": "النوبارية, البحيرة",
+    "activityType": "فرز و تعبئة خضر و فاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "الأندلسية",
+    "address": "النوبارية, البحيرة",
+    "activityType": "محطة فرز وتعبئة الحاصلات الزراعية",
+    "phoneNumber": "",
+    "notes": "متخصصة في الفراولة"
+  },
+  {
+    "supplierName": "التصديرية الزراعية (اجريكسبو)",
+    "address": "النوبارية, البحيرة",
+    "activityType": "محطة فرز وتعبئة الحاصلات الزراعية الطازجة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "الحجاز",
+    "address": "العاشر من رمضان, الشرقية",
+    "activityType": "فرز وتعبئة وتجميد الخضروات والفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "الرواسي",
+    "address": "النوبارية, البحيرة",
+    "activityType": "فرز وتعبئة الخضروات والفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "الزهراء لاند",
+    "address": "النوبارية, البحيرة",
+    "activityType": "فرز و تعبئة الحاصلات الزراعية",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "الشركة المتحدة للتنمية الزراعية",
+    "address": "النوبارية, البحيرة",
+    "activityType": "محطة فرز وتعبئة خضر وفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "الشركة المصرية الخليجية",
+    "address": "بلبيس, الشرقية",
+    "activityType": "محطة فرز وتعبئة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "المشروعات الزراعية المتكاملة (بيكو)",
+    "address": "الكيلو 72 طريق القاهرة اسكندرية الصحراوى",
+    "activityType": "فرز وتعبئة وتصدير الحاصلات الزراعية",
+    "phoneNumber": "",
+    "notes": "من أقدم الشركات في المجال"
+  },
+  {
+    "supplierName": "المنتجات الزراعية المصرية (ايجي فارم)",
+    "address": "النوبارية, البحيرة",
+    "activityType": "فرز وتعبئة الخضر والفاكهة الطازجة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "المنسي جروب",
+    "address": "النوبارية, البحيرة",
+    "activityType": "فرز وتعبئة الخضر والفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "أورينت فودز",
+    "address": "القناطر الخيرية, القليوبية",
+    "activityType": "تجميد خضار وفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "تكنوفودز ايجيبت",
+    "address": "المنطقة الصناعية, الاسماعيلية",
+    "activityType": "تجميد وتعبئة الخضروات والفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "جرين هاوس",
+    "address": "النوبارية, البحيرة",
+    "activityType": "فرز وتعبئة الخضر والفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "حورس مصر",
+    "address": "النوبارية, البحيرة",
+    "activityType": "فرز وتعبئة الحاصلات الزراعية",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "دايموند",
+    "address": "النوبارية, البحيرة",
+    "activityType": "محطة فرز وتعبئة الخضر والفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "سيكم",
+    "address": "بلبيس, الشرقية",
+    "activityType": "زراعة وتصنيع وتعبئة المنتجات العضوية",
+    "phoneNumber": "",
+    "notes": "رائدة في الزراعة الحيوية (Demeter)"
+  },
+  {
+    "supplierName": "فارم فريش",
+    "address": "طريق مصر اسماعيلية الصحراوى",
+    "activityType": "فرز وتعبئة وتصدير خضروات وفاكهة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "فالكون",
+    "address": "النوبارية, البحيرة",
+    "activityType": "فرز وتعبئة الخضر والفاكهة الطازجة",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "ماف",
+    "address": "النوبارية, البحيرة",
+    "activityType": "محطة فرز وتعبئة البطاطس والموالح",
+    "phoneNumber": "",
+    "notes": ""
+  },
+  {
+    "supplierName": "مكة للتنمية الزراعية",
+    "address": "وادى النطرون, البحيرة",
+    "activityType": "فرز وتعبئة وتصدير الحاصلات الزراعية",
+    "phoneNumber": "",
+    "notes": ""
   }
 ];
