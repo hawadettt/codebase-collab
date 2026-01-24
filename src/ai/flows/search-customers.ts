@@ -9,7 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { googleSearch } from '@genkit-ai/google-genai';
+import { googleSearch } from '@genkit-ai/google-genai/tools';
 
 const SearchCustomersInputSchema = z.object({
   query: z.string().describe('Search query for potential customers (e.g., "fruit importers in Jordan").'),
