@@ -117,41 +117,27 @@
           "type": "string",
           "description": "The name of the company/facility."
         },
-        "governorate": {
+        "address": {
           "type": "string",
-          "description": "The governorate where the supplier is located."
+          "description": "The address of the supplier."
         },
         "activityType": {
           "type": "string",
-          "description": "The type of activity the supplier is approved for (e.g., Packing Station, Manufacturing)."
+          "description": "The type of activity the supplier is approved for."
         },
-        "products": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of products the supplier is approved for."
-        },
-        "approvalDate": {
+        "phoneNumber": {
           "type": "string",
-          "format": "date-time",
-          "description": "The date when the supplier was added to the whitelist."
+          "description": "Contact phone number for the supplier."
         },
-        "status": {
+        "notes": {
           "type": "string",
-          "description": "The current status of the approval.",
-          "enum": [
-            "ساري",
-            "موقوف"
-          ]
+          "description": "Additional notes about the supplier."
         }
       },
       "required": [
         "supplierName",
-        "governorate",
-        "activityType",
-        "approvalDate",
-        "status"
+        "address",
+        "activityType"
       ]
     },
     "Customer": {
