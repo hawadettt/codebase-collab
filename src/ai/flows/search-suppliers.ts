@@ -9,7 +9,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { googleSearch } from '@genkit-ai/google-genai/tool';
 
 const SearchSuppliersInputSchema = z.object({
   query: z.string().describe('Search query for agricultural suppliers (e.g., "lettuce farms in Egypt").'),
@@ -38,10 +37,9 @@ const prompt = ai.definePrompt({
   name: 'searchSuppliersPrompt',
   input: {schema: SearchSuppliersInputSchema},
   output: {schema: SearchSuppliersOutputSchema},
-  tools: [googleSearch],
   prompt: `You are an expert research assistant for the Egyptian agricultural import/export industry. Your task is to find potential suppliers based on a search query, with a strong emphasis on reliability and official sources.
 
-When you search the web for agricultural suppliers that match the query: "{{query}}", you must follow these principles:
+When you search for agricultural suppliers that match the query: "{{query}}", you must follow these principles:
 
 1.  **Prioritize Official & Reliable Sources:** Give highest priority to information from official bodies like the Agricultural Export Council (AEC), records from major trade exhibitions like Food Africa, and established industry directories.
 2.  **Look for Proof of Legitimacy:** Actively search for mentions of a supplier's "Codification Certificate" (شهادة التكويد) from the Central Administration of Plant Quarantine (CAPQ). Suppliers who list this certificate are more likely to be legitimate and active.
