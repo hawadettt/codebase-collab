@@ -487,6 +487,8 @@ export const translations = {
     addNfsaSupplierFailure: "Failed to add whitelisted supplier.",
     noFilterResultsTitle: 'No Matches Found',
     noFilterResultsDescription: 'Try adjusting your search filters to find what you are looking for.',
+    sampleDataTitle: "Sample Data Displayed",
+    sampleDataDescription: "This is a sample list from the official NFSA whitelist. When you add your own suppliers, they will be displayed here instead.",
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -973,8 +975,10 @@ export const translations = {
     statusSuspended: "موقوف",
     addNfsaSupplierSuccess: "تمت إضافة المورد المعتمد بنجاح.",
     addNfsaSupplierFailure: "فشل في إضافة المورد المعتمد.",
-    noFilterResultsTitle: 'لم يتم العثور على نتائج',
+    noFilterResultsTitle: 'لا توجد نتائج مطابقة',
     noFilterResultsDescription: 'حاول تعديل فلاتر البحث للعثور على ما تبحث عنه.',
+    sampleDataTitle: "عرض بيانات توضيحية",
+    sampleDataDescription: "هذه قائمة بيانات توضيحية من القائمة الرسمية لهيئة سلامة الغذاء. عند إضافتك لموردين خاصين بك، سيتم عرضهم هنا بدلاً من هذه القائمة.",
   },
 };
 
