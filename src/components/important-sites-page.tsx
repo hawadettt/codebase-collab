@@ -129,8 +129,8 @@ const ALL_CATEGORIES: Category[] = [
     sites: [
       { titleKey: 'siteTradlinxTitle', descriptionKey: 'siteTradlinxDesc', url: 'https://blogs.tradlinx.com' },
       { titleKey: 'siteSearatesTitle', descriptionKey: 'siteSearatesDesc', url: 'https://www.searates.com' },
-      { titleKey: 'siteProject44Title', descriptionKey: 'siteProject44Desc', url: 'https://developers.project44.com' },
       { titleKey: 'siteAirCargoNewsTitle', descriptionKey: 'siteAirCargoNewsDesc', url: 'https://www.aircargonews.net' },
+      { titleKey: 'siteProject44Title', descriptionKey: 'siteProject44Desc', url: 'https://developers.project44.com' },
     ]
   },
   {
@@ -160,6 +160,8 @@ const ALL_CATEGORIES: Category[] = [
           { label: 'Farmer UI', url: 'https://dribbble.com/search/farmer-ui' },
           { label: 'Agriculture Dashboard', url: 'https://dribbble.com/search/agriculture-dashboard' }
       ] },
+      { titleKey: 'siteHeiaGuideTitle', descriptionKey: 'siteHeiaGuideDesc', url: 'https://heia.org.eg' },
+      { titleKey: 'siteKompassTitle', descriptionKey: 'siteKompassDesc', url: 'https://eg.kompass.com' },
     ]
   }
 ];
