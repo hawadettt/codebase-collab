@@ -76,14 +76,19 @@ service cloud.firestore {
      * This rule allows any signed-in user to read (get and list) documents
      * from the stations collection.
      */
-    match /artifacts/nile-key-master/public/data/stations/{stationId} {
-      allow get: if isSignedIn();
-      allow write: if false;
-    }
-    
-    match /artifacts/nile-key-master/public/data/stations {
-        allow list: if isSignedIn();
-        allow write: if false;
+    match /artifacts/{appId}/public/{dataType} {
+        
+        // Allow GET on individual station documents
+        match /stations/{stationId} {
+          allow get: if isSignedIn();
+          allow write: if false;
+        }
+
+        // Allow LIST on the stations collection
+        match /stations {
+            allow list: if isSignedIn();
+            allow write: if false;
+        }
     }
   }
 }
