@@ -66,7 +66,18 @@ service cloud.firestore {
         }
       }
     }
+    
+    // -------------------------------------------------------------------------
+    // Public Artifacts
+    // -------------------------------------------------------------------------
+
+    /**
+     * @description Public read access for application data artifacts.
+     * @path /artifacts/nile-key-master/public/data/stations/{stationId}
+     */
+    match /artifacts/nile-key-master/public/data/stations/{stationId} {
+        allow read: if isSignedIn();
+        allow write: if false; // Read-only data
+    }
   }
 }
-
-    
