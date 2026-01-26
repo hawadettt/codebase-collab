@@ -5,25 +5,23 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, Building2, Bot, Search, AlertTriangle, Info } from 'lucide-react';
+import { Loader2, Building2, Bot, Search, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useUser, useFirestore, useCollection } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
-import { format } from 'date-fns';
-import { ar, enUS } from 'date-fns/locale';
 import { searchSuppliers, type SearchSuppliersInput, type SearchSuppliersOutput } from '@/ai/flows/search-suppliers';
 import { useLanguage } from '@/context/language-provider';
 
 export function SuppliersDashboard() {
   const { language, t } = useLanguage();
 
-  type Supplier = { 
-    id: string; 
-    createdAt: { seconds: number, nanoseconds: number };
-    farmName: string;
-    codificationCode?: string;
-    location: string;
-    contactNumber: string;
+  type Station = { 
+    id: string;
+    name: string;
+    address: string;
+    activity: string;
+    phone?: string;
+    notes?: string;
   };
 
   const { toast } = useToast();
@@ -34,11 +32,12 @@ export function SuppliersDashboard() {
   const [searchResults, setSearchResults] = useState<SearchSuppliersOutput | null>(null);
 
   const suppliersQuery = useMemo(() => {
-    if (!user) return null;
-    return query(collection(firestore, 'users', user.uid, 'suppliers'), orderBy('createdAt', 'desc'));
-  }, [firestore, user]);
+    if (!firestore) return null;
+    const appId = 'nile-key-master';
+    return query(collection(firestore, 'artifacts', appId, 'public', 'data', 'stations'), orderBy('name', 'asc'));
+  }, [firestore]);
 
-  const { data: suppliers, isLoading: isLoadingSuppliers } = useCollection<Supplier>(suppliersQuery);
+  const { data: suppliers, isLoading: isLoadingSuppliers } = useCollection<Station>(suppliersQuery);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -83,26 +82,6 @@ export function SuppliersDashboard() {
             <Building2 className="h-6 w-6" /> {t.suppliersTitle}
           </CardTitle>
           <CardDescription>{t.suppliersDescription}</CardDescription>
-            <div className="mt-4 rounded-lg border bg-card p-4 text-card-foreground text-left">
-                <div className="flex items-start gap-3">
-                    <Info className="h-5 w-5 flex-shrink-0 text-primary" />
-                    <div className="flex-1">
-                        <h4 className="font-semibold text-base">{t.suppliersDbQuestion}</h4>
-                        <ul className="list-disc list-inside space-y-1.5 mt-2 text-sm text-muted-foreground">
-                            <li>{t.suppliersDbPoint1}</li>
-                            <li>{t.suppliersDbPoint2}</li>
-                            <li>{t.suppliersDbPoint3}</li>
-                            <li>{t.suppliersDbPoint4}</li>
-                        </ul>
-                        <div className="mt-4 flex items-start gap-3 rounded-md bg-destructive p-3 text-sm text-destructive-foreground">
-                            <AlertTriangle className="h-5 w-5 flex-shrink-0" />
-                            <div className="flex-1">
-                                <span className="font-semibold">{t.suppliersDbWarningTitle}</span> {t.suppliersDbWarningText}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </CardHeader>
         <CardContent>
           {isLoadingSuppliers ? (
@@ -114,22 +93,20 @@ export function SuppliersDashboard() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t.tableHeaderFarmName}</TableHead>
-                  <TableHead>{t.tableHeaderCodificationCode}</TableHead>
-                  <TableHead>{t.tableHeaderLocation}</TableHead>
+                  <TableHead>{t.tableHeaderAddress}</TableHead>
+                  <TableHead>{t.tableHeaderActivity}</TableHead>
                   <TableHead>{t.tableHeaderContact}</TableHead>
-                  <TableHead>{t.tableHeaderDate}</TableHead>
+                  <TableHead>{t.tableHeaderNotes}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {suppliers.map((supplier) => (
                   <TableRow key={supplier.id}>
-                    <TableCell className="font-medium">{supplier.farmName}</TableCell>
-                    <TableCell>{supplier.codificationCode}</TableCell>
-                    <TableCell>{supplier.location}</TableCell>
-                    <TableCell>{supplier.contactNumber}</TableCell>
-                    <TableCell>
-                      {supplier.createdAt ? format(new Date(supplier.createdAt.seconds * 1000), 'PPP', { locale: language === 'ar' ? ar : enUS }) : 'N/A'}
-                    </TableCell>
+                    <TableCell className="font-medium">{supplier.name}</TableCell>
+                    <TableCell>{supplier.address}</TableCell>
+                    <TableCell>{supplier.activity}</TableCell>
+                    <TableCell>{supplier.phone || '-'}</TableCell>
+                    <TableCell>{supplier.notes || '-'}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -194,5 +171,3 @@ export function SuppliersDashboard() {
     </div>
   );
 }
-
-    
