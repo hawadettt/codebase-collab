@@ -389,23 +389,22 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href="/settings">
+                <SidebarMenuButton isActive={pathname === '/settings'} size="sm">
+                  <Settings />
+                  <span>{t.sidebarSettings}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
       <SidebarSeparator />
-      <SidebarFooter className="p-2">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <Link href="/settings">
-              <SidebarMenuButton isActive={pathname === '/settings'} size="sm">
-                <Settings />
-                <span>{t.sidebarSettings}</span>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-        </SidebarMenu>
+      <SidebarFooter className="p-2 flex justify-center">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground">
+            <span className="font-headline text-lg font-bold text-background">N</span>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
 }
-
-    
