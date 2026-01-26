@@ -73,18 +73,15 @@ service cloud.firestore {
 
     /**
      * @description Public read access for application data artifacts.
+     * This rule allows any signed-in user to read (get and list) documents
+     * from the stations collection.
      * @path /artifacts/nile-key-master/public/data/stations
      */
     match /artifacts/nile-key-master/public/data/stations/{stationId} {
-        // Allow signed-in users to read individual station documents
-        allow get: if isSignedIn();
+        // Allow signed-in users to read (get and list) the stations collection.
+        allow read: if isSignedIn();
         // Disallow all write operations
         allow write: if false;
-    }
-    
-    match /artifacts/nile-key-master/public/data/stations {
-        // Allow signed-in users to list the stations
-        allow list: if isSignedIn();
     }
   }
 }
