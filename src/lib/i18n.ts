@@ -458,6 +458,8 @@ export const translations = {
     suppliersDbPoint4: "Implement a supplier evaluation system within your application based on the rejection rate.",
     suppliersDbWarningTitle: "Business Warning:",
     suppliersDbWarningText: "Do not rely on old internet lists. Farm data changes seasonally. The only reliable source is the farm's current 'Codification Certificate'.",
+    suppliersDataNoticeTitle: "Demonstration Data",
+    suppliersDataNoticeDesc: "This table is populated with sample data from the official NFSA whitelist for demonstration purposes. Once you add your own suppliers, this sample data will be replaced by your own.",
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -917,6 +919,8 @@ export const translations = {
     suppliersDbPoint4: "تطبيق نظام تقييم للموردين داخل تطبيقك بناءً على نسبة المرفوضات.",
     suppliersDbWarningTitle: "تحذير تجاري:",
     suppliersDbWarningText: "لا تعتمد على قوائم الإنترنت القديمة. بيانات المزارع تتغير موسمياً. الاعتماد الوحيد هو \"شهادة التكويد\" الحالية للمزرعة.",
+    suppliersDataNoticeTitle: "بيانات توضيحية",
+    suppliersDataNoticeDesc: "هذا الجدول مملوء ببيانات نموذجية من القائمة البيضاء الرسمية لهيئة سلامة الغذاء لأغراض العرض. بمجرد إضافة الموردين الخاصين بك، سيتم استبدال هذه البيانات النموذجية ببياناتك الخاصة.",
   },
 };
 

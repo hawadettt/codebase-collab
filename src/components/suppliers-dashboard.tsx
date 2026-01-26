@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, Building2, Bot, Search, AlertTriangle } from 'lucide-react';
+import { Loader2, Building2, Bot, Search, AlertTriangle, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useUser, useFirestore, useCollection } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { searchSuppliers, type SearchSuppliersInput, type SearchSuppliersOutput } from '@/ai/flows/search-suppliers';
 import { useLanguage } from '@/context/language-provider';
+import { nfsaSampleData } from '@/lib/nfsa-data';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 export function SuppliersDashboard() {
   const { language, t } = useLanguage();
@@ -38,6 +40,14 @@ export function SuppliersDashboard() {
   }, [firestore]);
 
   const { data: suppliers, isLoading: isLoadingSuppliers } = useCollection<Station>(suppliersQuery);
+  
+  const usingSampleData = !suppliers || suppliers.length === 0;
+  
+  const displayedSuppliers = useMemo(() => {
+      // If the live query is empty or errored, use the local sample data.
+      return usingSampleData ? nfsaSampleData.map((s, i) => ({...s, id: `sample-${i}`, name: s.supplierName, activity: s.activityType, phone: s.phoneNumber })) : suppliers;
+  }, [usingSampleData, suppliers]);
+
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -82,13 +92,22 @@ export function SuppliersDashboard() {
             <Building2 className="h-6 w-6" /> {t.suppliersTitle}
           </CardTitle>
           <CardDescription>{t.suppliersDescription}</CardDescription>
+           {usingSampleData && !isLoadingSuppliers && (
+              <Alert className="mt-4">
+                <Info className="h-4 w-4" />
+                <AlertTitle>{t.suppliersDataNoticeTitle}</AlertTitle>
+                <AlertDescription>
+                  {t.suppliersDataNoticeDesc}
+                </AlertDescription>
+              </Alert>
+            )}
         </CardHeader>
         <CardContent>
           {isLoadingSuppliers ? (
             <div className="flex h-40 items-center justify-center text-muted-foreground">
               <Loader2 className="mx-2 h-4 w-4 animate-spin" /> {t.loadingSuppliers}
             </div>
-          ) : suppliers && suppliers.length > 0 ? (
+          ) : displayedSuppliers && displayedSuppliers.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -100,7 +119,7 @@ export function SuppliersDashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {suppliers.map((supplier) => (
+                {displayedSuppliers.map((supplier) => (
                   <TableRow key={supplier.id}>
                     <TableCell className="font-medium">{supplier.name}</TableCell>
                     <TableCell>{supplier.address}</TableCell>
