@@ -73,11 +73,18 @@ service cloud.firestore {
 
     /**
      * @description Public read access for application data artifacts.
-     * @path /artifacts/nile-key-master/public/data/stations/{stationId}
+     * @path /artifacts/nile-key-master/public/data/stations
      */
     match /artifacts/nile-key-master/public/data/stations/{stationId} {
-        allow read: if isSignedIn();
-        allow write: if false; // Read-only data
+        // Allow signed-in users to read individual station documents
+        allow get: if isSignedIn();
+        // Disallow all write operations
+        allow write: if false;
+    }
+    
+    match /artifacts/nile-key-master/public/data/stations {
+        // Allow signed-in users to list the stations
+        allow list: if isSignedIn();
     }
   }
 }
