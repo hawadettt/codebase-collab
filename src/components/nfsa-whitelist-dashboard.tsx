@@ -103,12 +103,15 @@ export function NfsaWhitelistDashboard() {
             onChange={(e) => setActivityFilter(e.target.value)}
             className="lg:col-span-1"
           />
-           <Select value={governorateFilter} onValueChange={setGovernorateFilter}>
+           <Select 
+            value={governorateFilter} 
+            onValueChange={(value) => setGovernorateFilter(value === 'all' ? '' : value)}
+           >
             <SelectTrigger className="lg:col-span-1">
               <SelectValue placeholder={t.filterByGovernoratePlaceholder} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{t.filterByGovernorateAll}</SelectItem>
+              <SelectItem value="all">{t.filterByGovernorateAll}</SelectItem>
               {governorates.map(gov => (
                 <SelectItem key={gov.code} value={language === 'ar' ? gov.ar : gov.en}>
                   {language === 'ar' ? gov.ar : gov.en}
