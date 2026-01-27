@@ -4,13 +4,11 @@ import { useState, useMemo } from 'react';
 import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { useLanguage } from '@/context/language-provider';
-import { nfsaSampleData } from '@/lib/nfsa-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { AlertTriangle, BadgeCheck, Loader2, PlusCircle, Building2, Search, Info } from 'lucide-react';
+import { AlertTriangle, BadgeCheck, Loader2, PlusCircle, Building2, Search } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 type NfsaSupplier = {
@@ -38,22 +36,18 @@ export function NfsaWhitelistDashboard() {
 
   const { data: dbSuppliers, isLoading: isLoadingSuppliers } = useCollection<NfsaSupplier>(nfsaSuppliersQuery);
 
-  const displayedSuppliers = useMemo(() => {
-    // If the user has entered their own data, use that. Otherwise, use the sample data for demonstration.
-    return dbSuppliers && dbSuppliers.length > 0 ? dbSuppliers : nfsaSampleData.map((s, i) => ({...s, id: `sample-${i}`}));
-  }, [dbSuppliers]);
-
   const filteredSuppliers = useMemo(() => {
-    return displayedSuppliers.filter(s => {
+    if (!dbSuppliers) {
+      return [];
+    }
+    return dbSuppliers.filter(s => {
       const nameMatch = s.supplierName.toLowerCase().includes(nameFilter.toLowerCase());
       const addressMatch = s.address.toLowerCase().includes(addressFilter.toLowerCase());
       const activityMatch = s.activityType.toLowerCase().includes(activityFilter.toLowerCase());
       return nameMatch && addressMatch && activityMatch;
     });
-  }, [displayedSuppliers, nameFilter, addressFilter, activityFilter]);
+  }, [dbSuppliers, nameFilter, addressFilter, activityFilter]);
   
-  const usingSampleData = !dbSuppliers || dbSuppliers.length === 0;
-
   if (isUserLoading) {
     return <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   }
@@ -80,15 +74,6 @@ export function NfsaWhitelistDashboard() {
           <BadgeCheck className="h-6 w-6 text-green-500" /> {t.nfsaWhitelistTitle}
         </CardTitle>
         <CardDescription>{t.nfsaWhitelistDescription}</CardDescription>
-         {usingSampleData && (
-          <Alert className="mt-4">
-            <Info className="h-4 w-4" />
-            <AlertTitle>{t.nfsaDataNoticeTitle}</AlertTitle>
-            <AlertDescription>
-              {t.nfsaDataNoticeDesc}
-            </AlertDescription>
-          </Alert>
-        )}
       </CardHeader>
       <CardContent>
         <div className="mb-4 flex flex-col gap-4 md:flex-row">
@@ -122,7 +107,7 @@ export function NfsaWhitelistDashboard() {
           <div className="flex h-60 items-center justify-center text-muted-foreground">
             <Loader2 className="mx-2 h-4 w-4 animate-spin" /> {t.loadingSuppliers}
           </div>
-        ) : displayedSuppliers && displayedSuppliers.length > 0 ? (
+        ) : dbSuppliers && dbSuppliers.length > 0 ? (
           filteredSuppliers.length > 0 ? (
             <Table>
               <TableHeader>
