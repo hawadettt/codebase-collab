@@ -34,6 +34,7 @@ import {
   Landmark,
   Sprout,
   Book,
+  BadgeCheck,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useCollection, useFirestore, useUser } from "@/firebase";
@@ -244,14 +245,22 @@ export function AppSidebar() {
                       <SidebarMenuItem>
                         <Link href="/suppliers">
                           <SidebarMenuButton isActive={pathname === '/suppliers'} size="sm">
-                            <span>{t.sidebarViewAll}</span>
+                            <span>{t.sidebarPublicDatabase}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <Link href="/suppliers/whitelist">
+                          <SidebarMenuButton isActive={pathname === '/suppliers/whitelist'} size="sm">
+                           <BadgeCheck className="h-4 w-4"/>
+                            <span>{t.sidebarNfsaWhitelist}</span>
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
                         <Link href="/suppliers/new">
                           <SidebarMenuButton isActive={pathname === '/suppliers/new'} size="sm">
-                            <span>{t.sidebarAddNew}</span>
+                            <span>{t.sidebarAddPrivate}</span>
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>

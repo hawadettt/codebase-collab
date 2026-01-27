@@ -18,6 +18,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useUser, useFirestore, addDocumentNonBlocking } from '@/firebase';
 import { collection, serverTimestamp } from 'firebase/firestore';
 import { useLanguage } from '@/context/language-provider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { governorates } from "@/lib/governorates";
 
 function AddNfsaSupplierForm() {
     const { language, t } = useLanguage();
@@ -30,6 +32,7 @@ function AddNfsaSupplierForm() {
     const supplierSchema = z.object({
         supplierName: z.string().min(1, t.formSupplierNameRequired),
         address: z.string().min(1, t.formAddressRequired),
+        governorate: z.string().min(1, t.formGovernorateRequired),
         activityType: z.string().min(1, t.formActivityRequired),
         phoneNumber: z.string().optional(),
         notes: z.string().optional(),
@@ -40,6 +43,7 @@ function AddNfsaSupplierForm() {
         defaultValues: {
             supplierName: '',
             address: '',
+            governorate: '',
             activityType: '',
             phoneNumber: '',
             notes: '',
@@ -85,6 +89,30 @@ function AddNfsaSupplierForm() {
                                 <FormItem><FormLabel>{t.formActivityLabel}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                         </div>
+                         <FormField
+                            control={form.control}
+                            name="governorate"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>{t.formGovernorateLabel}</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder={t.filterByGovernoratePlaceholder} />
+                                    </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                    {governorates.map(gov => (
+                                        <SelectItem key={gov.code} value={language === 'ar' ? gov.ar : gov.en}>
+                                        {language === 'ar' ? gov.ar : gov.en}
+                                        </SelectItem>
+                                    ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField control={form.control} name="address" render={({ field }) => (
                             <FormItem><FormLabel>{t.formAddressLabel}</FormLabel><FormControl><Textarea placeholder={t.formAddressPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />

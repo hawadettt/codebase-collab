@@ -288,6 +288,48 @@
         "title",
         "url"
       ]
+    },
+    "NfsaSupplier": {
+      "title": "NFSA Whitelisted Supplier",
+      "type": "object",
+      "description": "Represents a supplier from the National Food Safety Authority (NFSA) whitelist.",
+      "properties": {
+        "supplierName": {
+          "type": "string",
+          "description": "The name of the supplier."
+        },
+        "address": {
+          "type": "string",
+          "description": "The full address of the supplier."
+        },
+        "governorate": {
+          "type": "string",
+          "description": "The governorate where the supplier is located."
+        },
+        "activityType": {
+          "type": "string",
+          "description": "The type of activity (e.g., Packing Station for fresh fruits)."
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The contact phone number."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional notes."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "supplierName",
+        "address",
+        "governorate",
+        "activityType",
+        "createdAt"
+      ]
     }
   },
   "auth": {
@@ -392,9 +434,27 @@
           },
           "description": "Stores site links for a user-created category."
         }
+      },
+      {
+        "path": "/users/{userId}/nfsaSuppliers/{supplierId}",
+        "definition": {
+          "entityName": "NfsaSupplier",
+          "schema": {
+            "$ref": "#/backend/entities/NfsaSupplier"
+          },
+          "description": "Stores user-saved NFSA whitelisted suppliers.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the owner user."
+            },
+            {
+              "name": "supplierId",
+              "description": "Unique ID for the supplier."
+            }
+          ]
+        }
       }
     ]
   }
 }
-
-    
