@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
-import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
+import { useCollection, useFirestore, useUser } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { useLanguage } from '@/context/language-provider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
@@ -24,7 +24,7 @@ export function NfsaWhitelistDashboard() {
   const [activityFilter, setActivityFilter] = useState('');
   const [governorateFilter, setGovernorateFilter] = useState('');
 
-  const nfsaSuppliersQuery = useMemoFirebase(() => {
+  const nfsaSuppliersQuery = useMemo(() => {
     if (!user) return null;
     return query(collection(firestore, 'users', user.uid, 'nfsaSuppliers'), orderBy('supplierName', 'asc'));
   }, [firestore, user]);
