@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { AlertTriangle, BadgeCheck, Loader2, PlusCircle, Building2, Search, Info } from 'lucide-react';
+import { AlertTriangle, BadgeCheck, Loader2, PlusCircle, Building2, Search, Info, ExternalLink } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { nfsaSuppliersData, NfsaSupplier } from '@/lib/nfsa-data';
 import { governorates } from '@/lib/governorates';
@@ -35,17 +35,15 @@ export function NfsaWhitelistDashboard() {
     return userSuppliers && userSuppliers.length > 0 ? userSuppliers : nfsaSuppliersData;
   }, [userSuppliers]);
 
-  const isShowingDemoData = !userSuppliers || userSuppliers.length === 0;
-
   const filteredSuppliers = useMemo(() => {
     return displayData.filter(s => {
       const nameMatch = s.supplierName.toLowerCase().includes(nameFilter.toLowerCase());
       const addressMatch = s.address.toLowerCase().includes(addressFilter.toLowerCase());
       const activityMatch = s.activityType.toLowerCase().includes(activityFilter.toLowerCase());
-      const governorateMatch = governorateFilter === '' || s.governorate === governorateFilter;
+      const governorateMatch = governorateFilter === '' || (language === 'ar' ? s.governorate === governorateFilter : s.governorate === governorateFilter);
       return nameMatch && addressMatch && activityMatch && governorateMatch;
     });
-  }, [displayData, nameFilter, addressFilter, activityFilter, governorateFilter]);
+  }, [displayData, nameFilter, addressFilter, activityFilter, governorateFilter, language]);
   
   if (isUserLoading) {
     return <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -75,15 +73,19 @@ export function NfsaWhitelistDashboard() {
         <CardDescription>{t.nfsaWhitelistDescription}</CardDescription>
       </CardHeader>
       <CardContent>
-         {isShowingDemoData && (
-          <Alert className="mb-4 bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
+        <Alert className="mb-4 bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
             <Info className="h-4 w-4 !text-blue-500" />
-            <AlertTitle className="text-blue-800 dark:text-blue-300">{t.demoDataTitle}</AlertTitle>
+            <AlertTitle className="text-blue-800 dark:text-blue-300">{t.dataSourceTitle}</AlertTitle>
             <AlertDescription className="text-blue-700 dark:text-blue-400">
-              {t.demoDataDescription}
+                {t.dataSourceDescription}
+                <Button asChild variant="link" className="p-0 h-auto mt-2 text-blue-700 dark:text-blue-400">
+                  <a href="https://www.nfsa.gov.eg" target="_blank" rel="noopener noreferrer">
+                    {t.nfsaOfficialSite}
+                    <ExternalLink className="ms-2 h-4 w-4" />
+                  </a>
+                </Button>
             </AlertDescription>
-          </Alert>
-        )}
+        </Alert>
         <div className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-5">
           <Input
             placeholder={t.filterByNamePlaceholder}
