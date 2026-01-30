@@ -35,6 +35,7 @@ import {
   Sprout,
   Book,
   BadgeCheck,
+  Brain,
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAuth, useCollection, useFirestore, useUser } from "@/firebase";
@@ -187,6 +188,14 @@ export function AppSidebar() {
                 <SidebarMenuButton isActive={pathname === '/dashboard'} size="sm">
                   <LayoutDashboard />
                   <span>{t.sidebarDashboard}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href="/predictive-analytics">
+                <SidebarMenuButton isActive={pathname === '/predictive-analytics'} size="sm">
+                  <Brain />
+                  <span>{t.sidebarPredictiveAnalytics}</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
