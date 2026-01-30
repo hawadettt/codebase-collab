@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/language-provider";
-import { Brain, Bot, Loader2, CalendarClock, TrendingUp, Sparkles, MapPin, Search } from "lucide-react";
+import { Brain, Bot, Loader2, CalendarClock, TrendingUp, Sparkles, MapPin, Search, Info } from "lucide-react";
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -14,7 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Separator } from './ui/separator';
 
 function HarvestAdvisor() {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const { toast } = useToast();
     const [crop, setCrop] = useState('');
     const [location, setLocation] = useState('Egypt');
@@ -26,7 +26,11 @@ function HarvestAdvisor() {
         setIsLoading(true);
         setResult(null);
         try {
-            const prediction = await predictHarvestTime({ crop, location });
+            const prediction = await predictHarvestTime({ 
+                crop, 
+                location,
+                language: language === 'ar' ? 'Arabic' : 'English'
+            });
             setResult(prediction);
         } catch (error) {
             console.error(error);
@@ -84,7 +88,7 @@ function HarvestAdvisor() {
 }
 
 function MarketOpportunityFinder() {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const { toast } = useToast();
     const [crop, setCrop] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -95,7 +99,11 @@ function MarketOpportunityFinder() {
         setIsLoading(true);
         setResult(null);
         try {
-            const opportunities = await findMarketOpportunities({ crop, exportingCountry: "Egypt" });
+            const opportunities = await findMarketOpportunities({ 
+                crop, 
+                exportingCountry: "Egypt",
+                language: language === 'ar' ? 'Arabic' : 'English'
+            });
             setResult(opportunities);
         } catch (error) {
             console.error(error);
@@ -155,6 +163,13 @@ export function PredictiveAnalyticsDashboard() {
           <CardDescription>{t.predictiveAnalyticsDescription}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+            <Alert className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
+                <Info className="h-4 w-4 !text-blue-500" />
+                <AlertTitle className="text-blue-800 dark:text-blue-300">{t.aiDataSourceTitle}</AlertTitle>
+                <AlertDescription className="text-blue-700 dark:text-blue-400">
+                    {t.aiDataSourceDescription}
+                </AlertDescription>
+            </Alert>
             <HarvestAdvisor />
             <Separator />
             <MarketOpportunityFinder />

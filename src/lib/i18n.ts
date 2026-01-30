@@ -510,6 +510,8 @@ export const translations = {
     marketOpportunityButton: 'Find Opportunities',
     marketOpportunityResultsTitle: 'Top Market Opportunities',
     confidenceScore: 'Confidence',
+    aiDataSourceTitle: 'Regarding AI Data Sources',
+    aiDataSourceDescription: "The AI tools rely on their vast internal knowledge base, trained on a massive dataset of text and code. They do not access live external websites or specific databases for these predictions. Think of it as consulting a world-class expert who synthesizes information rather than browsing in real-time. No specific links are used.",
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -1021,6 +1023,8 @@ export const translations = {
     marketOpportunityButton: 'ابحث عن الفرص',
     marketOpportunityResultsTitle: 'أبرز الفرص السوقية',
     confidenceScore: 'درجة الثقة',
+    aiDataSourceTitle: 'حول مصادر بيانات الذكاء الاصطناعي',
+    aiDataSourceDescription: 'تعتمد أدوات الذكاء الاصطناعي على قاعدة معارفها الداخلية الواسعة، التي تم تدريبها على مجموعة ضخمة من البيانات النصية والبرمجية. هي لا تصل إلى مواقع ويب خارجية مباشرة أو قواعد بيانات محددة لهذه التنبؤات. فكر في الأمر على أنه استشارة خبير عالمي يقوم بتجميع وتحليل المعلومات بدلاً من تصفح الإنترنت في الوقت الفعلي. لا يتم استخدام روابط محددة.',
   },
 };
 

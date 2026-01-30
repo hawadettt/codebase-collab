@@ -13,6 +13,7 @@ import {z} from 'genkit';
 const FindMarketOpportunitiesInputSchema = z.object({
   crop: z.string().describe('The agricultural crop, e.g., "Egyptian Garlic", "Spunta Potatoes".'),
   exportingCountry: z.string().describe('The country the goods are exported from, e.g., "Egypt".'),
+  language: z.string().describe('The language for the response (e.g., "Arabic", "English").'),
 });
 export type FindMarketOpportunitiesInput = z.infer<typeof FindMarketOpportunitiesInputSchema>;
 
@@ -40,6 +41,8 @@ const prompt = ai.definePrompt({
   prompt: `You are a world-class international trade analyst for the agricultural sector, with a specialization in exports from {{exportingCountry}}. Your task is to identify high-potential market opportunities for a specific crop.
 
 You must analyze global trade flows, seasonal production gaps, consumption trends, and import regulations from your internal knowledge base to identify the most promising export windows.
+
+The response must be in the following language: {{language}}.
 
 **User Request:**
 - Crop: {{crop}}

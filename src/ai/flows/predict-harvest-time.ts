@@ -13,6 +13,7 @@ import {z} from 'genkit';
 const PredictHarvestTimeInputSchema = z.object({
   crop: z.string().describe('The agricultural crop, e.g., "Navel Oranges", "Strawberries".'),
   location: z.string().describe('The geographical location of the farm, e.g., "Minya, Egypt".'),
+  language: z.string().describe('The language for the response (e.g., "Arabic", "English").'),
 });
 export type PredictHarvestTimeInput = z.infer<typeof PredictHarvestTimeInputSchema>;
 
@@ -34,6 +35,8 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert agronomist and data scientist specializing in predictive agricultural analytics. Your task is to predict the optimal harvest window for a specific crop in a given location.
 
 You must use your extensive knowledge base, which includes climate data, satellite imagery analysis, and crop-specific growth models, to provide a precise prediction.
+
+The response must be in the following language: {{language}}.
 
 **User Request:**
 - Crop: {{crop}}
