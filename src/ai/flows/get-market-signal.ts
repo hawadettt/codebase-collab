@@ -17,10 +17,10 @@ const GetMarketSignalInputSchema = z.object({
 });
 export type GetMarketSignalInput = z.infer<typeof GetMarketSignalInputSchema>;
 
-const MarketSignalEnum = z.enum(['SELL_NOW', 'MONITOR', 'WAIT']);
+export const MarketSignalEnum = z.enum(['SELL_NOW', 'MONITOR', 'WAIT']);
 export type MarketSignal = z.infer<typeof MarketSignalEnum>;
 
-const GetMarketSignalOutputSchema = z.object({
+export const GetMarketSignalOutputSchema = z.object({
   signal: MarketSignalEnum.describe("The market signal: 'SELL_NOW' for high prices, 'MONITOR' for stable/uncertain markets, 'WAIT' for low prices."),
   reasoning: z.string().describe("A concise reason for the signal, e.g., 'Supply gap in the EU market before the Spanish harvest begins.'"),
   confidenceScore: z.number().min(0).max(1).describe("A confidence score from 0.0 to 1.0 on the accuracy of this signal."),
