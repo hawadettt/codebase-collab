@@ -11,3 +11,4 @@ import '@/ai/flows/search-suppliers.ts';
 import '@/ai/flows/search-customers.ts';
 import '@/ai/flows/predict-harvest-time.ts';
 import '@/ai/flows/find-market-opportunities.ts';
+import '@/ai/flows/get-market-signal.ts';
