@@ -80,18 +80,21 @@ service cloud.firestore {
     // -------------------------------------------------------------------------
 
     /**
-     * @description Public read access for application data artifacts.
-     * This rule allows any user (authenticated or not) to read documents
-     * from the stations subcollection.
+     * @description Public read access for the public stations data.
+     * This allows any user (authenticated or not) to get a single station document.
      */
-    match /artifacts/{appId}/public/{dataType} {
-        // This rule allows any client to read (get and list) documents
-        // from the `stations` subcollection located at:
-        // /artifacts/{appId}/public/{dataType}/stations/{stationId}
-        match /stations/{stationId} {
-          allow read: if true;
-          allow write: if false;
-        }
+    match /artifacts/{appId}/public/{dataType}/stations/{stationId} {
+      allow get: if true;
+      allow write: if false;
+    }
+
+    /**
+     * @description Public list access for the public stations data.
+     * This allows any user (authenticated or not) to list the entire stations collection.
+     */
+    match /artifacts/{appId}/public/{dataType}/stations {
+      allow list: if true;
+      allow write: if false;
     }
   }
 }
