@@ -123,29 +123,30 @@ export function AppSidebar() {
 
   const handleAvatarSelect = async (newAvatarUrl: string) => {
     if (!userProfileRef || !user) {
-      toast({ variant: 'destructive', title: t.avatarUpdatedFail });
-      return;
+        toast({ variant: 'destructive', title: t.avatarUpdatedFail });
+        return;
     }
     try {
-      const dataToSave: { photoURL: string; id?: string, email?: string | null } = { photoURL: newAvatarUrl };
+        const dataToSave: { photoURL: string; id?: string; email?: string | null } = { photoURL: newAvatarUrl };
 
-      // If the user profile document doesn't exist, add required fields for creation
-      // to satisfy security rules.
-      if (!userProfile) {
-        dataToSave.id = user.uid;
-        if (user.email) {
-            dataToSave.email = user.email;
+        if (!userProfile) {
+            dataToSave.id = user.uid;
+            if (user.email) {
+                dataToSave.email = user.email;
+            }
         }
-      }
+        
+        // Use a non-blocking Firestore update. The UI will update optimistically.
+        // Any permission errors will be caught globally and displayed.
+        setDocumentNonBlocking(userProfileRef, dataToSave, { merge: true });
 
-      setDocumentNonBlocking(userProfileRef, dataToSave, { merge: true });
-      toast({ title: t.avatarUpdatedSuccess });
-      setIsAvatarDialogOpen(false);
+        toast({ title: t.avatarUpdatedSuccess });
+        setIsAvatarDialogOpen(false);
     } catch (error) {
-      // This catch block might not be reached for permission errors due to the non-blocking nature,
-      // but it's good practice for other potential errors.
-      console.error("Avatar update failed:", error);
-      toast({ variant: 'destructive', title: t.avatarUpdatedFail });
+        // This catch block is for immediate errors, not Firestore rule failures
+        // which are handled asynchronously by the global error handler.
+        console.error("Avatar update initiation failed:", error);
+        toast({ variant: 'destructive', title: t.avatarUpdatedFail });
     }
   };
 
@@ -188,14 +189,17 @@ export function AppSidebar() {
                     <AvatarFallback>{userProfile?.userName?.[0].toUpperCase() ?? user?.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
                   </Avatar>
                 </button>
-                <div className="flex flex-col overflow-hidden">
-                  <span className="truncate text-sm font-medium">{userProfile?.userName ?? user?.displayName ?? user?.email ?? t.sidebarUser}</span>
-                  {user?.email === 'hawadettt@gmail.com' ? (
-                      <span className="truncate text-xs font-semibold text-primary">{t.roleCompanyOwner}</span>
-                  ) : (
-                      userProfile?.companyType && <span className="truncate text-xs text-muted-foreground">{userProfile.companyType}</span>
-                  )}
-                </div>
+                <Link href="/settings" className="flex-grow overflow-hidden">
+                    <div className="flex flex-col justify-center h-full">
+                        {user?.email === 'hawadettt@gmail.com' ? (
+                          <span className="truncate text-sm font-semibold text-primary">{t.roleCompanyOwner}</span>
+                        ) : (
+                          userProfile?.companyType ? 
+                          <span className="truncate text-sm text-muted-foreground">{userProfile.companyType}</span> 
+                          : <span className="truncate text-sm font-medium">{userProfile?.userName ?? t.sidebarUser}</span>
+                        )}
+                    </div>
+                </Link>
                 <LogOut onClick={handleLogout} className="ms-auto h-5 w-5 flex-shrink-0 cursor-pointer text-muted-foreground hover:text-foreground" />
             </div>
             ) : (
