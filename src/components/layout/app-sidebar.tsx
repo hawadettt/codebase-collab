@@ -122,15 +122,28 @@ export function AppSidebar() {
   };
 
   const handleAvatarSelect = async (newAvatarUrl: string) => {
-    if (!userProfileRef) {
+    if (!userProfileRef || !user) {
       toast({ variant: 'destructive', title: t.avatarUpdatedFail });
       return;
     }
     try {
-      setDocumentNonBlocking(userProfileRef, { photoURL: newAvatarUrl }, { merge: true });
+      const dataToSave: { photoURL: string; id?: string, email?: string | null } = { photoURL: newAvatarUrl };
+
+      // If the user profile document doesn't exist, add required fields for creation
+      // to satisfy security rules.
+      if (!userProfile) {
+        dataToSave.id = user.uid;
+        if (user.email) {
+            dataToSave.email = user.email;
+        }
+      }
+
+      setDocumentNonBlocking(userProfileRef, dataToSave, { merge: true });
       toast({ title: t.avatarUpdatedSuccess });
       setIsAvatarDialogOpen(false);
     } catch (error) {
+      // This catch block might not be reached for permission errors due to the non-blocking nature,
+      // but it's good practice for other potential errors.
       console.error("Avatar update failed:", error);
       toast({ variant: 'destructive', title: t.avatarUpdatedFail });
     }
