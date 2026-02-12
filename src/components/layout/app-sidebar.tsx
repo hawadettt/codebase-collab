@@ -189,11 +189,11 @@ export function AppSidebar() {
                   </Avatar>
                 </button>
                 <div className="flex flex-col overflow-hidden">
-                  <span className="truncate text-sm font-medium">{userProfile?.userName ?? user?.displayName ?? t.sidebarUser}</span>
+                  <span className="truncate text-sm font-medium">{userProfile?.userName ?? user?.displayName ?? user?.email ?? t.sidebarUser}</span>
                   {user?.email === 'hawadettt@gmail.com' ? (
                       <span className="truncate text-xs font-semibold text-primary">{t.roleCompanyOwner}</span>
                   ) : (
-                      <span className="truncate text-xs text-muted-foreground">{user?.email ?? "user@example.com"}</span>
+                      userProfile?.companyType && <span className="truncate text-xs text-muted-foreground">{userProfile.companyType}</span>
                   )}
                 </div>
                 <LogOut onClick={handleLogout} className="ms-auto h-5 w-5 flex-shrink-0 cursor-pointer text-muted-foreground hover:text-foreground" />
