@@ -218,10 +218,12 @@ export function SettingsPage() {
                         </Button>
                     </div>
 
-                    <div className="space-y-1">
-                        <Label className="flex items-center gap-2"><Shield className="h-4 w-4 text-muted-foreground" /> {t.formRoleLabel}</Label>
-                        <p className="pl-6 text-sm font-semibold text-primary">{t.roleCompanyOwner}</p>
-                    </div>
+                    {user?.email === 'hawadettt@gmail.com' && (
+                      <div className="space-y-1">
+                          <Label className="flex items-center gap-2"><Shield className="h-4 w-4 text-muted-foreground" /> {t.formRoleLabel}</Label>
+                          <p className="pl-6 text-sm font-semibold text-primary">{t.roleCompanyOwner}</p>
+                      </div>
+                    )}
 
                     <div className="flex">
                         <div className="flex-grow space-y-1">
@@ -347,5 +349,3 @@ export function SettingsPage() {
     </div>
   );
 }
-
-    
