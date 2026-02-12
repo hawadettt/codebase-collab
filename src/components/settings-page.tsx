@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useLanguage } from "@/context/language-provider";
-import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2, Briefcase, Tag } from "lucide-react";
+import { Languages, Settings, User, Mail, Phone, Globe, AlertTriangle, Edit, MapPin, Loader2, Briefcase, Tag, Shield } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useUser, useFirestore, useDoc, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, setDoc, DocumentReference } from 'firebase/firestore';
@@ -216,6 +216,11 @@ export function SettingsPage() {
                         <Button variant="ghost" size="icon" onClick={() => setEditingField('userName')} disabled={isUpdating}>
                             <Edit className="h-4 w-4" />
                         </Button>
+                    </div>
+
+                    <div className="space-y-1">
+                        <Label className="flex items-center gap-2"><Shield className="h-4 w-4 text-muted-foreground" /> {t.formRoleLabel}</Label>
+                        <p className="pl-6 text-sm font-semibold text-primary">{t.roleCompanyOwner}</p>
                     </div>
 
                     <div className="flex">
