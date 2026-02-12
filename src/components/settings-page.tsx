@@ -23,6 +23,7 @@ type UserProfile = {
     companyName?: string;
     companyType?: string;
     email?: string;
+    photoURL?: string;
     whatsapp?: string;
     mobile?: string;
     country?: string;

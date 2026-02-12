@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import {
   Sidebar,
@@ -37,8 +37,7 @@ import {
   BadgeCheck,
   Brain,
 } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { useAuth, useCollection, useFirestore, useUser } from "@/firebase";
+import { useAuth, useCollection, useFirestore, useUser, useDoc, setDocumentNonBlocking } from "@/firebase";
 import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -50,9 +49,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { collection, query, orderBy } from "firebase/firestore";
+import { collection, query, orderBy, doc, DocumentReference } from "firebase/firestore";
+import { EditAvatarDialog } from "../edit-avatar-dialog";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
+
 
 const supportedLanguages = [
   { code: 'en', name: 'English' },
@@ -85,6 +87,14 @@ export function AppSidebar() {
   const firestore = useFirestore();
   const { toast } = useToast();
   const pathname = usePathname();
+  const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
+
+  const userProfileRef = useMemo(() => {
+    if (!user) return null;
+    return doc(firestore, 'users', user.uid) as DocumentReference<any>;
+  }, [firestore, user]);
+
+  const { data: userProfile } = useDoc<any>(userProfileRef);
 
   const customCategoriesQuery = React.useMemo(() => {
     if (!user) return null;
@@ -111,7 +121,24 @@ export function AppSidebar() {
     }
   };
 
+  const handleAvatarSelect = async (newAvatarUrl: string) => {
+    if (!userProfileRef) {
+      toast({ variant: 'destructive', title: t.avatarUpdatedFail });
+      return;
+    }
+    try {
+      setDocumentNonBlocking(userProfileRef, { photoURL: newAvatarUrl }, { merge: true });
+      toast({ title: t.avatarUpdatedSuccess });
+      setIsAvatarDialogOpen(false);
+    } catch (error) {
+      console.error("Avatar update failed:", error);
+      toast({ variant: 'destructive', title: t.avatarUpdatedFail });
+    }
+  };
+
+
   return (
+    <>
     <Sidebar side={language === 'ar' ? 'right' : 'left'}>
       <SidebarHeader>
         <div className="flex flex-col gap-2">
@@ -142,14 +169,19 @@ export function AppSidebar() {
             </div>
             ) : user ? (
             <div className="flex items-center gap-3 rounded-md border border-sidebar-border/50 bg-sidebar-accent p-2">
-                <Avatar className="h-9 w-9">
-                {user?.photoURL && <AvatarImage src={user.photoURL} />}
-                {!user?.photoURL && userAvatar && <AvatarImage src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} />}
-                <AvatarFallback>{user?.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
-                </Avatar>
+                <button onClick={() => setIsAvatarDialogOpen(true)} className="rounded-full ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                  <Avatar className="h-9 w-9">
+                    <AvatarImage src={userProfile?.photoURL || user?.photoURL || userAvatar?.imageUrl} />
+                    <AvatarFallback>{userProfile?.userName?.[0].toUpperCase() ?? user?.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+                  </Avatar>
+                </button>
                 <div className="flex flex-col overflow-hidden">
-                <span className="truncate text-sm font-medium">{user?.displayName ?? t.sidebarUser}</span>
-                <span className="truncate text-xs text-muted-foreground">{user?.email ?? "user@example.com"}</span>
+                  <span className="truncate text-sm font-medium">{userProfile?.userName ?? user?.displayName ?? t.sidebarUser}</span>
+                  {user?.email === 'hawadettt@gmail.com' ? (
+                      <span className="truncate text-xs font-semibold text-primary">{t.roleCompanyOwner}</span>
+                  ) : (
+                      <span className="truncate text-xs text-muted-foreground">{user?.email ?? "user@example.com"}</span>
+                  )}
                 </div>
                 <LogOut onClick={handleLogout} className="ms-auto h-5 w-5 flex-shrink-0 cursor-pointer text-muted-foreground hover:text-foreground" />
             </div>
@@ -424,5 +456,11 @@ export function AppSidebar() {
         </div>
       </SidebarFooter>
     </Sidebar>
+    <EditAvatarDialog
+        isOpen={isAvatarDialogOpen}
+        onOpenChange={setIsAvatarDialogOpen}
+        onAvatarSelect={handleAvatarSelect}
+      />
+    </>
   );
 }
