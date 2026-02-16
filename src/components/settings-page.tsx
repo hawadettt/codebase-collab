@@ -16,12 +16,14 @@ import { EditProfileFieldDialog } from "./edit-profile-field-dialog";
 import { countries } from "@/lib/countries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { useToast } from "@/hooks/use-toast";
+import type { TranslationKeys } from "@/lib/i18n";
+
 
 type UserProfile = {
     id?: string;
     userName?: string;
     companyName?: string;
-    companyType?: string;
+    role?: string;
     email?: string;
     photoURL?: string;
     whatsapp?: string;
@@ -56,18 +58,17 @@ export function SettingsPage() {
 
     const dataToSave = { ...data };
 
-    // If the user profile document doesn't exist, we are creating it.
-    // The security rule requires the 'id' field on create to match the user's UID.
     if (!userProfile) {
       dataToSave.id = user.uid;
       if (user.email) {
         dataToSave.email = user.email;
+        if(user.email === 'hawadettt@gmail.com') {
+            dataToSave.role = 'owner';
+        }
       }
     }
 
     try {
-      // Use setDoc with { merge: true } to perform an "upsert".
-      // This will CREATE the document if it doesn't exist, or UPDATE it if it does.
       await setDoc(userProfileRef, dataToSave, { merge: true });
       toast({ title: t.profileUpdatedSuccess });
     } catch (error: any) {
@@ -75,7 +76,7 @@ export function SettingsPage() {
       
       const permissionError = new FirestorePermissionError({
         path: userProfileRef.path,
-        operation: 'write', // 'write' covers both create and update.
+        operation: 'write', 
         requestResourceData: dataToSave,
       });
       errorEmitter.emit('permission-error', permissionError);
@@ -85,7 +86,7 @@ export function SettingsPage() {
         title: t.profileUpdateFailed,
         description: error.message || t.profileUpdateError,
       });
-      throw error; // Re-throw to be caught by the caller if needed
+      throw error;
     } finally {
       setIsUpdating(false);
     }
@@ -96,13 +97,20 @@ export function SettingsPage() {
     return country ? country.flag : '🏳️';
   }
 
-  const companyTypes = [
-    { value: 'Exporter', label: t.companyTypeExporter },
-    { value: 'Importer', label: t.companyTypeImporter },
-    { value: 'Freight Forwarder', label: t.companyTypeFreightForwarder },
-    { value: 'Producer/Farm', label: t.companyTypeProducerFarm },
-    { value: 'Other', label: t.companyTypeOther },
+  const userRoles = [
+    { value: 'customer', label: t.roleCustomer },
+    { value: 'supplier', label: t.roleSupplier },
+    { value: 'forwarder', label: t.roleForwarder },
+    { value: 'staff', label: t.roleStaff },
   ];
+  
+  const getRoleDisplay = () => {
+    if (userProfile?.role) {
+       const roleKey = `role${userProfile.role.charAt(0).toUpperCase() + userProfile.role.slice(1)}` as TranslationKeys;
+       return t[roleKey] || userProfile.role;
+    }
+    return t.userDataNotSet;
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -219,12 +227,36 @@ export function SettingsPage() {
                         </Button>
                     </div>
 
-                    {user?.email === 'hawadettt@gmail.com' && (
-                      <div className="space-y-1">
-                          <Label className="flex items-center gap-2"><Shield className="h-4 w-4 text-muted-foreground" /> {t.formRoleLabel}</Label>
-                          <p className="pl-6 text-sm font-semibold text-primary">{t.roleCompanyOwner}</p>
-                      </div>
-                    )}
+                    <div className="space-y-2">
+                        <Label className="flex items-center gap-2"><Shield className="h-4 w-4 text-muted-foreground" /> {t.formRoleLabel}</Label>
+                        <div className="pl-6">
+                            {user.email === 'hawadettt@gmail.com' ? (
+                                <p className="text-sm font-semibold text-primary">{t.roleCompanyOwner}</p>
+                            ) : (
+                                <Select
+                                value={userProfile?.role || ''}
+                                onValueChange={async (value) => {
+                                    try { await handleUpdateProfile({ role: value }) } catch (e) { /* error is handled in function and toast is shown */ }
+                                }}
+                                disabled={isUpdating}
+                                >
+                                <SelectTrigger className="w-full md:w-[280px]">
+                                    <SelectValue placeholder={t.selectRolePlaceholder}>
+                                        {isUpdating && userProfile?.role !== userRoles.find(c => c.value === userProfile?.role)?.value ? <Loader2 className="mx-2 h-4 w-4 animate-spin" /> : (getRoleDisplay())}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {userRoles.map((role) => (
+                                    <SelectItem key={role.value} value={role.value}>
+                                        {role.label}
+                                    </SelectItem>
+                                    ))}
+                                </SelectContent>
+                                </Select>
+                            )}
+                        </div>
+                    </div>
+
 
                     <div className="flex">
                         <div className="flex-grow space-y-1">
@@ -236,31 +268,6 @@ export function SettingsPage() {
                         </Button>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label className="flex items-center gap-2"><Tag className="h-4 w-4 text-muted-foreground" /> {t.formCompanyTypeLabel}</Label>
-                        <div className="pl-6">
-                            <Select
-                              value={userProfile?.companyType || ''}
-                              onValueChange={async (value) => {
-                                try { await handleUpdateProfile({ companyType: value }) } catch (e) { /* error is handled in function and toast is shown */ }
-                              }}
-                              disabled={isUpdating}
-                            >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder={t.selectCompanyTypePlaceholder}>
-                                    {isUpdating && userProfile?.companyType !== companyTypes.find(c => c.value === userProfile?.companyType)?.value ? <Loader2 className="mx-2 h-4 w-4 animate-spin" /> : (companyTypes.find(c => c.value === userProfile?.companyType)?.label || userProfile?.companyType || t.userDataNotSet)}
-                                </SelectValue>
-                              </SelectTrigger>
-                              <SelectContent>
-                                {companyTypes.map((type) => (
-                                  <SelectItem key={type.value} value={type.value}>
-                                    {type.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
                     
                     <div className="space-y-2">
                         <Label className="flex items-center gap-2"><Globe className="h-4 w-4 text-muted-foreground" /> {t.formCountry}</Label>
@@ -272,7 +279,7 @@ export function SettingsPage() {
                               }}
                               disabled={isUpdating}
                             >
-                              <SelectTrigger className="w-full">
+                              <SelectTrigger className="w-full md:w-[280px]">
                                 <SelectValue placeholder={t.selectCountry}>
                                   <div className="flex items-center gap-2">
                                      {isUpdating && userProfile?.country !== countries.find(c => c.name === userProfile?.country)?.name ? <Loader2 className="mx-2 h-4 w-4 animate-spin" /> : <span>{getCountryFlag(userProfile?.country)}</span>}

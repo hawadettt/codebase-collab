@@ -52,6 +52,7 @@ import {
 import { collection, query, orderBy, doc, DocumentReference } from "firebase/firestore";
 import { EditAvatarDialog } from "../edit-avatar-dialog";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import type { TranslationKeys } from "@/lib/i18n";
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
@@ -136,18 +137,25 @@ export function AppSidebar() {
             }
         }
         
-        // Use a non-blocking Firestore update. The UI will update optimistically.
-        // Any permission errors will be caught globally and displayed.
         setDocumentNonBlocking(userProfileRef, dataToSave, { merge: true });
 
         toast({ title: t.avatarUpdatedSuccess });
         setIsAvatarDialogOpen(false);
     } catch (error) {
-        // This catch block is for immediate errors, not Firestore rule failures
-        // which are handled asynchronously by the global error handler.
         console.error("Avatar update initiation failed:", error);
         toast({ variant: 'destructive', title: t.avatarUpdatedFail });
     }
+  };
+
+  const getRoleDisplay = () => {
+    if (user?.email === 'hawadettt@gmail.com') {
+      return t.roleCompanyOwner;
+    }
+    if (userProfile?.role) {
+      const roleKey = `role${userProfile.role.charAt(0).toUpperCase() + userProfile.role.slice(1)}` as TranslationKeys;
+      return t[roleKey] || userProfile.role;
+    }
+    return t.sidebarUser;
   };
 
 
@@ -191,13 +199,7 @@ export function AppSidebar() {
                 </button>
                 <Link href="/settings" className="flex-grow overflow-hidden">
                     <div className="flex flex-col justify-center h-full">
-                        {user?.email === 'hawadettt@gmail.com' ? (
-                          <span className="truncate text-sm font-semibold text-primary">{t.roleCompanyOwner}</span>
-                        ) : (
-                          userProfile?.companyType ? 
-                          <span className="truncate text-sm text-muted-foreground">{userProfile.companyType}</span> 
-                          : <span className="truncate text-sm font-medium">{userProfile?.userName ?? t.sidebarUser}</span>
-                        )}
+                       <span className="truncate text-sm font-semibold text-primary">{getRoleDisplay()}</span>
                     </div>
                 </Link>
                 <LogOut onClick={handleLogout} className="ms-auto h-5 w-5 flex-shrink-0 cursor-pointer text-muted-foreground hover:text-foreground" />

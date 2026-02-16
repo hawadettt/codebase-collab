@@ -28,9 +28,17 @@
           "type": "string",
           "description": "The user's company name."
         },
-        "companyType": {
+        "role": {
           "type": "string",
-          "description": "The type of the user's company."
+          "description": "The user's role in the application, which determines their permissions.",
+          "enum": [
+            "owner",
+            "admin",
+            "staff",
+            "customer",
+            "supplier",
+            "forwarder"
+          ]
         },
         "whatsapp": {
           "type": "string",

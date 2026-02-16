@@ -10,67 +10,64 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function isOwner(userId) {
+    function isResourceOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
+
+    function getRequestingUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAppOwner() {
+      // Note: This rule requires that the user's profile document exists and has a role.
+      // Client-side logic must handle the initial profile creation.
+      return isSignedIn() && getRequestingUserRole() == 'owner';
+    }
+
 
     // -------------------------------------------------------------------------
     // User Data (/users)
     // -------------------------------------------------------------------------
 
     match /users/{userId} {
-      allow get: if isOwner(userId);
-      allow list: if false; // Explicitly deny listing the entire users collection.
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isOwner(userId);
-      allow delete: if isOwner(userId);
+      // Read: The user themselves or the app owner can read the profile.
+      allow get: if isResourceOwner(userId) || isAppOwner();
+      allow list: if isAppOwner(); // Only the app owner can list all users.
+      
+      // Create: A user can only create their own profile. The 'id' must match their UID.
+      allow create: if isResourceOwner(userId) && request.resource.data.id == userId;
+
+      // Update: The user themselves or the app owner can update a profile.
+      allow update: if isResourceOwner(userId) || isAppOwner();
+      
+      // Delete: Only the app owner can delete a user profile.
+      allow delete: if isAppOwner();
 
       /**
-       * @description Controls access to a user's private shipments.
-       * @path /users/{userId}/shipments/{shipmentId}
-       * @principle Enforces strict ownership for all documents within a user's private data tree.
+       * @description Controls access to a user's private data subcollections.
+       * @principle Enforces strict ownership for all documents within a user's private data tree, but allows the app owner full access.
        */
       match /shipments/{shipmentId} {
-        allow read, write: if isOwner(userId);
+        allow read, write: if isResourceOwner(userId) || isAppOwner();
       }
       
-      /**
-       * @description Controls access to a user's private suppliers.
-       * @path /users/{userId}/suppliers/{supplierId}
-       */
       match /suppliers/{supplierId} {
-        allow read, write: if isOwner(userId);
+        allow read, write: if isResourceOwner(userId) || isAppOwner();
       }
 
-      /**
-       * @description Controls access to a user's private customers.
-       * @path /users/{userId}/customers/{customerId}
-       */
       match /customers/{customerId} {
-        allow read, write: if isOwner(userId);
+        allow read, write: if isResourceOwner(userId) || isAppOwner();
       }
       
-      /**
-       * @description Controls access to user-created NFSA suppliers.
-       * @path /users/{userId}/nfsaSuppliers/{supplierId}
-       */
       match /nfsaSuppliers/{supplierId} {
-        allow read, write: if isOwner(userId);
+        allow read, write: if isResourceOwner(userId) || isAppOwner();
       }
 
-      /**
-       * @description Controls access to user-created site categories.
-       * @path /users/{userId}/siteCategories/{categoryId}
-       */
       match /siteCategories/{categoryId} {
-        allow read, write: if isOwner(userId);
+        allow read, write: if isResourceOwner(userId) || isAppOwner();
         
-        /**
-         * @description Controls access to sites within a category.
-         * @path /users/{userId}/siteCategories/{categoryId}/sites/{siteId}
-         */
         match /sites/{siteId} {
-          allow read, write: if isOwner(userId);
+          allow read, write: if isResourceOwner(userId) || isAppOwner();
         }
       }
     }
