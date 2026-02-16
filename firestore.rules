@@ -84,20 +84,12 @@ service cloud.firestore {
     // -------------------------------------------------------------------------
 
     /**
-     * @description Public read access for the public stations data.
-     * This allows any user (authenticated or not) to get a single station document.
+     * @description Public read-only access for all public artifacts.
+     * This allows any user (authenticated or not) to read any document
+     * or collection within the `/artifacts/{appId}/public/` path.
      */
-    match /artifacts/{appId}/public/{dataType}/stations/{stationId} {
-      allow get: if true;
-      allow write: if false;
-    }
-
-    /**
-     * @description Public list access for the public stations data.
-     * This allows any user (authenticated or not) to list the entire stations collection.
-     */
-    match /artifacts/{appId}/public/{dataType}/stations {
-      allow list: if true;
+    match /artifacts/{appId}/public/{document=**} {
+      allow read: if true;
       allow write: if false;
     }
   }
