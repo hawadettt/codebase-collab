@@ -95,7 +95,7 @@ export function AppSidebar() {
     return doc(firestore, 'users', user.uid) as DocumentReference<any>;
   }, [firestore, user]);
 
-  const { data: userProfile } = useDoc<any>(userProfileRef);
+  const { data: userProfile, isLoading: isProfileLoading } = useDoc<any>(userProfileRef);
 
   const customCategoriesQuery = React.useMemo(() => {
     if (!user) return null;
@@ -105,8 +105,8 @@ export function AppSidebar() {
   const { data: customCategories } = useCollection<SiteCategory>(customCategoriesQuery);
 
   const isOwnerByEmail = user?.email === 'hawadettt@gmail.com';
-  const isAdminByRole = userProfile?.role && ['owner', 'admin', 'staff'].includes(userProfile.role);
-  const isAdmin = isOwnerByEmail || isAdminByRole;
+  const hasAdminRole = userProfile?.role && ['owner', 'admin', 'staff'].includes(userProfile.role);
+  const isAdmin = isOwnerByEmail || hasAdminRole;
 
 
   const handleLogout = async () => {
@@ -203,8 +203,7 @@ export function AppSidebar() {
                 </button>
                 <Link href="/settings" className="flex-grow overflow-hidden">
                     <div className="flex flex-col justify-center h-full">
-                       <p className="truncate text-sm font-semibold text-sidebar-foreground">{userProfile?.userName || user.email}</p>
-                       <span className="truncate text-xs font-medium text-primary">{getRoleDisplay()}</span>
+                       <p className="truncate text-sm font-semibold text-sidebar-foreground">{getRoleDisplay()}</p>
                     </div>
                 </Link>
                 <LogOut onClick={handleLogout} className="ms-auto h-5 w-5 flex-shrink-0 cursor-pointer text-muted-foreground hover:text-foreground" />
@@ -257,6 +256,17 @@ export function AppSidebar() {
               </Link>
             </SidebarMenuItem>
         </SidebarMenu>
+
+        {(user && !isUserLoading && isProfileLoading && !isOwnerByEmail) && (
+            <SidebarMenu className="mt-4">
+                <div className="px-2 text-xs font-semibold uppercase text-muted-foreground tracking-wider">{t.sidebarSectionManagement}</div>
+                <div className="space-y-1 p-2">
+                    <Skeleton className="h-9 w-full" />
+                    <Skeleton className="h-9 w-full" />
+                    <Skeleton className="h-9 w-full" />
+                </div>
+            </SidebarMenu>
+        )}
 
         {isAdmin && (
             <SidebarMenu className="mt-4">
