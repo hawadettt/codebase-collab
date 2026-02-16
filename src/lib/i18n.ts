@@ -545,6 +545,11 @@ export const translations = {
     avatarUpdatedFail: "Failed to update avatar.",
     uploadAvatarTitle: "Upload a new photo",
     orSelectAvatar: "Or choose an avatar",
+    sidebarSectionMain: "Main Menu",
+    sidebarSectionManagement: "Management",
+    sidebarSectionResources: "Resources",
+    accessDeniedTitle: "Access Denied",
+    accessDeniedDescription: "You do not have the required permissions to view this page. Please contact your administrator if you believe this is an error.",
   },
   ar: {
     nileKey: 'مفتاح النيل',
@@ -592,7 +597,7 @@ export const translations = {
     statsInTransit: 'الشحنات قيد النقل',
     statsCompleted: 'الشحنات المكتملة',
     shipmentsTitle: 'شحناتك',
-    shipmentsDescription: 'قائمة بجميع شحناتك المسجلة.',
+    shipmentsDescription: 'قائمة بجميع شحناتك المسجلة. لإضافة شحنة جديدة، استخدم خيار "إضافة جديد" في الشريط الجانبي.',
     loadingShipments: 'جاري تحميل الشحنات...',
     tableHeaderType: 'النوع',
     tableHeaderCustomer: 'العميل',
@@ -1091,6 +1096,11 @@ export const translations = {
     avatarUpdatedFail: "فشل تحديث الصورة الشخصية.",
     uploadAvatarTitle: "رفع صورة جديدة",
     orSelectAvatar: "أو اختر صورة رمزية",
+    sidebarSectionMain: "القائمة الرئيسية",
+    sidebarSectionManagement: "الإدارة",
+    sidebarSectionResources: "المصادر",
+    accessDeniedTitle: "الدخول مرفوض",
+    accessDeniedDescription: "ليس لديك الصلاحيات اللازمة لعرض هذه الصفحة. يرجى التواصل مع المسؤول إذا كنت تعتقد أن هذا خطأ.",
   },
 };
 

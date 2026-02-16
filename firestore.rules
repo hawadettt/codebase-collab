@@ -19,9 +19,15 @@ service cloud.firestore {
     }
 
     function isAppOwner() {
-      // Note: This rule requires that the user's profile document exists and has a role.
-      // Client-side logic must handle the initial profile creation.
-      return isSignedIn() && getRequestingUserRole() == 'owner';
+      return isSignedIn() && request.auth.token.email == 'hawadettt@gmail.com';
+    }
+    
+    function isAppAdmin() {
+      return isSignedIn() && getRequestingUserRole() == 'admin';
+    }
+
+    function isAppStaff() {
+      return isSignedIn() && getRequestingUserRole() == 'staff';
     }
 
 
@@ -30,37 +36,38 @@ service cloud.firestore {
     // -------------------------------------------------------------------------
 
     match /users/{userId} {
-      // Read: The user themselves or the app owner can read the profile.
-      allow get: if isResourceOwner(userId) || isAppOwner();
-      allow list: if isAppOwner(); // Only the app owner can list all users.
+      // Read: The user themselves or an admin/owner can read the profile.
+      allow get: if isResourceOwner(userId) || isAppOwner() || isAppAdmin();
+      // List: Only admin/owner roles can list all users.
+      allow list: if isAppOwner() || isAppAdmin();
       
       // Create: A user can only create their own profile. The 'id' must match their UID.
       allow create: if isResourceOwner(userId) && request.resource.data.id == userId;
 
-      // Update: The user themselves or the app owner can update a profile.
-      allow update: if isResourceOwner(userId) || isAppOwner();
+      // Update: The user themselves or an admin/owner can update a profile.
+      allow update: if isResourceOwner(userId) || isAppOwner() || isAppAdmin();
       
       // Delete: Only the app owner can delete a user profile.
       allow delete: if isAppOwner();
 
       /**
        * @description Controls access to a user's private data subcollections.
-       * @principle Enforces strict ownership for all documents within a user's private data tree, but allows the app owner full access.
+       * @principle Enforces strict ownership for all documents within a user's private data tree, but allows admin roles full access.
        */
       match /shipments/{shipmentId} {
-        allow read, write: if isResourceOwner(userId) || isAppOwner();
+        allow read, write: if isResourceOwner(userId) || isAppOwner() || isAppAdmin() || isAppStaff();
       }
       
       match /suppliers/{supplierId} {
-        allow read, write: if isResourceOwner(userId) || isAppOwner();
+        allow read, write: if isResourceOwner(userId) || isAppOwner() || isAppAdmin() || isAppStaff();
       }
 
       match /customers/{customerId} {
-        allow read, write: if isResourceOwner(userId) || isAppOwner();
+        allow read, write: if isResourceOwner(userId) || isAppOwner() || isAppAdmin() || isAppStaff();
       }
       
       match /nfsaSuppliers/{supplierId} {
-        allow read, write: if isResourceOwner(userId) || isAppOwner();
+        allow read, write: if isResourceOwner(userId) || isAppOwner() || isAppAdmin() || isAppStaff();
       }
 
       match /siteCategories/{categoryId} {
