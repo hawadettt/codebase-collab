@@ -211,7 +211,7 @@ export function AppSidebar() {
             <div className="px-2 py-2">
                 <Link href="/login" passHref>
                 <Button className="w-full">
-                    <LogIn className="mx-2 h-4 w-4" />
+                    <LogOut className="mx-2 h-4 w-4" />
                     {t.sidebarLoginButton}
                 </Button>
                 </Link>
