@@ -104,7 +104,9 @@ export function AppSidebar() {
 
   const { data: customCategories } = useCollection<SiteCategory>(customCategoriesQuery);
 
-  const isAdmin = userProfile?.role && ['owner', 'admin', 'staff'].includes(userProfile.role);
+  const isOwnerByEmail = user?.email === 'hawadettt@gmail.com';
+  const isAdminByRole = userProfile?.role && ['owner', 'admin', 'staff'].includes(userProfile.role);
+  const isAdmin = isOwnerByEmail || isAdminByRole;
 
 
   const handleLogout = async () => {
