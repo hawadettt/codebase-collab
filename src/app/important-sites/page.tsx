@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { useUser, useFirestore, useCollection } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
+import { defaultSiteCategories } from '@/lib/default-sites';
 
 type SiteCategory = {
   id: string;
@@ -35,7 +36,13 @@ export default function ImportantSitesRedirectPage() {
     if (categories && categories.length > 0) {
       router.replace(`/important-sites/${categories[0].id}`);
     } else {
-      router.replace('/important-sites/new');
+      // If user has no custom categories, redirect to the first default category
+      if (defaultSiteCategories.length > 0) {
+        router.replace(`/important-sites/${defaultSiteCategories[0].id}`);
+      } else {
+        // Fallback if even default categories are empty
+        router.replace('/important-sites/new');
+      }
     }
   }, [categories, isLoadingCategories, isUserLoading, router, user]);
 

@@ -53,6 +53,7 @@ import { collection, query, orderBy, doc, DocumentReference } from "firebase/fir
 import { EditAvatarDialog } from "../edit-avatar-dialog";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import type { TranslationKeys } from "@/lib/i18n";
+import { defaultSiteCategories } from "@/lib/default-sites";
 
 const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
 
@@ -102,7 +103,7 @@ export function AppSidebar() {
     return query(collection(firestore, 'users', user.uid, 'siteCategories'), orderBy('createdAt', 'asc'));
   }, [firestore, user]);
 
-  const { data: customCategories } = useCollection<SiteCategory>(customCategoriesQuery);
+  const { data: customCategories, isLoading: isLoadingCategories } = useCollection<SiteCategory>(customCategoriesQuery);
 
   const isOwnerByEmail = user?.email === 'hawadettt@gmail.com';
   const hasAdminRole = userProfile?.role && ['owner', 'admin', 'staff'].includes(userProfile.role);
@@ -406,16 +407,34 @@ export function AppSidebar() {
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pt-1">
                   <SidebarMenu className="pl-7">
-                      {customCategories && customCategories.map(category => (
-                        <SidebarMenuItem key={category.id}>
+                      {isLoadingCategories ? (
+                        <div className="space-y-1">
+                          <Skeleton className="h-7 w-full" />
+                          <Skeleton className="h-7 w-full" />
+                        </div>
+                      ) : (customCategories && customCategories.length > 0) ? (
+                        customCategories.map(category => (
+                          <SidebarMenuItem key={category.id}>
+                            <Link href={`/important-sites/${category.id}`}>
+                              <SidebarMenuButton isActive={pathname === `/important-sites/${category.id}`} size="sm">
+                                {iconComponents[category.icon] || iconComponents.Default}
+                                <span>{category.title}</span>
+                              </SidebarMenuButton>
+                            </Link>
+                          </SidebarMenuItem>
+                        ))
+                      ) : (
+                        defaultSiteCategories.map(category => (
+                          <SidebarMenuItem key={category.id}>
                             <Link href={`/important-sites/${category.id}`}>
                               <SidebarMenuButton isActive={pathname === `/important-sites/${category.id}`} size="sm">
                                   {iconComponents[category.icon] || iconComponents.Default}
-                                  <span>{category.title}</span>
+                                  <span>{t[category.titleKey as TranslationKeys]}</span>
                               </SidebarMenuButton>
                             </Link>
-                        </SidebarMenuItem>
-                      ))}
+                          </SidebarMenuItem>
+                        ))
+                      )}
                       <SidebarMenuItem>
                         <Link href="/important-sites/new">
                           <SidebarMenuButton isActive={pathname === '/important-sites/new'} size="sm">
