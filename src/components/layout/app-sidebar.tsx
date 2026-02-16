@@ -412,28 +412,34 @@ export function AppSidebar() {
                           <Skeleton className="h-7 w-full" />
                           <Skeleton className="h-7 w-full" />
                         </div>
-                      ) : (customCategories && customCategories.length > 0) ? (
-                        customCategories.map(category => (
-                          <SidebarMenuItem key={category.id}>
-                            <Link href={`/important-sites/${category.id}`}>
-                              <SidebarMenuButton isActive={pathname === `/important-sites/${category.id}`} size="sm">
-                                {iconComponents[category.icon] || iconComponents.Default}
-                                <span>{category.title}</span>
-                              </SidebarMenuButton>
-                            </Link>
-                          </SidebarMenuItem>
-                        ))
                       ) : (
-                        defaultSiteCategories.map(category => (
-                          <SidebarMenuItem key={category.id}>
-                            <Link href={`/important-sites/${category.id}`}>
-                              <SidebarMenuButton isActive={pathname === `/important-sites/${category.id}`} size="sm">
+                        <>
+                          {customCategories && customCategories.map(category => (
+                            <SidebarMenuItem key={category.id}>
+                              <Link href={`/important-sites/${category.id}`}>
+                                <SidebarMenuButton isActive={pathname === `/important-sites/${category.id}`} size="sm">
                                   {iconComponents[category.icon] || iconComponents.Default}
-                                  <span>{t[category.titleKey as TranslationKeys]}</span>
-                              </SidebarMenuButton>
-                            </Link>
-                          </SidebarMenuItem>
-                        ))
+                                  <span>{category.title}</span>
+                                </SidebarMenuButton>
+                              </Link>
+                            </SidebarMenuItem>
+                          ))}
+
+                          {customCategories && customCategories.length > 0 && defaultSiteCategories.length > 0 && (
+                            <SidebarSeparator className="my-2" />
+                          )}
+
+                          {defaultSiteCategories.map(category => (
+                            <SidebarMenuItem key={category.id}>
+                              <Link href={`/important-sites/${category.id}`}>
+                                <SidebarMenuButton isActive={pathname === `/important-sites/${category.id}`} size="sm">
+                                    {iconComponents[category.icon] || iconComponents.Default}
+                                    <span>{t[category.titleKey as TranslationKeys]}</span>
+                                </SidebarMenuButton>
+                              </Link>
+                            </SidebarMenuItem>
+                          ))}
+                        </>
                       )}
                       <SidebarMenuItem>
                         <Link href="/important-sites/new">

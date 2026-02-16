@@ -46,39 +46,30 @@ export function ImportantSitesPage() {
   const [isAddSiteOpen, setIsAddSiteOpen] = useState(false);
   const [isDeleteCategoryOpen, setIsDeleteCategoryOpen] = useState(false);
 
-  // Check if the user has ANY custom categories to decide the data source
-  const customCategoriesQuery = useMemo(() => {
-    if (!user) return null;
-    return query(collection(firestore, 'users', user.uid, 'siteCategories'));
-  }, [user, firestore]);
-  const { data: customCategories, isLoading: isLoadingCustom } = useCollection<any>(customCategoriesQuery);
+  // Determine if the current category is a custom one by checking its ID against the default list
+  const isCustomCategory = useMemo(() => !defaultSiteCategories.some(c => c.id === categoryId), [categoryId]);
 
-  const isDefaultMode = useMemo(() => {
-    if (isLoadingCustom) return undefined; // Undefined while loading
-    return !customCategories || customCategories.length === 0;
-  }, [customCategories, isLoadingCustom]);
-
-  // --- Firestore Data Hooks (only run if not in default mode) ---
+  // --- Firestore Data Hooks (only run for custom categories) ---
   const categoryDocRef = useMemo(() => {
-    if (isDefaultMode !== false || !user || !categoryId) return null;
+    if (!isCustomCategory || !user || !categoryId) return null;
     return doc(firestore, 'users', user.uid, 'siteCategories', categoryId) as DocumentReference<any>;
-  }, [firestore, user, categoryId, isDefaultMode]);
+  }, [firestore, user, categoryId, isCustomCategory]);
   const { data: firestoreCategory, isLoading: isLoadingFirestoreCategory } = useDoc<any>(categoryDocRef);
 
   const sitesQuery = useMemo(() => {
-    if (isDefaultMode !== false || !user || !categoryId) return null;
+    if (!isCustomCategory || !user || !categoryId) return null;
     return query(collection(firestore, 'users', user.uid, 'siteCategories', categoryId, 'sites'), orderBy('title', 'asc'));
-  }, [firestore, user, categoryId, isDefaultMode]);
+  }, [firestore, user, categoryId, isCustomCategory]);
   const { data: firestoreSites, isLoading: isLoadingFirestoreSites } = useCollection<any>(sitesQuery);
   
   // --- Default Data (retrieved synchronously) ---
   const defaultCategoryData = useMemo(() => {
-    if (isDefaultMode !== true) return null;
+    if (isCustomCategory) return null;
     return defaultSiteCategories.find(c => c.id === categoryId);
-  }, [categoryId, isDefaultMode]);
+  }, [categoryId, isCustomCategory]);
 
   // --- Loading State ---
-  const isLoading = isDefaultMode === undefined || (isDefaultMode === false && (isLoadingFirestoreCategory || isLoadingFirestoreSites));
+  const isLoading = isCustomCategory && (isLoadingFirestoreCategory || isLoadingFirestoreSites);
 
   if (isLoading) {
     return (
@@ -97,8 +88,8 @@ export function ImportantSitesPage() {
   }
 
   // --- Determine final data to render ---
-  const category = isDefaultMode ? defaultCategoryData : firestoreCategory;
-  const sites = isDefaultMode ? defaultCategoryData?.sites : firestoreSites;
+  const category = isCustomCategory ? firestoreCategory : defaultCategoryData;
+  const sites = isCustomCategory ? firestoreSites : defaultCategoryData?.sites;
   
   if (!category) {
     return (
@@ -113,8 +104,8 @@ export function ImportantSitesPage() {
   }
   
   const IconComponent = iconComponents[category.icon] || iconComponents.Default;
-  const title = isDefaultMode ? t[category.titleKey as TranslationKeys] : category.title;
-  const description = isDefaultMode ? t[category.descriptionKey as TranslationKeys] : category.description;
+  const title = isCustomCategory ? category.title : t[category.titleKey as TranslationKeys];
+  const description = isCustomCategory ? category.description : t[category.descriptionKey as TranslationKeys];
 
   return (
     <>
@@ -128,7 +119,7 @@ export function ImportantSitesPage() {
               </CardTitle>
               <CardDescription className="text-base pt-2">{description}</CardDescription>
             </div>
-            {!isDefaultMode && (
+            {isCustomCategory && (
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" onClick={() => setIsAddSiteOpen(true)}>
                   <PlusCircle className="h-5 w-5 text-muted-foreground" />
@@ -143,8 +134,8 @@ export function ImportantSitesPage() {
         <CardContent>
           <Accordion type="single" collapsible className="w-full space-y-2">
             {sites && sites.map((site, siteIndex) => {
-                const siteTitle = isDefaultMode ? t[site.titleKey as TranslationKeys] : site.title;
-                const siteDescription = isDefaultMode ? t[site.descriptionKey as TranslationKeys] : site.description;
+                const siteTitle = isCustomCategory ? site.title : t[site.titleKey as TranslationKeys];
+                const siteDescription = isCustomCategory ? site.description : t[site.descriptionKey as TranslationKeys];
                 return (
                     <AccordionItem value={`site-${siteIndex}`} key={site.id || site.url} className="border-b-0 rounded-md border bg-muted/30">
                         <AccordionTrigger className="px-4 py-3 text-base font-medium hover:no-underline text-start">
@@ -164,13 +155,13 @@ export function ImportantSitesPage() {
             })}
             {(!sites || sites.length === 0) && (
                  <div className="flex flex-col items-center justify-center rounded-md border-2 border-dashed border-muted-foreground/30 bg-muted/20 p-12 text-center">
-                    <p className="text-muted-foreground">{isDefaultMode ? "This default category has no sites." : "Add your first site to this category by clicking the '+' icon above."}</p>
+                    <p className="text-muted-foreground">{!isCustomCategory ? "This default category has no sites." : "Add your first site to this category by clicking the '+' icon above."}</p>
                 </div>
             )}
           </Accordion>
         </CardContent>
       </Card>
-      {!isDefaultMode && (
+      {isCustomCategory && (
         <>
             <AddSiteDialog
                 isOpen={isAddSiteOpen}
