@@ -406,54 +406,6 @@ export function AppSidebar() {
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pt-1">
                   <SidebarMenu className="pl-7">
-                      <SidebarMenuItem>
-                        <Link href="/important-sites/egyptian-government">
-                          <SidebarMenuButton isActive={pathname === '/important-sites/egyptian-government'} size="sm">
-                            <Landmark className="h-4 w-4" />
-                            <span>{t.sitesCategoryEgyptianGovernment}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <Link href="/important-sites/sovereign">
-                          <SidebarMenuButton isActive={pathname === '/important-sites/sovereign'} size="sm">
-                            <Shield className="h-4 w-4" />
-                            <span>{t.sitesCategorySovereign}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <Link href="/important-sites/logistics">
-                          <SidebarMenuButton isActive={pathname === '/important-sites/logistics'} size="sm">
-                            <Search className="h-4 w-4" />
-                            <span>{t.sitesCategoryLogistics}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <Link href="/important-sites/market-intel">
-                          <SidebarMenuButton isActive={pathname === '/important-sites/market-intel'} size="sm">
-                            <Database className="h-4 w-4" />
-                            <span>{t.sitesCategoryMarketIntel}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <Link href="/important-sites/technical">
-                          <SidebarMenuButton isActive={pathname === '/important-sites/technical'} size="sm">
-                            <Code className="h-4 w-4" />
-                            <span>{t.sitesCategoryTechnical}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                       <SidebarMenuItem>
-                        <Link href="/important-sites/agricultural">
-                          <SidebarMenuButton isActive={pathname === '/important-sites/agricultural'} size="sm">
-                            <Sprout className="h-4 w-4" />
-                            <span>{t.sitesCategoryAgricultural}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
                       {customCategories && customCategories.map(category => (
                         <SidebarMenuItem key={category.id}>
                             <Link href={`/important-sites/${category.id}`}>
