@@ -35,15 +35,15 @@ export function initializeFirebase() {
 export function getSdks(firebaseApp: FirebaseApp) {
   let firestore;
   try {
-    // نستخدم initializeFirestore بدلاً من getFirestore لتوفير إعدادات محددة
-    // تحسن الاتصال في بيئات الشبكة المقيدة أو التي تستخدم بروكسی.
+    // We use initializeFirestore instead of getFirestore to provide specific settings
+    // that improve connectivity in restricted network environments.
     firestore = initializeFirestore(firebaseApp, {
       localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-      // تفعيل Long Polling يحل مشاكل الاتصال عندما تكون تدفقات gRPC محجوبة.
+      // Enabling Long Polling solves connection issues when gRPC streams are blocked.
       experimentalForceLongPolling: true,
     });
   } catch (e) {
-    // في حالة تم تهيئة Firestore مسبقاً (مثلاً أثناء التحديث السريع للكود)، نقوم بجلب النسخة الموجودة.
+    // In case Firestore is already initialized, we get the existing instance.
     firestore = getFirestore(firebaseApp);
   }
 
