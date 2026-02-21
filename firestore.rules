@@ -23,11 +23,11 @@ service cloud.firestore {
     }
     
     function isAppAdmin() {
-      return isSignedIn() && getRequestingUserRole() == 'admin';
+      return isSignedIn() && (getRequestingUserRole() == 'admin' || isAppOwner());
     }
 
     function isAppStaff() {
-      return isSignedIn() && getRequestingUserRole() == 'staff';
+      return isSignedIn() && (getRequestingUserRole() == 'staff' || isAppAdmin());
     }
 
 
@@ -52,7 +52,6 @@ service cloud.firestore {
 
       /**
        * @description Controls access to a user's private data subcollections.
-       * @principle Enforces strict ownership for all documents within a user's private data tree, but allows admin roles full access.
        */
       match /shipments/{shipmentId} {
         allow read, write: if isResourceOwner(userId) || isAppOwner() || isAppAdmin() || isAppStaff();
@@ -85,8 +84,6 @@ service cloud.firestore {
 
     /**
      * @description Public read-only access for all public artifacts.
-     * This allows any user (authenticated or not) to read any document
-     * or collection within the `/artifacts/{appId}/public/` path.
      */
     match /artifacts/{appId}/public/{document=**} {
       allow read: if true;
