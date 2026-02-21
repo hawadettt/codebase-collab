@@ -487,7 +487,7 @@ export const translations = {
     tableHeaderTracking: 'رقم التتبع',
     tableHeaderTransport: 'نوع النقل',
     tableHeaderAcidNumber: 'رقم ACID',
-    noShipmentsTitle: 'لا توجد شحنات بعد',
+    noShipmentsTitle: 'لا يوجد شحنات بعد',
     noShipmentsDescription: 'أضف شحنتك الأولى باستخدام "إضافة جديد" في الشريط الجانبي.',
     addShipmentTitle: 'إضافة شحنة جديدة',
     addShipmentDescription: 'أدخل تفاصيل الشحنة الجديدة.',

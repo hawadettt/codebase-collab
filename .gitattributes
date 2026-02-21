@@ -1,17 +1,6 @@
-# Handle line endings automatically for files detected as text 
-# and leave binary files alone.
-* text=auto
-
-# Standardize on LF for all text files in the repo
-* text eol=lf
-
-# Explicitly declare documentation files as text
-*.md text
-
-# Explicitly declare code files as text
+* text=auto eol=lf
 *.ts text
 *.tsx text
-*.js text
 *.json text
 *.css text
-*.html text
+*.md text

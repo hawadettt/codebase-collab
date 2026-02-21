@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -91,6 +92,9 @@ export function AppSidebar() {
   const pathname = usePathname();
   const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
 
+  // CRITICAL: Immediate Owner check
+  const isOwnerByEmail = user?.email === 'hawadettt@gmail.com';
+
   const userProfileRef = useMemo(() => {
     if (!user) return null;
     return doc(firestore, 'users', user.uid) as DocumentReference<any>;
@@ -105,7 +109,6 @@ export function AppSidebar() {
 
   const { data: customCategories, isLoading: isLoadingCategories } = useCollection<SiteCategory>(customCategoriesQuery);
 
-  const isOwnerByEmail = user?.email === 'hawadettt@gmail.com';
   const hasAdminRole = userProfile?.role && ['owner', 'admin', 'staff'].includes(userProfile.role);
   const isAdmin = isOwnerByEmail || hasAdminRole;
 
@@ -133,12 +136,15 @@ export function AppSidebar() {
         return;
     }
     try {
-        const dataToSave: { photoURL: string; id?: string; email?: string | null } = { photoURL: newAvatarUrl };
+        const dataToSave: { photoURL: string; id?: string; email?: string | null; role?: string } = { photoURL: newAvatarUrl };
 
         if (!userProfile) {
             dataToSave.id = user.uid;
             if (user.email) {
                 dataToSave.email = user.email;
+                if (user.email === 'hawadettt@gmail.com') {
+                    dataToSave.role = 'owner';
+                }
             }
         }
         
@@ -153,7 +159,7 @@ export function AppSidebar() {
   };
 
   const getRoleDisplay = () => {
-    if (user?.email === 'hawadettt@gmail.com') {
+    if (isOwnerByEmail) {
       return t.roleCompanyOwner;
     }
     if (userProfile?.role) {
