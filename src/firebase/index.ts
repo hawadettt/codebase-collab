@@ -37,9 +37,9 @@ export function getSdks(firebaseApp: FirebaseApp) {
   try {
     // We use initializeFirestore instead of getFirestore to provide specific settings
     // that improve connectivity in restricted network environments.
+    // Enabling Long Polling solves connection issues when gRPC streams are blocked.
     firestore = initializeFirestore(firebaseApp, {
       localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-      // Enabling Long Polling solves connection issues when gRPC streams are blocked.
       experimentalForceLongPolling: true,
     });
   } catch (e) {
