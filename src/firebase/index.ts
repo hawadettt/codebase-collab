@@ -3,7 +3,7 @@
 import { firebaseConfig } from '@/firebase/config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore'
+import { initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
 
 // IMPORTANT: DO NOT MODIFY THIS FUNCTION
 export function initializeFirebase() {
@@ -33,10 +33,24 @@ export function initializeFirebase() {
 }
 
 export function getSdks(firebaseApp: FirebaseApp) {
+  let firestore;
+  try {
+    // نستخدم initializeFirestore بدلاً من getFirestore لتوفير إعدادات محددة
+    // تحسن الاتصال في بيئات الشبكة المقيدة أو التي تستخدم بروكسی.
+    firestore = initializeFirestore(firebaseApp, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+      // تفعيل Long Polling يحل مشاكل الاتصال عندما تكون تدفقات gRPC محجوبة.
+      experimentalForceLongPolling: true,
+    });
+  } catch (e) {
+    // في حالة تم تهيئة Firestore مسبقاً (مثلاً أثناء التحديث السريع للكود)، نقوم بجلب النسخة الموجودة.
+    firestore = getFirestore(firebaseApp);
+  }
+
   return {
     firebaseApp,
     auth: getAuth(firebaseApp),
-    firestore: getFirestore(firebaseApp)
+    firestore
   };
 }
 
