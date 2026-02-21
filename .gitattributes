@@ -1,6 +1,1 @@
-* text=auto eol=lf
-*.ts text
-*.tsx text
-*.json text
-*.css text
-*.md text
+* text=auto

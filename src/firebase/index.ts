@@ -5,20 +5,17 @@ import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
 
-// IMPORTANT: DO NOT MODIFY THIS FUNCTION
+/**
+ * @fileOverview تهيئة خدمات Firebase مع تحسينات الاستقرار.
+ * تم تفعيل Long Polling لحل مشاكل الاتصال في بيئات العمل المقيدة.
+ */
+
 export function initializeFirebase() {
   if (!getApps().length) {
-    // Important! initializeApp() is called without any arguments because Firebase App Hosting
-    // integrates with the initializeApp() function to provide the environment variables needed to
-    // populate the FirebaseOptions in production. It is critical that we attempt to call initializeApp()
-    // without arguments.
     let firebaseApp;
     try {
-      // Attempt to initialize via Firebase App Hosting environment variables
       firebaseApp = initializeApp();
     } catch (e) {
-      // Only warn in production because it's normal to use the firebaseConfig to initialize
-      // during development
       if (process.env.NODE_ENV === "production") {
         console.warn('Automatic initialization failed. Falling back to firebase config object.', e);
       }
@@ -28,22 +25,18 @@ export function initializeFirebase() {
     return getSdks(firebaseApp);
   }
 
-  // If already initialized, return the SDKs with the already initialized App
   return getSdks(getApp());
 }
 
 export function getSdks(firebaseApp: FirebaseApp) {
   let firestore;
   try {
-    // We use initializeFirestore instead of getFirestore to provide specific settings
-    // that improve connectivity in restricted network environments.
-    // Enabling Long Polling solves connection issues when gRPC streams are blocked.
+    // تفعيل التخزين المؤقت المستمر و Long Polling لضمان الوصول للبيانات حتى مع ضعف الإنترنت
     firestore = initializeFirestore(firebaseApp, {
       localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
       experimentalForceLongPolling: true,
     });
   } catch (e) {
-    // In case Firestore is already initialized, we get the existing instance.
     firestore = getFirestore(firebaseApp);
   }
 
