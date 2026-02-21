@@ -92,7 +92,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
 
-  // CRITICAL: Immediate Owner check
+  // CRITICAL OWNER IDENTITY
   const isOwnerByEmail = user?.email === 'hawadettt@gmail.com';
 
   const userProfileRef = useMemo(() => {
